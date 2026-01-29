@@ -3,9 +3,6 @@ import { prisma } from '../prisma.js';
 
 export async function stateRoutes(app: FastifyInstance) {
   app.get('/state', { preHandler: app.authenticate }, async (request) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7244/ingest/ea561df3-ab07-4044-a42c-811fd3e6974d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'state.ts:5',message:'/state handler entry',data:{requestUser:request.user||null,userSub:(request.user as any)?.sub||null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-    // #endregion
     const userId = (request.user as { sub: string }).sub;
     const state = await prisma.userState.findUnique({
       where: { userId },
