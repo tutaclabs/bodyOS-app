@@ -1,0 +1,9 @@
+export const STORAGE_KEYS = {
+  PROTOCOLS: 'bodyos_protocols',
+  NUTRITION_FLOORS: 'bodyos_floors',
+  USER_SETTINGS: 'bodyos_settings',
+  OPENAI_API_KEY: 'bodyos_openai_key',
+  WELLNESS_METRICS: 'bodyos_wellness_metrics',
+  CHAT_HISTORY: 'bodyos_chat_history'
+};
+
