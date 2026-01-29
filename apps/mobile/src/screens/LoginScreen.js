@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-nativ
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
+import { isBackendConfigured, loginWithBackend, registerWithBackend } from '../core/auth-api';
 import { theme } from '../ui/theme';
 
 const storage = new AsyncStorageAdapter();
@@ -34,6 +35,17 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
     setLoading(true);
 
     try {
+      if (isBackendConfigured()) {
+        if (isSignUp) {
+          await registerWithBackend(email, password);
+          Alert.alert('Success', 'Account created!');
+        } else {
+          await loginWithBackend(email, password);
+        }
+        onLoginSuccess();
+        return;
+      }
+
       const users = await storage.load(STORAGE_KEYS.USERS, []);
 
       if (isSignUp) {
@@ -67,7 +79,9 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
         onLoginSuccess();
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      const msg =
+        typeof error?.message === 'string' ? error.message : 'Something went wrong. Please try again.';
+      Alert.alert('Error', msg);
     } finally {
       setLoading(false);
     }

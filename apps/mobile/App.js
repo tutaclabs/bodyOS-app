@@ -18,6 +18,8 @@ import { AsyncStorageAdapter } from './src/core/storage';
 import { STORAGE_KEYS } from './src/core/keys';
 import { useTranslation } from './src/hooks/useTranslation';
 import { theme } from './src/ui/theme';
+import { isCloudEnabled, pullRemoteState } from './src/core/cloud';
+import { getMe, isBackendConfigured, logoutBackend } from './src/core/auth-api';
 
 const Tab = createBottomTabNavigator();
 const storage = new AsyncStorageAdapter();
@@ -96,7 +98,7 @@ function Header({ onBackToLanding, onLogout }) {
             }}
           >
             <Text style={{ fontSize: 10, fontWeight: '900', color: theme.emeraldText }}>
-              LOCAL-ONLY STORAGE
+              {isCloudEnabled() ? 'CLOUD SYNC' : 'LOCAL-ONLY STORAGE'}
             </Text>
           </View>
         </View>
@@ -115,7 +117,21 @@ function AppContent() {
   useEffect(() => {
     (async () => {
       const currentUser = await storage.load(STORAGE_KEYS.CURRENT_USER, null);
-      if (currentUser) {
+      let authed = Boolean(currentUser);
+
+      if (isBackendConfigured()) {
+        const me = await getMe();
+        authed = Boolean(me);
+        if (authed) {
+          try {
+            await pullRemoteState();
+          } catch {
+            // ignore pull errors on boot
+          }
+        }
+      }
+
+      if (authed) {
         setIsAuthenticated(true);
         const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
         if (!settings.onboarding?.completed) {
@@ -140,6 +156,13 @@ function AppContent() {
   const handleLoginSuccess = async () => {
     setIsAuthenticated(true);
     setShowLogin(false);
+    if (isBackendConfigured()) {
+      try {
+        await pullRemoteState();
+      } catch {
+        // ignore pull errors; app still usable with local cache
+      }
+    }
     const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
     if (!settings.onboarding?.completed) {
       setShowOnboarding(true);
@@ -166,7 +189,11 @@ function AppContent() {
   };
 
   const handleLogout = useCallback(async () => {
-    await storage.save(STORAGE_KEYS.CURRENT_USER, null);
+    if (isBackendConfigured()) {
+      await logoutBackend();
+    } else {
+      await storage.save(STORAGE_KEYS.CURRENT_USER, null);
+    }
     setIsAuthenticated(false);
     setShowLanding(true);
     setShowLogin(false);

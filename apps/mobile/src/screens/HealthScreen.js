@@ -8,6 +8,7 @@ import { askResearchQuestion } from '../core/ai-research';
 import { WellnessMetricsScreen } from './WellnessMetricsScreen';
 import { BiohackingInsightsScreen } from './BiohackingInsightsScreen';
 import { GoalModeScreen } from './GoalModeScreen';
+import { isBackendConfigured } from '../core/auth-api';
 
 const storage = new AsyncStorageAdapter();
 
@@ -22,6 +23,10 @@ const AIResearchAssistant = () => {
 
   useEffect(() => {
     (async () => {
+      if (isBackendConfigured()) {
+        setKeySaved(true);
+        return;
+      }
       const savedKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
       if (savedKey) {
         setApiKey(savedKey);
@@ -51,7 +56,7 @@ const AIResearchAssistant = () => {
       return;
     }
 
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setError('OpenAI API key is required');
       setShowKeyInput(true);
       return;
@@ -98,7 +103,7 @@ const AIResearchAssistant = () => {
         )}
       </View>
 
-      {showKeyInput && !keySaved && (
+      {showKeyInput && !keySaved && !isBackendConfigured() && (
         <View style={{ marginBottom: 12, padding: 12, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#F2610133' }}>
           <TextInput
             value={apiKey}
@@ -313,4 +318,3 @@ export function HealthScreen() {
     </View>
   );
 }
-

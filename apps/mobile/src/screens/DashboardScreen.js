@@ -10,6 +10,9 @@ import { parseProtocolFromText } from '../core/ai-protocol-parser';
 import { checkProtocolInteractions } from '../core/interaction-checker';
 import { analyzeStackRedundancies } from '../core/stack-validator';
 import { TrackerScreen } from './TrackerScreen';
+import { pushProtocols } from '../core/cloud';
+import { pushNutritionFloors } from '../core/cloud';
+import { isBackendConfigured } from '../core/auth-api';
 
 const storage = new AsyncStorageAdapter();
 
@@ -71,6 +74,7 @@ export function DashboardScreen() {
           timeOfDay: p.timeOfDay || 'flexible'
         }));
         await storage.save(STORAGE_KEYS.PROTOCOLS, savedProtocols);
+        await pushProtocols(savedProtocols).catch(() => {});
       }
       setProtocols(savedProtocols);
       const savedFloors = await storage.load(STORAGE_KEYS.NUTRITION_FLOORS, null);
@@ -91,6 +95,7 @@ export function DashboardScreen() {
       );
       setProtocols(next);
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
+      await pushProtocols(next).catch(() => {});
       setEditingProtocol(null);
     } else {
       const next = [
@@ -99,6 +104,7 @@ export function DashboardScreen() {
       ];
       setProtocols(next);
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
+      await pushProtocols(next).catch(() => {});
     }
     
     setName('');
@@ -126,7 +132,7 @@ export function DashboardScreen() {
     }
 
     const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setParseError('OpenAI API key required. Add it in the Health tab.');
       return;
     }
@@ -142,6 +148,7 @@ export function DashboardScreen() {
       ];
       setProtocols(next);
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
+      await pushProtocols(next).catch(() => {});
       setNaturalLanguageInput('');
       setUseNaturalLanguage(false);
       setIsAdding(false);
@@ -156,6 +163,7 @@ export function DashboardScreen() {
     const next = protocols.filter((p) => p.id !== id);
     setProtocols(next);
     await storage.save(STORAGE_KEYS.PROTOCOLS, next);
+    await pushProtocols(next).catch(() => {});
   };
 
   const bumpFloor = async (key, delta) => {
@@ -165,6 +173,7 @@ export function DashboardScreen() {
     };
     setFloors(next);
     await storage.save(STORAGE_KEYS.NUTRITION_FLOORS, next);
+    await pushNutritionFloors(next).catch(() => {});
   };
 
   const scrollToTop = () => {
@@ -214,14 +223,10 @@ export function DashboardScreen() {
         });
       }
       
-      if (apiKey) {
+      if (isBackendConfigured() || apiKey) {
         const aiResult = await checkProtocolSafety(protocols, apiKey);
-        if (aiResult.warnings) {
-          allWarnings.push(...aiResult.warnings);
-        }
-        if (aiResult.recommendations) {
-          allRecommendations.push(...aiResult.recommendations);
-        }
+        if (aiResult.warnings) allWarnings.push(...aiResult.warnings);
+        if (aiResult.recommendations) allRecommendations.push(...aiResult.recommendations);
       } else {
         allRecommendations.push('Add OpenAI API key in Health tab for AI-powered safety analysis.');
       }
@@ -244,7 +249,7 @@ export function DashboardScreen() {
 
   const handleGenerateInsights = async () => {
     const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setInsightsError('OpenAI API key required. Add it in the Health tab.');
       return;
     }
@@ -931,4 +936,3 @@ export function DashboardScreen() {
     </View>
   );
 }
-

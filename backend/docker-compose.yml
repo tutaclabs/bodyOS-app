@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bodyos
+      POSTGRES_PASSWORD: bodyos
+      POSTGRES_DB: bodyos
+    ports:
+      - "5432:5432"
+    volumes:
+      - bodyos_postgres:/var/lib/postgresql/data
+
+volumes:
+  bodyos_postgres:
+
