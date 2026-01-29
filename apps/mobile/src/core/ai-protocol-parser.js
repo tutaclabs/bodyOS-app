@@ -1,4 +1,23 @@
+import { isBackendConfigured } from './auth-api';
+import { apiFetch } from './api-client';
+
 export async function parseProtocolFromText(text, apiKey) {
+  if (isBackendConfigured()) {
+    if (!text || !text.trim()) throw new Error('Text cannot be empty');
+    const res = await apiFetch('/ai/protocol-parser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.trim() }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);
+    return {
+      name: json?.name || 'Unknown Protocol',
+      cycleOn: Number(json?.cycleOn) || 5,
+      cycleOff: Number(json?.cycleOff) || 2,
+    };
+  }
+
   if (!apiKey) {
     throw new Error('OpenAI API key is required');
   }

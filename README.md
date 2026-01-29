@@ -50,6 +50,12 @@ bodyOS is a local-first wellness tracking and protocol management platform desig
 - Android: Android Studio and Android Emulator
 - Or use Expo Go app on physical device
 
+### Backend (Fastify + Postgres)
+
+- Backend code lives in `backend/`.
+- Mobile can point to the deployed backend by setting `EXPO_PUBLIC_API_BASE_URL` when starting Expo (or in EAS build env).
+- See `backend/README.md` for local setup and Render deployment.
+
 ### Installation
 
 #### Web App

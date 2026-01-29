@@ -5,6 +5,7 @@ import { theme } from '../ui/theme';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
+import { pushWellnessMetrics } from '../core/cloud';
 
 const storage = new AsyncStorageAdapter();
 
@@ -32,6 +33,7 @@ export function WellnessMetricsScreen() {
     const allMetrics = await storage.load(STORAGE_KEYS.WELLNESS_METRICS, {});
     allMetrics[today] = metrics;
     await storage.save(STORAGE_KEYS.WELLNESS_METRICS, allMetrics);
+    await pushWellnessMetrics(allMetrics).catch(() => {});
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

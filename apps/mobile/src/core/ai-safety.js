@@ -1,4 +1,22 @@
+import { isBackendConfigured } from './auth-api';
+import { apiFetch } from './api-client';
+
 export async function checkProtocolSafety(protocols, apiKey) {
+  if (isBackendConfigured()) {
+    const res = await apiFetch('/ai/safety', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ protocols: protocols || [] }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);
+    return {
+      safe: json?.safe !== false,
+      warnings: Array.isArray(json?.warnings) ? json.warnings : [],
+      recommendations: Array.isArray(json?.recommendations) ? json.recommendations : [],
+    };
+  }
+
   if (!apiKey) {
     throw new Error('OpenAI API key is required');
   }

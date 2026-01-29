@@ -7,6 +7,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
 import { chatWithBodyOS } from '../core/ai-bodyos-chat';
+import { isBackendConfigured } from '../core/auth-api';
+import { chatWithBodyOSBackend } from '../core/ai-backend';
+import { pushChatHistory } from '../core/cloud';
 
 const storage = new AsyncStorageAdapter();
 
@@ -36,7 +39,7 @@ export function BodyOSIntelligenceScreen() {
     if (!message.trim() || loading) return;
 
     const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setError(t.ai.research.addKey);
       return;
     }
@@ -49,17 +52,32 @@ export function BodyOSIntelligenceScreen() {
     const newMessages = [...messages, { role: 'user', content: userMessage }];
     setMessages(newMessages);
     await storage.save(STORAGE_KEYS.CHAT_HISTORY, newMessages);
+    await pushChatHistory(newMessages).catch(() => {});
 
     try {
-      const response = await chatWithBodyOS(userMessage, apiKey, language);
-      const updatedMessages = [...newMessages, { role: 'assistant', content: response }];
+      let assistantText = '';
+      let updatedMessages = null;
+
+      if (isBackendConfigured()) {
+        const result = await chatWithBodyOSBackend(userMessage, language, messages);
+        assistantText = result.assistantMessage;
+        updatedMessages = Array.isArray(result.updatedHistory)
+          ? result.updatedHistory
+          : [...newMessages, { role: 'assistant', content: assistantText }];
+      } else {
+        assistantText = await chatWithBodyOS(userMessage, apiKey, language);
+        updatedMessages = [...newMessages, { role: 'assistant', content: assistantText }];
+      }
+
       setMessages(updatedMessages);
       await storage.save(STORAGE_KEYS.CHAT_HISTORY, updatedMessages);
+      await pushChatHistory(updatedMessages).catch(() => {});
     } catch (err) {
       setError(err.message || 'Failed to get response.');
       const failedMessages = newMessages.slice(0, -1);
       setMessages(failedMessages);
       await storage.save(STORAGE_KEYS.CHAT_HISTORY, failedMessages);
+      await pushChatHistory(failedMessages).catch(() => {});
     } finally {
       setLoading(false);
     }
