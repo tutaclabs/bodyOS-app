@@ -100,7 +100,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_severity' });
     }
 
-    const updated = await prisma.sideEffect.update({
+    const updated = await (prisma as any).sideEffect.update({
       where: { id: params.id },
       data: {
         symptom: body.symptom ?? existing.symptom,
