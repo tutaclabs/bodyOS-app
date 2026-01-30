@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View, Text, Pressable } from 'react-native';
 
 import { LanguageProvider, useLanguage } from './src/contexts/LanguageContext';
@@ -316,8 +316,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <SafeAreaProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </SafeAreaProvider>
   );
 }
