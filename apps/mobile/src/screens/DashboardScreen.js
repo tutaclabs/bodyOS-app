@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
 import { STORAGE_KEYS } from '../core/keys';
@@ -15,6 +15,51 @@ import { pushNutritionFloors } from '../core/cloud';
 import { isBackendConfigured } from '../core/auth-api';
 
 const storage = new AsyncStorageAdapter();
+
+function AnimatedTimelineItem({ protocol, delay }) {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: delay,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 400,
+        delay: delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={{
+        padding: 12,
+        backgroundColor: theme.card,
+        borderRadius: 12,
+        borderLeftWidth: 3,
+        borderLeftColor: theme.primary,
+        borderWidth: 1,
+        borderColor: theme.border,
+        opacity: fadeAnim,
+        transform: [{ translateY: slideAnim }],
+      }}
+    >
+      <Text style={{ fontWeight: '700', color: theme.text, marginBottom: 4 }}>
+        {protocol.name}
+      </Text>
+      <Text style={{ fontSize: 11, color: theme.muted }}>
+        {protocol.cycleOn} On / {protocol.cycleOff} Off Cycle
+      </Text>
+    </Animated.View>
+  );
+}
 
 function SmallPill({ children }) {
   return (
@@ -51,6 +96,7 @@ export function DashboardScreen() {
   const [parsing, setParsing] = useState(false);
   const [parseError, setParseError] = useState('');
   const [editingProtocol, setEditingProtocol] = useState(null);
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const [floors, setFloors] = useState({
     protein: { current: 120, target: 160, unit: 'g' },
@@ -460,17 +506,20 @@ export function DashboardScreen() {
                       setParseError('');
                     }}
                     placeholder='e.g. "Add BPC-157, 5 days on, 2 days off"'
-                    placeholderTextColor="#94A3B8"
+                    placeholderTextColor={theme.muted}
                     multiline
+                    onFocus={() => setFocusedInput('naturalLanguage')}
+                    onBlur={() => setFocusedInput(null)}
                     style={{
-                      borderWidth: 1,
-                      borderColor: theme.border,
+                      backgroundColor: theme.card,
                       borderRadius: 12,
                       paddingHorizontal: 12,
                       paddingVertical: 10,
                       color: theme.text,
                       minHeight: 80,
-                      textAlignVertical: 'top'
+                      textAlignVertical: 'top',
+                      borderBottomWidth: focusedInput === 'naturalLanguage' ? 2 : 0,
+                      borderBottomColor: focusedInput === 'naturalLanguage' ? theme.primary : 'transparent',
                     }}
                     editable={!parsing}
                   />
@@ -504,14 +553,17 @@ export function DashboardScreen() {
                     value={name}
                     onChangeText={setName}
                     placeholder="Protocol Name (e.g. BPC-157)"
-                    placeholderTextColor="#94A3B8"
+                    placeholderTextColor={theme.muted}
+                    onFocus={() => setFocusedInput('name')}
+                    onBlur={() => setFocusedInput(null)}
                     style={{
-                      borderWidth: 1,
-                      borderColor: theme.border,
+                      backgroundColor: theme.card,
                       borderRadius: 12,
                       paddingHorizontal: 12,
                       paddingVertical: 10,
-                      color: theme.text
+                      color: theme.text,
+                      borderBottomWidth: focusedInput === 'name' ? 2 : 0,
+                      borderBottomColor: focusedInput === 'name' ? theme.primary : 'transparent',
                     }}
                   />
                   <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -523,13 +575,16 @@ export function DashboardScreen() {
                         value={cycleOn}
                         onChangeText={setCycleOn}
                         keyboardType="numeric"
+                        onFocus={() => setFocusedInput('cycleOn')}
+                        onBlur={() => setFocusedInput(null)}
                         style={{
-                          borderWidth: 1,
-                          borderColor: theme.border,
+                          backgroundColor: theme.card,
                           borderRadius: 12,
                           paddingHorizontal: 12,
                           paddingVertical: 10,
-                          color: theme.text
+                          color: theme.text,
+                          borderBottomWidth: focusedInput === 'cycleOn' ? 2 : 0,
+                          borderBottomColor: focusedInput === 'cycleOn' ? theme.primary : 'transparent',
                         }}
                       />
                     </View>
@@ -541,13 +596,16 @@ export function DashboardScreen() {
                         value={cycleOff}
                         onChangeText={setCycleOff}
                         keyboardType="numeric"
+                        onFocus={() => setFocusedInput('cycleOff')}
+                        onBlur={() => setFocusedInput(null)}
                         style={{
-                          borderWidth: 1,
-                          borderColor: theme.border,
+                          backgroundColor: theme.card,
                           borderRadius: 12,
                           paddingHorizontal: 12,
                           paddingVertical: 10,
-                          color: theme.text
+                          color: theme.text,
+                          borderBottomWidth: focusedInput === 'cycleOff' ? 2 : 0,
+                          borderBottomColor: focusedInput === 'cycleOff' ? theme.primary : 'transparent',
                         }}
                       />
                     </View>
@@ -603,53 +661,69 @@ export function DashboardScreen() {
             </View>
           ) : null}
 
-          <View style={{ marginTop: 14, gap: 10 }}>
+          <View style={{ marginTop: 14 }}>
             {protocols.length === 0 ? (
-              <Text style={{ color: '#94A3B8', fontStyle: 'italic', textAlign: 'center', paddingVertical: 18 }}>
+              <Text style={{ color: theme.muted, fontStyle: 'italic', textAlign: 'center', paddingVertical: 18 }}>
                 No active protocols set.
               </Text>
             ) : (
-              protocols.map((p) => (
-                <Pressable
-                  key={p.id}
-                  onPress={() => startEdit(p)}
-                  style={({ pressed }) => ({
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: 14,
-                    paddingLeft: 18,
-                    borderWidth: 1,
-                    borderColor: '#F1F5F9',
-                    borderRadius: 16,
-                    backgroundColor: pressed ? '#F8FAFC' : '#fff',
-                    opacity: pressed ? 0.8 : 1,
-                    borderLeftWidth: 4,
-                    borderLeftColor: theme.primary
-                  })}
-                >
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={{ fontWeight: '800', color: '#334155' }}>{p.name}</Text>
-                    <Text style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                      {p.cycleOn} On / {p.cycleOff} Off Cycle
-                    </Text>
-                    {p.timeOfDay && p.timeOfDay !== 'flexible' && (
-                      <Text style={{ fontSize: 10, color: theme.primary, textTransform: 'capitalize', marginTop: 2 }}>
-                        {p.timeOfDay}
-                      </Text>
-                    )}
-                  </View>
-                  <Pressable 
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      deleteProtocol(p.id);
-                    }}
-                    style={{ padding: 8, marginLeft: 8, borderRadius: 8 }}
-                  >
-                    <Text style={{ color: theme.primary, fontWeight: '800', fontSize: 12 }}>Delete</Text>
-                  </Pressable>
-                </Pressable>
-              ))
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                {protocols.map((p, index) => {
+                  const isLarge = index % 3 === 0;
+                  return (
+                    <Pressable
+                      key={p.id}
+                      onPress={() => startEdit(p)}
+                      style={({ pressed }) => ({
+                        flex: isLarge ? 1 : 0.48,
+                        minWidth: isLarge ? '100%' : '48%',
+                        padding: 16,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: theme.border,
+                        backgroundColor: theme.card,
+                        opacity: pressed ? 0.8 : 1,
+                        overflow: 'hidden',
+                      })}
+                    >
+                      <View
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                        }}
+                      />
+                      <View style={{ position: 'relative', zIndex: 1 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ fontWeight: '800', color: theme.text, fontSize: 16, marginBottom: 4 }}>{p.name}</Text>
+                            <Text style={{ fontSize: 11, color: theme.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                              {p.cycleOn} On / {p.cycleOff} Off Cycle
+                            </Text>
+                            {p.timeOfDay && p.timeOfDay !== 'flexible' && (
+                              <Text style={{ fontSize: 10, color: theme.primary, textTransform: 'capitalize', marginTop: 4 }}>
+                                {p.timeOfDay}
+                              </Text>
+                            )}
+                          </View>
+                          <Pressable 
+                            onPress={(e) => {
+                              e.stopPropagation();
+                              deleteProtocol(p.id);
+                            }}
+                            style={{ padding: 6, borderRadius: 8 }}
+                          >
+                            <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 11 }}>×</Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </View>
             )}
           </View>
         </Card>
@@ -682,24 +756,8 @@ export function DashboardScreen() {
                         ({timeInfo.hours})
                       </Text>
                     </View>
-                    {timeProtocols.map((p) => (
-                      <View
-                        key={p.id}
-                        style={{
-                          padding: 12,
-                          backgroundColor: '#F8FAFC',
-                          borderRadius: 12,
-                          borderLeftWidth: 3,
-                          borderLeftColor: theme.primary
-                        }}
-                      >
-                        <Text style={{ fontWeight: '700', color: theme.text, marginBottom: 4 }}>
-                          {p.name}
-                        </Text>
-                        <Text style={{ fontSize: 11, color: theme.muted }}>
-                          {p.cycleOn} On / {p.cycleOff} Off Cycle
-                        </Text>
-                      </View>
+                    {timeProtocols.map((p, idx) => (
+                      <AnimatedTimelineItem key={p.id} protocol={p} delay={idx * 100} />
                     ))}
                   </View>
                 );
@@ -712,24 +770,8 @@ export function DashboardScreen() {
                       Flexible Timing
                     </Text>
                   </View>
-                  {protocols.filter(p => !p.timeOfDay || p.timeOfDay === 'flexible').map((p) => (
-                    <View
-                      key={p.id}
-                      style={{
-                        padding: 12,
-                        backgroundColor: '#F8FAFC',
-                        borderRadius: 12,
-                        borderLeftWidth: 3,
-                        borderLeftColor: theme.muted
-                      }}
-                    >
-                      <Text style={{ fontWeight: '700', color: theme.text, marginBottom: 4 }}>
-                        {p.name}
-                      </Text>
-                      <Text style={{ fontSize: 11, color: theme.muted }}>
-                        {p.cycleOn} On / {p.cycleOff} Off Cycle
-                      </Text>
-                    </View>
+                  {protocols.filter(p => !p.timeOfDay || p.timeOfDay === 'flexible').map((p, idx) => (
+                    <AnimatedTimelineItem key={p.id} protocol={p} delay={idx * 100} />
                   ))}
                 </View>
               )}

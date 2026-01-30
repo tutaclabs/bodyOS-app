@@ -12,16 +12,25 @@ export function Card({ children, style }) {
           borderWidth: 1,
           borderRadius: 20,
           padding: 16,
-          shadowColor: theme.shadow,
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.08,
-          shadowRadius: 12,
-          elevation: 3
+          overflow: 'hidden',
         },
         style
       ]}
     >
-      {children}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.03)',
+          borderRadius: 20,
+        }}
+      />
+      <View style={{ position: 'relative', zIndex: 1 }}>
+        {children}
+      </View>
     </View>
   );
 }

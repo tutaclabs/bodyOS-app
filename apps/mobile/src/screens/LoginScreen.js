@@ -16,6 +16,7 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) {
@@ -144,47 +145,55 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
           <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
             Email
           </Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="your@email.com"
-            placeholderTextColor="#94A3B8"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={{
-              borderWidth: 1,
-              borderColor: '#E2E8F0',
-              borderRadius: 12,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-              fontSize: 15,
-              color: theme.text,
-              backgroundColor: '#fff',
-            }}
-          />
+          <View style={{ position: 'relative' }}>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="your@email.com"
+              placeholderTextColor="#8B949E"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              onFocus={() => setFocusedInput('email')}
+              onBlur={() => setFocusedInput(null)}
+              style={{
+                backgroundColor: theme.card,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                fontSize: 15,
+                color: theme.text,
+                borderBottomWidth: focusedInput === 'email' ? 2 : 0,
+                borderBottomColor: focusedInput === 'email' ? theme.primary : 'transparent',
+              }}
+            />
+          </View>
         </View>
 
         <View>
           <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
             Password
           </Text>
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="••••••••"
-            placeholderTextColor="#94A3B8"
-            secureTextEntry
-            style={{
-              borderWidth: 1,
-              borderColor: '#E2E8F0',
-              borderRadius: 12,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-              fontSize: 15,
-              color: theme.text,
-              backgroundColor: '#fff',
-            }}
-          />
+          <View style={{ position: 'relative' }}>
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="••••••••"
+              placeholderTextColor="#8B949E"
+              secureTextEntry
+              onFocus={() => setFocusedInput('password')}
+              onBlur={() => setFocusedInput(null)}
+              style={{
+                backgroundColor: theme.card,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                fontSize: 15,
+                color: theme.text,
+                borderBottomWidth: focusedInput === 'password' ? 2 : 0,
+                borderBottomColor: focusedInput === 'password' ? theme.primary : 'transparent',
+              }}
+            />
+          </View>
         </View>
 
         {isSignUp && (
@@ -192,23 +201,27 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
             <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
               Confirm Password
             </Text>
-            <TextInput
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="••••••••"
-              placeholderTextColor="#94A3B8"
-              secureTextEntry
-              style={{
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
-                borderRadius: 12,
-                paddingHorizontal: 16,
-                paddingVertical: 14,
-                fontSize: 15,
-                color: theme.text,
-                backgroundColor: '#fff',
-              }}
-            />
+            <View style={{ position: 'relative' }}>
+              <TextInput
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder="••••••••"
+                placeholderTextColor="#8B949E"
+                secureTextEntry
+                onFocus={() => setFocusedInput('confirmPassword')}
+                onBlur={() => setFocusedInput(null)}
+                style={{
+                  backgroundColor: theme.card,
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  fontSize: 15,
+                  color: theme.text,
+                  borderBottomWidth: focusedInput === 'confirmPassword' ? 2 : 0,
+                  borderBottomColor: focusedInput === 'confirmPassword' ? theme.primary : 'transparent',
+                }}
+              />
+            </View>
           </View>
         )}
 
@@ -217,14 +230,14 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
           disabled={loading}
           style={{
             paddingVertical: 16,
-            backgroundColor: loading ? '#E2E8F0' : theme.primary,
+            backgroundColor: loading ? theme.card : theme.primary,
             borderRadius: 12,
             alignItems: 'center',
             marginTop: 8,
             opacity: loading ? 0.6 : 1,
           }}
         >
-          <Text style={{ color: '#fff', fontWeight: '800', fontSize: 16 }}>
+          <Text style={{ color: loading ? theme.muted : '#000000', fontWeight: '800', fontSize: 16 }}>
             {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
           </Text>
         </Pressable>
@@ -249,8 +262,10 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
         style={{
           marginTop: 32,
           padding: 16,
-          backgroundColor: '#F1F5F9',
+          backgroundColor: theme.card,
           borderRadius: 12,
+          borderWidth: 1,
+          borderColor: theme.border,
         }}
       >
         <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', lineHeight: 16 }}>

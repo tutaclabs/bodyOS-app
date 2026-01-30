@@ -54,6 +54,7 @@ function CalcSection() {
   const [vialMg, setVialMg] = useState('5');
   const [bacMl, setBacMl] = useState('2');
   const [desiredMcg, setDesiredMcg] = useState('250');
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const units = useMemo(() => {
     const vial = Number(vialMg) || 0;
@@ -67,100 +68,108 @@ function CalcSection() {
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
       <Card>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text, marginBottom: 16 }}>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text, marginBottom: 24 }}>
           {t.reconstitution.title}
         </Text>
 
-        <View style={{ flexDirection: 'row', gap: 12 }}>
-          <View style={{ flex: 1, gap: 12 }}>
-            <View>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text, marginBottom: 6 }}>
-                {t.reconstitution.vialMg}
-              </Text>
-              <TextInput
-                value={vialMg}
-                onChangeText={setVialMg}
-                keyboardType="numeric"
-                placeholder="e.g. 5"
-                placeholderTextColor="#94A3B8"
-                style={{
-                  borderWidth: 1,
-                  borderColor: theme.border,
-                  borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 12,
-                  color: theme.text,
-                  fontSize: 14
-                }}
-              />
-            </View>
-            <View>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text, marginBottom: 6 }}>
-                {t.reconstitution.bacMl}
-              </Text>
-              <TextInput
-                value={bacMl}
-                onChangeText={setBacMl}
-                keyboardType="numeric"
-                placeholder="e.g. 2"
-                placeholderTextColor="#94A3B8"
-                style={{
-                  borderWidth: 1,
-                  borderColor: theme.border,
-                  borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 12,
-                  color: theme.text,
-                  fontSize: 14
-                }}
-              />
-            </View>
-            <View>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text, marginBottom: 6 }}>
-                {t.reconstitution.desiredMcg}
-              </Text>
-              <TextInput
-                value={desiredMcg}
-                onChangeText={setDesiredMcg}
-                keyboardType="numeric"
-                placeholder="e.g. 250"
-                placeholderTextColor="#94A3B8"
-                style={{
-                  borderWidth: 1,
-                  borderColor: theme.border,
-                  borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 12,
-                  color: theme.text,
-                  fontSize: 14
-                }}
-              />
-            </View>
+        <View style={{ gap: 16 }}>
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+              Step 1: {t.reconstitution.vialMg}
+            </Text>
+            <TextInput
+              value={vialMg}
+              onChangeText={setVialMg}
+              keyboardType="numeric"
+              placeholder="e.g. 5"
+              placeholderTextColor={theme.muted}
+              onFocus={() => setFocusedInput('vialMg')}
+              onBlur={() => setFocusedInput(null)}
+              style={{
+                backgroundColor: theme.card,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                color: theme.text,
+                fontSize: 16,
+                borderBottomWidth: focusedInput === 'vialMg' ? 2 : 0,
+                borderBottomColor: focusedInput === 'vialMg' ? theme.primary : 'transparent',
+              }}
+            />
           </View>
 
-          <View
-            style={{
-              width: 140,
-              backgroundColor: '#F261010D',
-              borderColor: '#F2610133',
-              borderWidth: 2,
-              borderRadius: 20,
-              paddingVertical: 20,
-              paddingHorizontal: 12,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, letterSpacing: 1, marginBottom: 12, textTransform: 'uppercase' }}>
-              {t.reconstitution.drawAmount}
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+              Step 2: {t.reconstitution.bacMl}
             </Text>
-            <Text style={{ fontSize: 42, fontWeight: '900', color: theme.primary, marginBottom: 8, fontFamily: 'monospace' }}>
-              {units.toFixed(1)}
-            </Text>
-            <Text style={{ fontSize: 11, color: '#475569', fontWeight: '600', textAlign: 'center' }}>
-              {t.reconstitution.units}
-            </Text>
+            <TextInput
+              value={bacMl}
+              onChangeText={setBacMl}
+              keyboardType="numeric"
+              placeholder="e.g. 2"
+              placeholderTextColor={theme.muted}
+              onFocus={() => setFocusedInput('bacMl')}
+              onBlur={() => setFocusedInput(null)}
+              style={{
+                backgroundColor: theme.card,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                color: theme.text,
+                fontSize: 16,
+                borderBottomWidth: focusedInput === 'bacMl' ? 2 : 0,
+                borderBottomColor: focusedInput === 'bacMl' ? theme.primary : 'transparent',
+              }}
+            />
           </View>
+
+          <View>
+            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+              Step 3: {t.reconstitution.desiredMcg}
+            </Text>
+            <TextInput
+              value={desiredMcg}
+              onChangeText={setDesiredMcg}
+              keyboardType="numeric"
+              placeholder="e.g. 250"
+              placeholderTextColor={theme.muted}
+              onFocus={() => setFocusedInput('desiredMcg')}
+              onBlur={() => setFocusedInput(null)}
+              style={{
+                backgroundColor: theme.card,
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+                color: theme.text,
+                fontSize: 16,
+                borderBottomWidth: focusedInput === 'desiredMcg' ? 2 : 0,
+                borderBottomColor: focusedInput === 'desiredMcg' ? theme.primary : 'transparent',
+              }}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            marginTop: 24,
+            padding: 32,
+            backgroundColor: theme.card,
+            borderWidth: 1,
+            borderColor: theme.border,
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted, letterSpacing: 2, marginBottom: 16, textTransform: 'uppercase' }}>
+            {t.reconstitution.drawAmount}
+          </Text>
+          <Text style={{ fontSize: 64, fontWeight: '900', color: theme.primary, marginBottom: 8, fontFamily: 'monospace', letterSpacing: -2 }}>
+            {units.toFixed(1)}
+          </Text>
+          <Text style={{ fontSize: 12, color: theme.muted, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
+            {t.reconstitution.units}
+          </Text>
         </View>
 
         {showSafetyWarning && (

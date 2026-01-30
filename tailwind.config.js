@@ -17,6 +17,13 @@ export default {
           800: '#7C6015',
           900: '#5E4610',
         },
+        dark: {
+          bg: '#0A0C10',
+          card: '#161B22',
+          border: 'rgba(255, 255, 255, 0.1)',
+          text: '#FFFFFF',
+          muted: '#8B949E',
+        },
         luxury: {
           beige: '#F5F1E8',
           'beige-light': '#FAF8F3',
@@ -27,7 +34,7 @@ export default {
           'neutral-warm': '#F0EDE5',
           'neutral-cool': '#E8E5DD',
         },
-        background: '#FAF8F3',
+        background: '#0A0C10',
       },
       borderRadius: {
         'card': '20px',
@@ -37,14 +44,18 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Playfair Display', 'Cormorant Garamond', 'serif'],
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',
         'soft-lg': '0 4px 16px rgba(0, 0, 0, 0.08)',
         'glass': '0 4px 12px rgba(0, 0, 0, 0.08)',
+        'inner-glow': 'inset 0 0 20px rgba(255, 255, 255, 0.05)',
+        'inner-glow-gold': 'inset 0 0 20px rgba(212, 175, 55, 0.1)',
       },
       backdropBlur: {
         'glass': '10px',
+        'glass-lg': '20px',
       }
     }
   },
