@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View, Text, Pressable } from 'react-native';
 
 import { LanguageProvider, useLanguage } from './src/contexts/LanguageContext';
@@ -32,15 +32,17 @@ function ProfileScreenWrapper({ onLogout }) {
 function Header({ onBackToLanding, onLogout }) {
   const t = useTranslation();
   const { language, setLanguage } = useLanguage();
+  const insets = useSafeAreaInsets();
 
   return (
     <View
       style={{
+        paddingTop: Math.max(insets.top, 14),
         paddingHorizontal: 16,
-        paddingVertical: 14,
+        paddingBottom: 14,
         borderBottomWidth: 1,
         borderBottomColor: theme.border,
-        backgroundColor: 'rgba(255,255,255,0.92)'
+        backgroundColor: theme.bg
       }}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -58,9 +60,9 @@ function Header({ onBackToLanding, onLogout }) {
               justifyContent: 'center'
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '900' }}>L</Text>
+            <Text style={{ color: '#000000', fontWeight: '900' }}>L</Text>
           </View>
-          <Text style={{ fontSize: 18, fontWeight: '900', color: '#1E293B' }}>{t.app.name}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '900', color: theme.text }}>{t.app.name}</Text>
         </Pressable>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Pressable
@@ -69,7 +71,7 @@ function Header({ onBackToLanding, onLogout }) {
               paddingHorizontal: 10,
               paddingVertical: 6,
               borderRadius: 8,
-              backgroundColor: '#F1F5F9',
+              backgroundColor: theme.card,
             }}
           >
             <Text style={{ fontSize: 11, fontWeight: '700', color: theme.text }}>
@@ -209,7 +211,7 @@ function AppContent() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }} edges={['top']}>
         <LandingScreen onEnterApp={handleEnterApp} />
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </SafeAreaView>
     );
   }
@@ -224,7 +226,7 @@ function AppContent() {
             setShowLanding(true);
           }}
         />
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </SafeAreaView>
     );
   }
@@ -233,7 +235,7 @@ function AppContent() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }} edges={['top']}>
         <OnboardingScreen onComplete={handleOnboardingComplete} />
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </SafeAreaView>
     );
   }
@@ -258,25 +260,24 @@ function AppContent() {
           screenOptions={{
             headerShown: false,
             tabBarActiveTintColor: theme.primary,
-            tabBarInactiveTintColor: '#94A3B8',
+            tabBarInactiveTintColor: theme.muted,
             tabBarStyle: {
               position: 'absolute',
-              bottom: 24,
-              left: 16,
-              right: 16,
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 24,
-              borderTopWidth: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: theme.bg,
+              borderRadius: 0,
+              borderTopWidth: 1,
+              borderTopColor: theme.border,
               height: 70,
               paddingBottom: 8,
               paddingTop: 8,
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: { width: 0, height: -2 },
               shadowOpacity: 0.1,
-              shadowRadius: 12,
+              shadowRadius: 8,
               elevation: 8,
-              borderWidth: 1,
-              borderColor: 'rgba(226, 232, 240, 0.6)'
             },
             tabBarLabelStyle: {
               fontSize: 11,
@@ -308,7 +309,7 @@ function AppContent() {
         </Tab.Navigator>
       </NavigationContainer>
       <MedicalDisclaimerFooter />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 }

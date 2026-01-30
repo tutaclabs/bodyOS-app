@@ -73,7 +73,7 @@ export function ProfileScreen({ onLogout }) {
 
   if (!userSettings) {
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
         <Card>
           <Text style={{ textAlign: 'center', color: theme.muted, paddingVertical: 20 }}>
             Loading profile...
@@ -89,7 +89,7 @@ export function ProfileScreen({ onLogout }) {
   const lifestyle = userSettings.lifestyle || {};
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 20 }}>
           <Text style={{ fontSize: 20 }}>👤</Text>

@@ -493,7 +493,7 @@ export function TrackerScreen() {
   const injectionSites = ['Left arm', 'Right arm', 'Stomach', 'Thigh', 'Other'];
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
         <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
           {t.tracker?.title || 'Peptide Tracker'}

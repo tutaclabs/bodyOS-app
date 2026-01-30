@@ -66,7 +66,7 @@ function CalcSection() {
   const showSafetyWarning = units > 50 || (Number(desiredMcg) || 0) > 2000;
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
         <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text, marginBottom: 24 }}>
           {t.reconstitution.title}
@@ -235,7 +235,7 @@ function LibrarySection() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <Text style={{ fontSize: 20 }}>📚</Text>

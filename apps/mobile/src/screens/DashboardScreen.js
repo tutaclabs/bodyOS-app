@@ -356,7 +356,7 @@ export function DashboardScreen() {
       ) : (
         <ScrollView
           ref={scrollViewRef}
-          contentContainerStyle={{ paddingBottom: 24 }}
+          contentContainerStyle={{ paddingBottom: 100 }}
           onScroll={handleScroll}
           scrollEventThrottle={400}
         >

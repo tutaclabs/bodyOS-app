@@ -79,20 +79,20 @@ const AIResearchAssistant = () => {
   return (
     <View
       style={{
-        backgroundColor: '#F261010D',
-        borderColor: '#F2610133',
+        backgroundColor: theme.card,
+        borderColor: theme.border,
         borderWidth: 1,
         borderRadius: 14,
         padding: 14
       }}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 13, fontWeight: '800', color: '#334155' }}>
+        <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
           ⚡ AI Research Assistant
         </Text>
         {keySaved ? (
           <Pressable onPress={handleRemoveKey}>
-            <Text style={{ fontSize: 11, color: '#64748B' }}>Remove Key</Text>
+            <Text style={{ fontSize: 11, color: theme.muted }}>Remove Key</Text>
           </Pressable>
         ) : (
           <Pressable onPress={() => setShowKeyInput(!showKeyInput)}>
@@ -132,7 +132,7 @@ const AIResearchAssistant = () => {
           >
             <Text style={{ color: '#000000', fontWeight: '700', fontSize: 12 }}>Save Key</Text>
           </Pressable>
-          <Text style={{ fontSize: 10, color: '#64748B', marginTop: 8 }}>
+          <Text style={{ fontSize: 10, color: theme.muted, marginTop: 8 }}>
             Your API key is stored locally. Get one at{' '}
             <Text
               style={{ color: theme.primary, textDecorationLine: 'underline' }}
@@ -191,7 +191,7 @@ const AIResearchAssistant = () => {
 
       {answer && (
         <View style={{ marginTop: 12, padding: 12, backgroundColor: theme.card, borderRadius: 10, borderWidth: 1, borderColor: theme.border }}>
-          <Text style={{ fontSize: 12, color: '#334155', lineHeight: 18 }}>{answer}</Text>
+          <Text style={{ fontSize: 12, color: theme.text, lineHeight: 18 }}>{answer}</Text>
         </View>
       )}
     </View>
@@ -237,7 +237,7 @@ export function HealthScreen() {
       {activeSection === 'goals' ? (
         <GoalModeScreen />
       ) : (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
           <WellnessMetricsScreen />
           
           <BiohackingInsightsScreen />
@@ -257,11 +257,11 @@ export function HealthScreen() {
               padding: 12
             }}
           >
-            <Text style={{ fontSize: 13, fontWeight: '800', color: '#334155' }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
               "White Market" Checklist
             </Text>
             <View style={{ marginTop: 8, gap: 6 }}>
-              <Text style={{ fontSize: 12, color: '#475569' }}>
+              <Text style={{ fontSize: 12, color: theme.muted }}>
                 • Verifiable physical business address (not just a PO Box).
               </Text>
               <Text style={{ fontSize: 12, color: '#475569' }}>
@@ -282,15 +282,15 @@ export function HealthScreen() {
               padding: 12
             }}
           >
-            <Text style={{ fontSize: 13, fontWeight: '800', color: '#334155' }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
               Empirical Summaries
             </Text>
             <View style={{ marginTop: 8, gap: 10 }}>
               <View>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text }}>
                   BPC-157 Research Summary
                 </Text>
-                <Text style={{ marginTop: 4, fontSize: 12, color: '#64748B' }}>
+                <Text style={{ marginTop: 4, fontSize: 12, color: theme.muted }}>
                   Systemic pentadecapeptide identified in gastric juice. Studies suggest
                   modulation of NO system and growth factor expression in tendon healing.
                 </Text>
