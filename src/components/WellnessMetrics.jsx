@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Save } from 'lucide-react';
+import { Activity, Save, AlertCircle } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation.js';
 import { WebLocalStorageAdapter } from '../core/storage.js';
 import { STORAGE_KEYS } from '../core/keys.js';
+import { SideEffectLogger } from './features/side-effects/SideEffectLogger.jsx';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -16,6 +17,7 @@ export default function WellnessMetrics() {
     pain: 0,
   });
   const [saved, setSaved] = useState(false);
+  const [showSideEffectLogger, setShowSideEffectLogger] = useState(false);
 
   useEffect(() => {
     const allMetrics = storage.load(STORAGE_KEYS.WELLNESS_METRICS, {});
@@ -38,7 +40,33 @@ export default function WellnessMetrics() {
         <Activity className="text-[#F26101]" size={20} />
         <h2 className="text-lg font-bold text-slate-800">{t.wellness.title}</h2>
         <span className="ml-auto text-xs text-slate-500">{t.wellness.today}</span>
+        <button
+          onClick={() => setShowSideEffectLogger(!showSideEffectLogger)}
+          className="ml-2 p-2 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors"
+          title={t.sideEffects.title}
+        >
+          <AlertCircle size={18} />
+        </button>
       </div>
+
+      {showSideEffectLogger && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold text-amber-800">{t.sideEffects.title}</h3>
+            <button
+              onClick={() => setShowSideEffectLogger(false)}
+              className="text-amber-600 hover:text-amber-800"
+            >
+              ×
+            </button>
+          </div>
+          <SideEffectLogger
+            onSave={() => {
+              setShowSideEffectLogger(false);
+            }}
+          />
+        </div>
+      )}
 
       <div className="space-y-6">
         <div>

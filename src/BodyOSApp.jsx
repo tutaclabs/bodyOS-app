@@ -33,6 +33,12 @@ import Library from './components/Library.jsx';
 import WellnessMetrics from './components/WellnessMetrics.jsx';
 import GoalMode from './components/GoalMode.jsx';
 import Profile from './components/Profile.jsx';
+import { ExpirationBadge } from './components/features/expiration-alerts/ExpirationBadge.jsx';
+import { ExpirationModal } from './components/features/expiration-alerts/ExpirationModal.jsx';
+import { ExpirationNotifications } from './components/features/expiration-alerts/ExpirationNotifications.jsx';
+import { InjectionSiteSelector } from './components/features/injection-tracker/InjectionSiteSelector.jsx';
+import { InjectionSiteMap } from './components/features/injection-tracker/InjectionSiteMap.jsx';
+import { SideEffectLogger } from './components/features/side-effects/SideEffectLogger.jsx';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -163,6 +169,7 @@ const ProtocolDashboard = () => {
   const [naturalLanguageInput, setNaturalLanguageInput] = useState('');
   const [parsing, setParsing] = useState(false);
   const [parseError, setParseError] = useState('');
+  const [expirationModalProtocol, setExpirationModalProtocol] = useState(null);
 
   useEffect(() => {
     setProtocols(storage.load(STORAGE_KEYS.PROTOCOLS, []));
@@ -454,13 +461,27 @@ const ProtocolDashboard = () => {
             className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors group relative overflow-hidden"
           >
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F26101]"></div>
-            <div className="flex flex-col ml-3">
-              <span className="font-bold text-slate-700">{p.name}</span>
+            <div className="flex flex-col ml-3 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-slate-700">{p.name}</span>
+                <ExpirationBadge
+                  expirationDate={p.expirationDate}
+                  reconstitutionDate={p.reconstitutionDate}
+                  expirationDays={p.expirationDays}
+                />
+              </div>
               <span className="text-xs text-slate-500 font-mono uppercase tracking-wider">
                 {p.cycleOn} {t.protocols.cycle.split(' / ')[0]} / {p.cycleOff} {t.protocols.cycle.split(' / ')[1]}
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => setExpirationModalProtocol(p)}
+                className="p-2 rounded-lg text-slate-400 hover:text-[#F26101] hover:bg-[#F26101]/10 transition-colors"
+                title="Set expiration date"
+              >
+                <Calendar size={16} strokeWidth={1.5} />
+              </button>
               <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></div>
               <button
                 onClick={() => deleteProtocol(p.id)}
@@ -472,6 +493,17 @@ const ProtocolDashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+      {expirationModalProtocol && (
+        <ExpirationModal
+          protocol={expirationModalProtocol}
+          onClose={() => setExpirationModalProtocol(null)}
+          onSave={() => {
+            setExpirationModalProtocol(null);
+            setProtocols(storage.load(STORAGE_KEYS.PROTOCOLS, []));
+          }}
+        />
+      )}
       </div>
     </div>
   );
@@ -890,6 +922,10 @@ export default function BodyOSApp() {
     return (
       <div className="space-y-8">
         <ProtocolDashboard />
+        <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Expiration Alerts</h3>
+          <ExpirationNotifications />
+        </div>
         <FloorTracker />
         <WellnessMetrics />
         <PersonalizedInsights />
@@ -945,6 +981,10 @@ export default function BodyOSApp() {
           <div className="space-y-8">
             <ReconstitutionWizard />
             <ProtocolDashboard />
+            <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Expiration Alerts</h3>
+              <ExpirationNotifications />
+            </div>
           </div>
           <div className="space-y-8">
             <FloorTracker />

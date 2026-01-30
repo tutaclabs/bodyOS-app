@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext.jsx';
+import { NotificationProvider } from './contexts/NotificationContext.jsx';
 import LandingPage from './LandingPage.jsx';
 import BodyOSApp from './BodyOSApp.jsx';
 import Onboarding from './components/Onboarding.jsx';
@@ -21,13 +22,15 @@ function ProtectedApp() {
 export default function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/app/*" element={<ProtectedApp />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app/*" element={<ProtectedApp />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </NotificationProvider>
     </LanguageProvider>
   );
 }

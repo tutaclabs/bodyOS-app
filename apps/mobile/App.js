@@ -6,6 +6,7 @@ import { SafeAreaView, SafeAreaProvider, useSafeAreaInsets } from 'react-native-
 import { View, Text, Pressable } from 'react-native';
 
 import { LanguageProvider, useLanguage } from './src/contexts/LanguageContext';
+import { NotificationProvider } from './src/contexts/NotificationContext';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { ToolsScreen } from './src/screens/ToolsScreen';
 import { HealthScreen } from './src/screens/HealthScreen';
@@ -318,7 +319,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <LanguageProvider>
-        <AppContent />
+        <NotificationProvider>
+          <AppContent />
+        </NotificationProvider>
       </LanguageProvider>
     </SafeAreaProvider>
   );

@@ -4,6 +4,7 @@ export const STORAGE_KEYS = {
   USER_SETTINGS: 'bodyos_settings',
   OPENAI_API_KEY: 'bodyos_openai_key',
   WELLNESS_METRICS: 'bodyos_wellness_metrics',
-  CHAT_HISTORY: 'bodyos_chat_history'
+  CHAT_HISTORY: 'bodyos_chat_history',
+  NOTIFICATIONS: 'bodyos_notifications',
 };
 
