@@ -283,9 +283,8 @@ export function ProfileScreen({ onLogout }) {
           Data Privacy
         </Text>
         <Text style={{ fontSize: 12, lineHeight: 16, color: '#94A3B8' }}>
-          All your data is stored locally on this device. No information is sent to external servers
-          except when using AI features (with your API key). You can clear all data by uninstalling
-          the app.
+          Your account data is synced with the backend server. Some data like protocols and settings
+          are also stored locally for offline access. AI features require your OpenAI API key.
         </Text>
       </Card>
     </ScrollView>

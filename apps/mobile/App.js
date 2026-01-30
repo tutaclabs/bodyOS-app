@@ -193,6 +193,7 @@ function AppContent() {
       await logoutBackend();
     } else {
       await storage.save(STORAGE_KEYS.CURRENT_USER, null);
+      await storage.save(STORAGE_KEYS.AUTH_TOKEN, null);
     }
     setIsAuthenticated(false);
     setShowLanding(true);

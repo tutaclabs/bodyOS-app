@@ -9,5 +9,6 @@ export const STORAGE_KEYS = {
   CURRENT_USER: 'bodyos_current_user',
   ACCESS_TOKEN: 'bodyos_access_token',
   REFRESH_TOKEN: 'bodyos_refresh_token',
+  AUTH_TOKEN: 'bodyos_auth_token',
   PEPTIDE_LOGS: 'bodyos_peptide_logs'
 };

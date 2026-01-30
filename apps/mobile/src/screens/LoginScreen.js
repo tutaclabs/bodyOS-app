@@ -5,6 +5,7 @@ import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
 import { isBackendConfigured, loginWithBackend, registerWithBackend } from '../core/auth-api';
 import { theme } from '../ui/theme';
+import { apiRequest } from '../core/api';
 
 const storage = new AsyncStorageAdapter();
 
@@ -46,36 +47,48 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
         return;
       }
 
-      const users = await storage.load(STORAGE_KEYS.USERS, []);
-
       if (isSignUp) {
-        const existingUser = users.find((u) => u.email === email.toLowerCase());
-        if (existingUser) {
-          Alert.alert('Error', 'Email already registered');
-          setLoading(false);
-          return;
-        }
-
-        const newUser = {
-          email: email.toLowerCase(),
-          password: password,
-          createdAt: Date.now(),
+        const response = await apiRequest('/auth/signup', {
+          method: 'POST',
+          body: {
+            email: email.toLowerCase(),
+            password: password,
+          },
+        });
+        
+        const userData = {
+          email: response.user?.email || email.toLowerCase(),
+          id: response.user?.id || response.user?._id,
+          token: response.token,
+          ...response.user,
         };
-        users.push(newUser);
-        await storage.save(STORAGE_KEYS.USERS, users);
-        await storage.save(STORAGE_KEYS.CURRENT_USER, newUser);
+        
+        await storage.save(STORAGE_KEYS.CURRENT_USER, userData);
+        if (response.token) {
+          await storage.save(STORAGE_KEYS.AUTH_TOKEN, response.token);
+        }
         Alert.alert('Success', 'Account created!');
         onLoginSuccess();
       } else {
-        const user = users.find(
-          (u) => u.email === email.toLowerCase() && u.password === password
-        );
-        if (!user) {
-          Alert.alert('Error', 'Invalid email or password');
-          setLoading(false);
-          return;
+        const response = await apiRequest('/auth/login', {
+          method: 'POST',
+          body: {
+            email: email.toLowerCase(),
+            password: password,
+          },
+        });
+        
+        const userData = {
+          email: response.user?.email || email.toLowerCase(),
+          id: response.user?.id || response.user?._id,
+          token: response.token,
+          ...response.user,
+        };
+        
+        await storage.save(STORAGE_KEYS.CURRENT_USER, userData);
+        if (response.token) {
+          await storage.save(STORAGE_KEYS.AUTH_TOKEN, response.token);
         }
-        await storage.save(STORAGE_KEYS.CURRENT_USER, user);
         onLoginSuccess();
       }
     } catch (error) {
@@ -241,7 +254,7 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
         }}
       >
         <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', lineHeight: 16 }}>
-          For testing purposes only. Credentials are stored locally on your device.
+          Connected to backend API. Your data is synced with the server.
         </Text>
       </View>
     </ScrollView>
