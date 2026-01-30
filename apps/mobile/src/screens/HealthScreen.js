@@ -104,7 +104,7 @@ const AIResearchAssistant = () => {
       </View>
 
       {showKeyInput && !keySaved && !isBackendConfigured() && (
-        <View style={{ marginBottom: 12, padding: 12, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#F2610133' }}>
+        <View style={{ marginBottom: 12, padding: 12, backgroundColor: theme.card, borderRadius: 12, borderWidth: 1, borderColor: theme.border }}>
           <TextInput
             value={apiKey}
             onChangeText={setApiKey}
@@ -130,7 +130,7 @@ const AIResearchAssistant = () => {
               alignItems: 'center'
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12 }}>Save Key</Text>
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 12 }}>Save Key</Text>
           </Pressable>
           <Text style={{ fontSize: 10, color: '#64748B', marginTop: 8 }}>
             Your API key is stored locally. Get one at{' '}
@@ -158,7 +158,7 @@ const AIResearchAssistant = () => {
               paddingVertical: 10,
               fontSize: 13,
               color: theme.text,
-              backgroundColor: '#fff',
+              backgroundColor: theme.card,
               marginBottom: 10
             }}
             editable={!loading}
@@ -175,9 +175,9 @@ const AIResearchAssistant = () => {
             }}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color="#000000" />
             ) : (
-              <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13 }}>Ask AI</Text>
+              <Text style={{ color: '#000000', fontWeight: '800', fontSize: 13 }}>Ask AI</Text>
             )}
           </Pressable>
         </>
@@ -190,7 +190,7 @@ const AIResearchAssistant = () => {
       )}
 
       {answer && (
-        <View style={{ marginTop: 12, padding: 12, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#E2E8F0' }}>
+        <View style={{ marginTop: 12, padding: 12, backgroundColor: theme.card, borderRadius: 10, borderWidth: 1, borderColor: theme.border }}>
           <Text style={{ fontSize: 12, color: '#334155', lineHeight: 18 }}>{answer}</Text>
         </View>
       )}
@@ -203,18 +203,18 @@ export function HealthScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: '#fff' }}>
+      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.bg }}>
         <Pressable
           onPress={() => setActiveSection('wellness')}
           style={{
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'wellness' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'wellness' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'wellness' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'wellness' ? '#000000' : theme.text }}>
             💊 Wellness
           </Text>
         </Pressable>
@@ -224,11 +224,11 @@ export function HealthScreen() {
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'goals' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'goals' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'goals' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'goals' ? '#000000' : theme.text }}>
             🎯 Goals
           </Text>
         </Pressable>

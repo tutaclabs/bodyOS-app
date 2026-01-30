@@ -122,7 +122,7 @@ export function BodyOSIntelligenceScreen() {
                       maxWidth: '80%',
                       padding: 12,
                       borderRadius: 12,
-                      backgroundColor: msg.role === 'user' ? theme.primary : '#fff',
+                      backgroundColor: msg.role === 'user' ? theme.primary : theme.card,
                       borderWidth: msg.role === 'assistant' ? 1 : 0,
                       borderColor: '#E2E8F0',
                     }}
@@ -130,7 +130,7 @@ export function BodyOSIntelligenceScreen() {
                     <Text
                       style={{
                         fontSize: 13,
-                        color: msg.role === 'user' ? '#fff' : theme.text,
+                        color: msg.role === 'user' ? '#000000' : theme.text,
                         lineHeight: 18,
                       }}
                     >
@@ -145,7 +145,7 @@ export function BodyOSIntelligenceScreen() {
                     style={{
                       padding: 12,
                       borderRadius: 12,
-                      backgroundColor: '#fff',
+                      backgroundColor: theme.card,
                       borderWidth: 1,
                       borderColor: '#E2E8F0',
                     }}
@@ -204,9 +204,9 @@ export function BodyOSIntelligenceScreen() {
               }}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color="#000000" />
               ) : (
-                <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Send</Text>
+                <Text style={{ color: '#000000', fontWeight: '700', fontSize: 14 }}>Send</Text>
               )}
             </Pressable>
           </View>

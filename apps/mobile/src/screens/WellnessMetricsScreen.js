@@ -231,7 +231,7 @@ export function WellnessMetricsScreen() {
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>
               {saved ? 'Saved!' : t.wellness.save}
             </Text>
           </Pressable>

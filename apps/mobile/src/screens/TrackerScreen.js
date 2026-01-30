@@ -62,7 +62,7 @@ function SimpleChart({ data, label, color = theme.primary, unit = '' }) {
                     borderRadius: 4,
                     zIndex: 10
                   }}>
-                    <Text style={{ fontSize: 9, fontWeight: '700', color: '#fff' }}>
+                    <Text style={{ fontSize: 9, fontWeight: '700', color: '#000000' }}>
                       {point.value.toFixed(0)}{unit}
                     </Text>
                   </View>
@@ -74,7 +74,7 @@ function SimpleChart({ data, label, color = theme.primary, unit = '' }) {
                     backgroundColor: isToday ? color : (point.value > 0 ? color : '#CBD5E1'),
                     borderRadius: 4,
                     borderWidth: isToday ? 2 : 0,
-                    borderColor: '#fff',
+                    borderColor: theme.primary,
                     shadowColor: point.value > 0 ? color : 'transparent',
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.2,
@@ -239,7 +239,7 @@ function CalendarView({ selectedDate, onSelectDate, logs }) {
                       width: 4,
                       height: 4,
                       borderRadius: 2,
-                      backgroundColor: isSelected ? '#fff' : theme.primary
+                      backgroundColor: isSelected ? theme.primary : theme.card
                     }}
                   />
                 )}
@@ -522,7 +522,7 @@ export function TrackerScreen() {
               borderRadius: 8
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12 }}>
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 12 }}>
               {t.tracker?.addDose || '+ Add Dose'}
             </Text>
           </Pressable>
@@ -618,7 +618,7 @@ export function TrackerScreen() {
                 key={idx}
                 style={{
                   padding: 10,
-                  backgroundColor: '#fff',
+                  backgroundColor: theme.card,
                   borderRadius: 8,
                   borderWidth: 1,
                   borderColor: '#FDE68A'
@@ -826,7 +826,7 @@ export function TrackerScreen() {
                     opacity: (!formData.protocolId || !formData.doseAmount) ? 0.5 : 1
                   }}
                 >
-                  <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>
+                  <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>
                     {t.common?.save || 'Save'}
                   </Text>
                 </Pressable>

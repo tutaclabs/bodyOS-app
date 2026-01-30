@@ -183,7 +183,7 @@ export function GoalModeScreen() {
                     borderRadius: 12,
                     borderWidth: 2,
                     borderColor: isCompleted ? '#10B981' : '#E2E8F0',
-                    backgroundColor: isCompleted ? '#ECFDF5' : '#fff',
+                    backgroundColor: isCompleted ? theme.emeraldBg : theme.card,
                   }}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -199,7 +199,7 @@ export function GoalModeScreen() {
                         justifyContent: 'center',
                       }}
                     >
-                      {isCompleted && <Text style={{ color: '#fff', fontSize: 12 }}>✓</Text>}
+                      {isCompleted && <Text style={{ color: theme.emeraldText, fontSize: 12 }}>✓</Text>}
                     </View>
                     <Text
                       style={{
@@ -273,7 +273,7 @@ export function GoalModeScreen() {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>
+                <Text style={{ color: '#000000', fontWeight: '700', fontSize: 14 }}>
                   {t.goals.startProgram}
                 </Text>
               </Pressable>

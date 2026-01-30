@@ -130,7 +130,7 @@ export function LoginScreen({ onLoginSuccess, onBack }) {
             marginBottom: 16,
           }}
         >
-          <Text style={{ color: '#fff', fontSize: 32, fontWeight: '900' }}>L</Text>
+          <Text style={{ color: '#000000', fontSize: 32, fontWeight: '900' }}>L</Text>
         </View>
         <Text style={{ fontSize: 28, fontWeight: '900', color: theme.text, marginBottom: 8 }}>
           {t.app.name}

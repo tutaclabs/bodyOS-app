@@ -273,7 +273,7 @@ export function ProfileScreen({ onLogout }) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>Logout</Text>
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>Logout</Text>
           </Pressable>
         )}
       </Card>

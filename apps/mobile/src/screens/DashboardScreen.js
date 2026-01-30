@@ -320,18 +320,18 @@ export function DashboardScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: '#fff' }}>
+      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.bg }}>
         <Pressable
           onPress={() => setActiveSection('protocols')}
           style={{
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'protocols' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'protocols' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'protocols' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'protocols' ? '#000000' : theme.text }}>
             📊 Protocols
           </Text>
         </Pressable>
@@ -341,11 +341,11 @@ export function DashboardScreen() {
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'tracker' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'tracker' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'tracker' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'tracker' ? '#000000' : theme.text }}>
             📅 Tracker
           </Text>
         </Pressable>
@@ -473,11 +473,11 @@ export function DashboardScreen() {
                     flex: 1,
                     paddingVertical: 8,
                     borderRadius: 10,
-                    backgroundColor: !useNaturalLanguage ? theme.primary : '#F1F5F9',
+                    backgroundColor: !useNaturalLanguage ? theme.primary : theme.card,
                     alignItems: 'center'
                   }}
                 >
-                  <Text style={{ color: !useNaturalLanguage ? '#fff' : theme.text, fontSize: 11, fontWeight: '700' }}>
+                  <Text style={{ color: !useNaturalLanguage ? '#000000' : theme.text, fontSize: 11, fontWeight: '700' }}>
                     Manual
                   </Text>
                 </Pressable>
@@ -487,11 +487,11 @@ export function DashboardScreen() {
                     flex: 1,
                     paddingVertical: 8,
                     borderRadius: 10,
-                    backgroundColor: useNaturalLanguage ? theme.primary : '#F1F5F9',
+                    backgroundColor: useNaturalLanguage ? theme.primary : theme.card,
                     alignItems: 'center'
                   }}
                 >
-                  <Text style={{ color: useNaturalLanguage ? '#fff' : theme.text, fontSize: 11, fontWeight: '700' }}>
+                  <Text style={{ color: useNaturalLanguage ? '#000000' : theme.text, fontSize: 11, fontWeight: '700' }}>
                     ⚡ AI Parse
                   </Text>
                 </Pressable>
@@ -626,7 +626,7 @@ export function DashboardScreen() {
                             borderRadius: 12,
                             borderWidth: 1,
                             borderColor: timeOfDay === time ? theme.primary : theme.border,
-                            backgroundColor: timeOfDay === time ? `${theme.primary}15` : '#fff',
+                            backgroundColor: timeOfDay === time ? `${theme.primary}15` : theme.card,
                             alignItems: 'center'
                           }}
                         >
@@ -886,9 +886,9 @@ export function DashboardScreen() {
               }}
             >
               {loadingInsights ? (
-                <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>Analyzing...</Text>
+                <Text style={{ color: '#000000', fontSize: 11, fontWeight: '700' }}>Analyzing...</Text>
               ) : (
-                <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>⚡ Generate</Text>
+                <Text style={{ color: '#000000', fontSize: 11, fontWeight: '700' }}>⚡ Generate</Text>
               )}
             </Pressable>
           </View>
@@ -906,7 +906,7 @@ export function DashboardScreen() {
                     key={idx}
                     style={{
                       padding: 12,
-                      backgroundColor: '#fff',
+                      backgroundColor: theme.card,
                       borderRadius: 10,
                       borderWidth: 1,
                       borderColor: '#F2610119'
@@ -953,7 +953,7 @@ export function DashboardScreen() {
               elevation: 5
             }}
           >
-            <Text style={{ color: '#fff', fontSize: 20, fontWeight: '800' }}>↑</Text>
+            <Text style={{ color: '#000000', fontSize: 20, fontWeight: '800' }}>↑</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={scrollToBottom}
@@ -971,7 +971,7 @@ export function DashboardScreen() {
               elevation: 5
             }}
           >
-            <Text style={{ color: '#fff', fontSize: 20, fontWeight: '800' }}>↓</Text>
+            <Text style={{ color: '#000000', fontSize: 20, fontWeight: '800' }}>↓</Text>
           </TouchableOpacity>
         </View>
       )}

@@ -337,8 +337,8 @@ const ProtocolDashboard = () => {
               onClick={() => setUseNaturalLanguage(false)}
               className={`flex-1 py-1.5 rounded-button text-xs font-semibold transition-colors ${
                 !useNaturalLanguage
-                  ? 'bg-[#F26101] text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50'
+                  ? 'bg-primary text-black'
+                  : 'bg-dark-card text-gray-400 hover:bg-dark-card/80'
               }`}
             >
               {t.protocols.manualEntry}
@@ -347,8 +347,8 @@ const ProtocolDashboard = () => {
               onClick={() => setUseNaturalLanguage(true)}
               className={`flex-1 py-1.5 rounded-button text-xs font-semibold transition-colors ${
                 useNaturalLanguage
-                  ? 'bg-[#F26101] text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50'
+                  ? 'bg-primary text-black'
+                  : 'bg-dark-card text-gray-400 hover:bg-dark-card/80'
               }`}
             >
               ⚡ {t.protocols.aiParse}
@@ -402,7 +402,7 @@ const ProtocolDashboard = () => {
                 onChange={(e) => setNewProtocol({ ...newProtocol, name: e.target.value })}
               />
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200">
+                <div className="flex items-center gap-2 bg-dark-card p-2 rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
                   <span className="text-xs text-slate-400">{t.protocols.daysOn}</span>
                   <input
                     type="number"
@@ -416,7 +416,7 @@ const ProtocolDashboard = () => {
                     }
                   />
                 </div>
-                <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200">
+                <div className="flex items-center gap-2 bg-dark-card p-2 rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
                   <span className="text-xs text-slate-400">{t.protocols.daysOff}</span>
                   <input
                     type="number"
@@ -548,7 +548,7 @@ const PersonalizedInsights = () => {
           {insights.map((insight, idx) => (
             <div
               key={idx}
-              className="p-3 bg-white/90 rounded-lg border border-[#F26101]/10 shadow-soft"
+              className="p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}
             >
               <p className="text-sm text-slate-700 leading-relaxed">{insight}</p>
             </div>
@@ -591,7 +591,7 @@ const FloorTracker = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
+    <div className="bg-dark-card p-6 rounded-card border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
       <div className="flex items-center gap-2 mb-6">
         <Activity className="text-primary" size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
         <h2 className="text-lg font-bold text-white font-serif">{t.floors.title}</h2>
@@ -728,7 +728,7 @@ const AIResearchAssistant = () => {
       </div>
 
       {showKeyInput && !keySaved && (
-        <div className="mb-3 p-3 bg-white rounded-lg border border-[#F26101]/20 shadow-soft">
+        <div className="mb-3 p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
           <input
             type="password"
             value={apiKey}
@@ -787,8 +787,8 @@ const AIResearchAssistant = () => {
       )}
 
       {answer && (
-        <div className="mt-3 p-3 bg-white rounded-lg border border-[#F26101]/10 shadow-soft">
-          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">{answer}</p>
+        <div className="mt-3 p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+          <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">{answer}</p>
         </div>
       )}
     </div>
@@ -905,7 +905,7 @@ export default function BodyOSApp() {
         onClose={() => setShowDisclaimer(false)}
         onAccept={handleAcceptDisclaimer}
       />
-      <nav className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+      <nav className="sticky top-0 z-10 bg-dark-card/80 backdrop-blur-md border-b border-dark-border px-6 py-4 flex justify-between items-center" style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
@@ -969,7 +969,7 @@ export default function BodyOSApp() {
       </main>
 
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden">
-        <div className="bg-white/90 backdrop-blur-xl border border-slate-200/60 rounded-[24px] px-6 py-4 flex items-center justify-around gap-4 shadow-soft-lg">
+        <div className="bg-dark-card/90 backdrop-blur-xl border border-dark-border rounded-[24px] px-6 py-4 flex items-center justify-around gap-4" style={{ backgroundColor: 'rgba(22, 27, 34, 0.9)', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`p-2 transition-colors ${activeTab === 'dashboard' ? 'text-[#F26101]' : 'text-slate-400'}`}

@@ -21,7 +21,7 @@ export function MedicalDisclaimerModal({ isOpen, onClose, onAccept }) {
       >
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: theme.card,
             borderRadius: 20,
             padding: 20,
             maxWidth: 400,
@@ -56,7 +56,7 @@ export function MedicalDisclaimerModal({ isOpen, onClose, onAccept }) {
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>
               {t.disclaimer.accept}
             </Text>
           </Pressable>

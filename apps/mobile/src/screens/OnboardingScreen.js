@@ -124,7 +124,7 @@ export function OnboardingScreen({ onComplete }) {
                     borderRadius: 12,
                     borderWidth: 2,
                     borderColor: selectedGoals.includes(goal.key) ? theme.primary : '#E2E8F0',
-                    backgroundColor: selectedGoals.includes(goal.key) ? '#F261010D' : '#fff',
+                    backgroundColor: selectedGoals.includes(goal.key) ? `${theme.primary}15` : theme.card,
                     minWidth: '45%',
                   }}
                 >
@@ -163,7 +163,7 @@ export function OnboardingScreen({ onComplete }) {
                     borderRadius: 12,
                     borderWidth: 2,
                     borderColor: experienceLevel === level.key ? theme.primary : '#E2E8F0',
-                    backgroundColor: experienceLevel === level.key ? '#F261010D' : '#fff',
+                    backgroundColor: experienceLevel === level.key ? `${theme.primary}15` : theme.card,
                   }}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -369,7 +369,7 @@ export function OnboardingScreen({ onComplete }) {
             opacity: canProceed() ? 1 : 0.5,
           }}
         >
-          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>
+          <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>
             {step === 3 ? t.onboarding.finish : t.onboarding.next}
           </Text>
         </Pressable>

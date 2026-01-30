@@ -13,18 +13,18 @@ export function ToolsScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: '#fff' }}>
+      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.bg }}>
         <Pressable
           onPress={() => setActiveSection('calc')}
           style={{
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'calc' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'calc' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'calc' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'calc' ? '#000000' : theme.text }}>
             🧪 Calculator
           </Text>
         </Pressable>
@@ -34,11 +34,11 @@ export function ToolsScreen() {
             flex: 1,
             paddingVertical: 10,
             borderRadius: 12,
-            backgroundColor: activeSection === 'library' ? theme.primary : '#F1F5F9',
+            backgroundColor: activeSection === 'library' ? theme.primary : theme.card,
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'library' ? '#fff' : theme.text }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'library' ? '#000000' : theme.text }}>
             📚 Library
           </Text>
         </Pressable>
@@ -256,7 +256,7 @@ function LibrarySection() {
             paddingVertical: 12,
             fontSize: 14,
             color: theme.text,
-            backgroundColor: '#fff',
+            backgroundColor: theme.card,
             marginBottom: 12,
           }}
         />
@@ -278,7 +278,7 @@ function LibrarySection() {
                   style={{
                     fontSize: 12,
                     fontWeight: '700',
-                    color: selectedCategory === cat ? '#fff' : theme.text,
+                    color: selectedCategory === cat ? '#000000' : theme.text,
                   }}
                 >
                   {cat}

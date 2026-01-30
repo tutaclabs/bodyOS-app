@@ -91,7 +91,7 @@ export function LibraryScreen() {
                   style={{
                     fontSize: 12,
                     fontWeight: '700',
-                    color: selectedCategory === cat ? '#fff' : theme.text,
+                    color: selectedCategory === cat ? '#000000' : theme.text,
                   }}
                 >
                   {cat}
