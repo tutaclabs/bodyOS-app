@@ -31,7 +31,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       where.severity = { gte: parseInt(query.minSeverity, 10) };
     }
 
-    const sideEffects = await prisma.sideEffect.findMany({
+    const sideEffects = await (prisma as any).sideEffect.findMany({
       where,
       orderBy: { date: 'desc' },
     });
@@ -58,7 +58,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_severity' });
     }
 
-    const sideEffect = await prisma.sideEffect.create({
+    const sideEffect = await (prisma as any).sideEffect.create({
       data: {
         userId,
         protocolId: body.protocolId || null,
@@ -88,7 +88,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_id' });
     }
 
-    const existing = await prisma.sideEffect.findFirst({
+    const existing = await (prisma as any).sideEffect.findFirst({
       where: { id: params.id, userId },
     });
 
@@ -122,7 +122,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_id' });
     }
 
-    const existing = await prisma.sideEffect.findFirst({
+    const existing = await (prisma as any).sideEffect.findFirst({
       where: { id: params.id, userId },
     });
 
@@ -130,7 +130,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       return reply.code(404).send({ error: 'not_found' });
     }
 
-    await prisma.sideEffect.delete({
+    await (prisma as any).sideEffect.delete({
       where: { id: params.id },
     });
 
@@ -156,7 +156,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       }
     }
 
-    const sideEffects = await prisma.sideEffect.findMany({
+    const sideEffects = await (prisma as any).sideEffect.findMany({
       where,
       orderBy: { date: 'asc' },
       select: {
@@ -176,7 +176,8 @@ export async function sideEffectRoutes(app: FastifyInstance) {
     const protocols = (state?.protocols as any[]) || [];
     const protocolMap = new Map(protocols.map((p: any) => [p.id, p]));
 
-    const timeline = sideEffects.map((se) => ({
+    type SideEffectType = { id: string; date: Date; symptom: string; severity: number; protocolId: string | null };
+    const timeline = sideEffects.map((se: SideEffectType) => ({
       date: se.date.toISOString().split('T')[0],
       symptom: se.symptom,
       severity: se.severity,

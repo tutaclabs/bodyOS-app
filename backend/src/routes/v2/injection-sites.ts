@@ -17,7 +17,7 @@ const SITE_LOCATIONS = [
 export async function injectionSiteRoutes(app: FastifyInstance) {
   app.get('/v2/injection-sites', { preHandler: app.authenticate }, async (request) => {
     const userId = (request.user as { sub: string }).sub;
-    const sites = await prisma.injectionSite.findMany({
+    const sites = await (prisma as any).injectionSite.findMany({
       where: { userId },
       orderBy: { lastUsedDate: 'desc' },
     });
@@ -35,7 +35,7 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_site_location' });
     }
 
-    const existing = await prisma.injectionSite.findFirst({
+    const existing = await (prisma as any).injectionSite.findFirst({
       where: {
         userId,
         siteLocation: body.siteLocation,
@@ -46,7 +46,7 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
     let site;
 
     if (existing) {
-      site = await prisma.injectionSite.update({
+      site = await (prisma as any).injectionSite.update({
         where: { id: existing.id },
         data: {
           lastUsedDate: now,
@@ -55,7 +55,7 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
         },
       });
     } else {
-      site = await prisma.injectionSite.create({
+      site = await (prisma as any).injectionSite.create({
         data: {
           userId,
           siteLocation: body.siteLocation,
@@ -78,7 +78,7 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: 'invalid_id' });
     }
 
-    const site = await prisma.injectionSite.findFirst({
+    const site = await (prisma as any).injectionSite.findFirst({
       where: { id: params.id, userId },
     });
 
@@ -86,7 +86,7 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
       return reply.code(404).send({ error: 'not_found' });
     }
 
-    const updated = await prisma.injectionSite.update({
+    const updated = await (prisma as any).injectionSite.update({
       where: { id: params.id },
       data: { notes: body.notes },
     });
@@ -96,13 +96,14 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
 
   app.get('/v2/injection-sites/suggest', { preHandler: app.authenticate }, async (request) => {
     const userId = (request.user as { sub: string }).sub;
-    const sites = await prisma.injectionSite.findMany({
+    const sites = await (prisma as any).injectionSite.findMany({
       where: { userId },
     });
 
     const now = new Date();
-    const siteMap = new Map<string, typeof sites[0]>();
-    sites.forEach((s) => siteMap.set(s.siteLocation, s));
+    type SiteType = { siteLocation: string; lastUsedDate: Date | null; usageCount: number };
+    const siteMap = new Map<string, SiteType>();
+    sites.forEach((s: SiteType) => siteMap.set(s.siteLocation, s));
 
     const suggestions = SITE_LOCATIONS.map((location) => {
       const site = siteMap.get(location);
@@ -134,13 +135,13 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
 
     const recommended = suggestions[0];
     const recentSites = sites
-      .filter((s) => s.lastUsedDate)
-      .sort((a, b) => {
+      .filter((s: SiteType) => s.lastUsedDate)
+      .sort((a: SiteType, b: SiteType) => {
         if (!a.lastUsedDate || !b.lastUsedDate) return 0;
         return b.lastUsedDate.getTime() - a.lastUsedDate.getTime();
       })
       .slice(0, 3)
-      .map((s) => s.siteLocation);
+      .map((s: SiteType) => s.siteLocation);
 
     const needsRotation = recentSites.length >= 3 && new Set(recentSites).size === 1;
 

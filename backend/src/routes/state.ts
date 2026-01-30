@@ -6,7 +6,7 @@ export async function stateRoutes(app: FastifyInstance) {
     const userId = (request.user as { sub: string }).sub;
     const state = await prisma.userState.findUnique({
       where: { userId },
-      select: { protocols: true, nutritionFloors: true, wellnessMetrics: true, chatHistory: true, notifications: true, updatedAt: true },
+      select: { protocols: true, nutritionFloors: true, wellnessMetrics: true, chatHistory: true, notifications: true, updatedAt: true } as any,
     });
     return {
       state:
@@ -79,8 +79,8 @@ export async function stateRoutes(app: FastifyInstance) {
     if (body.notifications === undefined) return reply.code(400).send({ error: 'invalid_input' });
     const updated = await prisma.userState.upsert({
       where: { userId },
-      create: { userId, notifications: body.notifications as any },
-      update: { notifications: body.notifications as any },
+      create: { userId, notifications: body.notifications as any } as any,
+      update: { notifications: body.notifications as any } as any,
       select: { updatedAt: true },
     });
     return { ok: true, updatedAt: updated.updatedAt };
