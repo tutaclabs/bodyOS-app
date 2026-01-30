@@ -144,7 +144,7 @@ export function BiohackingInsightsScreen() {
                     paddingHorizontal: 12,
                     paddingVertical: 6,
                     borderRadius: 8,
-                    backgroundColor: dateRange === days ? theme.primary : '#F1F5F9'
+                    backgroundColor: dateRange === days ? theme.primary : theme.card
                   }}
                 >
                   <Text style={{ 

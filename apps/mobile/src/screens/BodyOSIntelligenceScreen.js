@@ -95,7 +95,7 @@ export function BodyOSIntelligenceScreen() {
           <View
             style={{
               height: 300,
-              backgroundColor: '#F8FAFC',
+              backgroundColor: theme.card,
               borderRadius: 12,
               padding: 12,
               marginBottom: 12,

@@ -123,7 +123,7 @@ export function CalcScreen() {
               marginTop: 14,
               padding: 12,
               borderRadius: 12,
-              backgroundColor: '#FFFBEB',
+              backgroundColor: theme.card,
               borderColor: '#FDE68A',
               borderWidth: 1
             }}

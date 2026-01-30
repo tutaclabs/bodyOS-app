@@ -37,7 +37,7 @@ function SimpleChart({ data, label, color = theme.primary, unit = '' }) {
       
       <View style={{ 
         height: chartHeight + 40, 
-        backgroundColor: '#F8FAFC', 
+        backgroundColor: theme.card, 
         borderRadius: 12, 
         padding: 12,
         borderWidth: 1,
@@ -540,7 +540,7 @@ export function TrackerScreen() {
                 onPress={() => startEdit(log)}
                 style={{
                   padding: 12,
-                  backgroundColor: '#F8FAFC',
+                  backgroundColor: theme.card,
                   borderRadius: 12,
                   borderWidth: 1,
                   borderColor: '#E2E8F0'

@@ -69,7 +69,7 @@ export function LibraryScreen() {
             paddingVertical: 12,
             fontSize: 14,
             color: theme.text,
-            backgroundColor: '#fff',
+            backgroundColor: theme.card,
             marginBottom: 12,
           }}
         />
@@ -84,7 +84,7 @@ export function LibraryScreen() {
                   paddingHorizontal: 16,
                   paddingVertical: 8,
                   borderRadius: 20,
-                  backgroundColor: selectedCategory === cat ? theme.primary : '#F1F5F9',
+                  backgroundColor: selectedCategory === cat ? theme.primary : theme.card,
                 }}
               >
                 <Text
@@ -103,7 +103,7 @@ export function LibraryScreen() {
 
         <View
           style={{
-            backgroundColor: '#F1F5F9',
+            backgroundColor: theme.card,
             borderColor: '#E2E8F0',
             borderWidth: 1,
             borderRadius: 14,
@@ -152,7 +152,7 @@ export function LibraryScreen() {
                           paddingHorizontal: 8,
                           paddingVertical: 4,
                           borderRadius: 8,
-                          backgroundColor: '#F1F5F9',
+                          backgroundColor: theme.card,
                         }}
                       >
                         <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted }}>

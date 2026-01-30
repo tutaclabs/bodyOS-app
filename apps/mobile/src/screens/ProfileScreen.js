@@ -97,7 +97,7 @@ export function ProfileScreen({ onLogout }) {
         </View>
 
         {currentUser && (
-          <View style={{ marginBottom: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: '#E2E8F0' }}>
+            <View style={{ marginBottom: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: theme.border }}>
             <Text style={{ fontSize: 13, fontWeight: '700', color: theme.muted, marginBottom: 4 }}>
               Email
             </Text>
@@ -151,12 +151,14 @@ export function ProfileScreen({ onLogout }) {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 12,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderRadius: 12,
+                  borderWidth: 1,
+                  borderColor: theme.border,
                 }}
               >
                 <Text style={{ fontSize: 14, fontWeight: '700', color: theme.text }}>
-                  {getExperienceLabel(experienceLevel)}
+                  {getExperienceLabel(experienceLevel) || 'Not set'}
                 </Text>
               </View>
             </View>
@@ -171,7 +173,7 @@ export function ProfileScreen({ onLogout }) {
                     {t.onboarding.lifestyle.sleepQuality}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
                       <View
                         style={{
                           height: '100%',
@@ -191,7 +193,7 @@ export function ProfileScreen({ onLogout }) {
                     {t.onboarding.lifestyle.stress}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
                       <View
                         style={{
                           height: '100%',
@@ -211,7 +213,7 @@ export function ProfileScreen({ onLogout }) {
                     {t.onboarding.lifestyle.trainingFreq}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
                       <View
                         style={{
                           height: '100%',
@@ -247,16 +249,16 @@ export function ProfileScreen({ onLogout }) {
           <View
             style={{
               padding: 20,
-              backgroundColor: '#FFFBEB',
+              backgroundColor: theme.card,
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: '#FDE68A',
+              borderColor: theme.border,
             }}
           >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: '#92400E', marginBottom: 8 }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
               Onboarding Not Completed
             </Text>
-            <Text style={{ fontSize: 12, color: '#92400E', lineHeight: 18 }}>
+            <Text style={{ fontSize: 12, color: theme.muted, lineHeight: 18 }}>
               Complete onboarding to personalize your experience and see your profile information here.
             </Text>
           </View>

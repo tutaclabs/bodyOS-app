@@ -104,7 +104,7 @@ export function GoalModeScreen() {
             <Text style={{ fontSize: 13, color: theme.muted }}>
               {t.goals.day} {currentDay} {t.goals.of} {activeProgram.duration}
             </Text>
-            <View style={{ flex: 1, height: 6, backgroundColor: '#F1F5F9', borderRadius: 3, overflow: 'hidden' }}>
+            <View style={{ flex: 1, height: 6, backgroundColor: theme.card, borderRadius: 3, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
               <View
                 style={{
                   height: '100%',
@@ -133,7 +133,7 @@ export function GoalModeScreen() {
               style={{
                 flex: 1,
                 paddingVertical: 10,
-                backgroundColor: '#F1F5F9',
+                backgroundColor: theme.card,
                 borderRadius: 12,
                 alignItems: 'center',
                 opacity: currentDay === 1 ? 0.5 : 1,
@@ -155,7 +155,7 @@ export function GoalModeScreen() {
               style={{
                 flex: 1,
                 paddingVertical: 10,
-                backgroundColor: '#F1F5F9',
+                backgroundColor: theme.card,
                 borderRadius: 12,
                 alignItems: 'center',
                 opacity: currentDay === activeProgram.duration ? 0.5 : 1,

@@ -178,7 +178,7 @@ function CalcSection() {
               marginTop: 14,
               padding: 12,
               borderRadius: 12,
-              backgroundColor: '#FFFBEB',
+              backgroundColor: theme.card,
               borderColor: '#FDE68A',
               borderWidth: 1
             }}
@@ -271,7 +271,7 @@ function LibrarySection() {
                   paddingHorizontal: 16,
                   paddingVertical: 8,
                   borderRadius: 20,
-                  backgroundColor: selectedCategory === cat ? theme.primary : '#F1F5F9',
+                  backgroundColor: selectedCategory === cat ? theme.primary : theme.card,
                 }}
               >
                 <Text
@@ -290,7 +290,7 @@ function LibrarySection() {
 
         <View
           style={{
-            backgroundColor: '#F1F5F9',
+            backgroundColor: theme.card,
             borderColor: '#E2E8F0',
             borderWidth: 1,
             borderRadius: 14,
@@ -339,7 +339,7 @@ function LibrarySection() {
                           paddingHorizontal: 8,
                           paddingVertical: 4,
                           borderRadius: 8,
-                          backgroundColor: '#F1F5F9',
+                          backgroundColor: theme.card,
                         }}
                       >
                         <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted }}>

@@ -64,7 +64,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,
@@ -72,7 +72,7 @@ export function WellnessMetricsScreen() {
               >
                 <Text style={{ fontWeight: '800', color: theme.muted, fontSize: 18 }}>-</Text>
               </Pressable>
-              <View style={{ flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+              <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
                 <View
                   style={{
                     height: '100%',
@@ -86,7 +86,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,
@@ -139,7 +139,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,
@@ -160,7 +160,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,
@@ -185,7 +185,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,
@@ -193,7 +193,7 @@ export function WellnessMetricsScreen() {
               >
                 <Text style={{ fontWeight: '800', color: theme.muted, fontSize: 18 }}>-</Text>
               </Pressable>
-              <View style={{ flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+              <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
                 <View
                   style={{
                     height: '100%',
@@ -207,7 +207,7 @@ export function WellnessMetricsScreen() {
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 10,
-                  backgroundColor: '#F1F5F9',
+                  backgroundColor: theme.card,
                   borderWidth: 1,
                   borderColor: '#E2E8F0',
                   borderRadius: 12,

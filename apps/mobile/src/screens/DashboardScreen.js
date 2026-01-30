@@ -790,10 +790,12 @@ export function DashboardScreen() {
                 paddingHorizontal: 10,
                 paddingVertical: 4,
                 borderRadius: 999,
-                backgroundColor: '#F1F5F9'
+                backgroundColor: theme.card,
+                borderWidth: 1,
+                borderColor: theme.border
               }}
             >
-              <Text style={{ fontSize: 10, fontWeight: '800', color: '#64748B' }}>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted }}>
                 NO CALORIE TRACKING
               </Text>
             </View>
@@ -805,14 +807,14 @@ export function DashboardScreen() {
               return (
                 <View key={key} style={{ gap: 10 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <Text style={{ textTransform: 'capitalize', fontWeight: '700', color: '#475569' }}>
+                    <Text style={{ textTransform: 'capitalize', fontWeight: '700', color: theme.text }}>
                       {key}
                     </Text>
-                    <Text style={{ color: '#0F172A' }}>
+                    <Text style={{ color: theme.text }}>
                       <Text style={{ fontFamily: undefined, fontWeight: '900', fontSize: 18 }}>
                         {data.current}
                       </Text>
-                      <Text style={{ color: '#94A3B8', fontSize: 12 }}>
+                      <Text style={{ color: theme.muted, fontSize: 12 }}>
                         {' '}
                         / {data.target}
                         {data.unit} Floor
@@ -823,7 +825,9 @@ export function DashboardScreen() {
                     style={{
                       height: 8,
                       borderRadius: 999,
-                      backgroundColor: '#F1F5F9',
+                      backgroundColor: theme.card,
+                      borderWidth: 1,
+                      borderColor: theme.border,
                       overflow: 'hidden'
                     }}
                   >
@@ -845,7 +849,7 @@ export function DashboardScreen() {
                         borderRadius: 12,
                         borderWidth: 1,
                         borderColor: theme.border,
-                        backgroundColor: '#F8FAFC'
+                        backgroundColor: theme.card
                       }}
                     >
                       <Text style={{ fontWeight: '800', color: '#64748B' }}>-</Text>
@@ -858,7 +862,7 @@ export function DashboardScreen() {
                         borderRadius: 12,
                         borderWidth: 1,
                         borderColor: theme.border,
-                        backgroundColor: '#F8FAFC',
+                        backgroundColor: theme.card,
                         alignItems: 'center'
                       }}
                     >

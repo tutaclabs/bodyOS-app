@@ -250,7 +250,7 @@ export function HealthScreen() {
         <View style={{ marginTop: 12, gap: 12 }}>
           <View
             style={{
-              backgroundColor: '#F1F5F9',
+              backgroundColor: theme.card,
               borderColor: '#E2E8F0',
               borderWidth: 1,
               borderRadius: 14,
@@ -275,7 +275,7 @@ export function HealthScreen() {
 
           <View
             style={{
-              backgroundColor: '#F1F5F9',
+              backgroundColor: theme.card,
               borderColor: '#E2E8F0',
               borderWidth: 1,
               borderRadius: 14,
