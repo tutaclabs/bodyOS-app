@@ -5,6 +5,7 @@ import { theme } from '../ui/theme';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
+import { InjectionSiteSelector } from '../components/features/injection-tracker/InjectionSiteSelector';
 
 const storage = new AsyncStorageAdapter();
 
@@ -490,7 +491,6 @@ export function TrackerScreen() {
   const dailyUsageData = getDailyUsageData();
   const complianceData = calculateCompliance();
   const upcomingDoses = getUpcomingDoses();
-  const injectionSites = ['Left arm', 'Right arm', 'Stomach', 'Thigh', 'Other'];
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
@@ -768,29 +768,13 @@ export function TrackerScreen() {
                 </View>
 
                 <View>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text, marginBottom: 6 }}>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
                     {t.tracker?.injectionSite || 'Injection Site'}
                   </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                    {injectionSites.map((site) => (
-                      <Pressable
-                        key={site}
-                        onPress={() => setFormData({ ...formData, injectionSite: site })}
-                        style={{
-                          paddingHorizontal: 12,
-                          paddingVertical: 8,
-                          borderRadius: 8,
-                          borderWidth: 1,
-                          borderColor: formData.injectionSite === site ? theme.primary : theme.border,
-                          backgroundColor: formData.injectionSite === site ? `${theme.primary}15` : '#fff'
-                        }}
-                      >
-                        <Text style={{ fontSize: 12, fontWeight: '700', color: formData.injectionSite === site ? theme.primary : theme.text }}>
-                          {site}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
+                  <InjectionSiteSelector
+                    selectedSite={formData.injectionSite}
+                    onSelect={(site) => setFormData({ ...formData, injectionSite: site })}
+                  />
                 </View>
 
                 <View>

@@ -13,6 +13,8 @@ import { TrackerScreen } from './TrackerScreen';
 import { pushProtocols } from '../core/cloud';
 import { pushNutritionFloors } from '../core/cloud';
 import { isBackendConfigured } from '../core/auth-api';
+import { ExpirationBadge } from '../components/features/expiration-alerts/ExpirationBadge';
+import { ExpirationModal } from '../components/features/expiration-alerts/ExpirationModal';
 
 const storage = new AsyncStorageAdapter();
 
@@ -108,6 +110,7 @@ export function DashboardScreen() {
   const [insights, setInsights] = useState([]);
   const [loadingInsights, setLoadingInsights] = useState(false);
   const [insightsError, setInsightsError] = useState('');
+  const [expirationModalProtocol, setExpirationModalProtocol] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -699,7 +702,14 @@ export function DashboardScreen() {
                       <View style={{ position: 'relative', zIndex: 1 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                           <View style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '800', color: theme.text, fontSize: 16, marginBottom: 4 }}>{p.name}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                              <Text style={{ fontWeight: '800', color: theme.text, fontSize: 16 }}>{p.name}</Text>
+                              <ExpirationBadge
+                                expirationDate={p.expirationDate}
+                                reconstitutionDate={p.reconstitutionDate}
+                                expirationDays={p.expirationDays}
+                              />
+                            </View>
                             <Text style={{ fontSize: 11, color: theme.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                               {p.cycleOn} On / {p.cycleOff} Off Cycle
                             </Text>
@@ -709,15 +719,26 @@ export function DashboardScreen() {
                               </Text>
                             )}
                           </View>
-                          <Pressable 
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              deleteProtocol(p.id);
-                            }}
-                            style={{ padding: 6, borderRadius: 8 }}
-                          >
-                            <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 11 }}>×</Text>
-                          </Pressable>
+                          <View style={{ flexDirection: 'row', gap: 4 }}>
+                            <Pressable 
+                              onPress={(e) => {
+                                e.stopPropagation();
+                                setExpirationModalProtocol(p);
+                              }}
+                              style={{ padding: 6, borderRadius: 8 }}
+                            >
+                              <Text style={{ color: theme.primary, fontWeight: '700', fontSize: 11 }}>📅</Text>
+                            </Pressable>
+                            <Pressable 
+                              onPress={(e) => {
+                                e.stopPropagation();
+                                deleteProtocol(p.id);
+                              }}
+                              style={{ padding: 6, borderRadius: 8 }}
+                            >
+                              <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 11 }}>×</Text>
+                            </Pressable>
+                          </View>
                         </View>
                       </View>
                     </Pressable>
@@ -978,6 +999,21 @@ export function DashboardScreen() {
             <Text style={{ color: '#000000', fontSize: 20, fontWeight: '800' }}>↓</Text>
           </TouchableOpacity>
         </View>
+      )}
+
+      {expirationModalProtocol && (
+        <ExpirationModal
+          protocol={expirationModalProtocol}
+          onClose={() => {
+            setExpirationModalProtocol(null);
+            const updated = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+            setProtocols(updated);
+          }}
+          onSave={() => {
+            const updated = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+            setProtocols(updated);
+          }}
+        />
       )}
     </View>
   );

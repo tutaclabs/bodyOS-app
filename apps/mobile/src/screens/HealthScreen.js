@@ -9,6 +9,8 @@ import { WellnessMetricsScreen } from './WellnessMetricsScreen';
 import { BiohackingInsightsScreen } from './BiohackingInsightsScreen';
 import { GoalModeScreen } from './GoalModeScreen';
 import { isBackendConfigured } from '../core/auth-api';
+import { SideEffectLogger } from '../components/features/side-effects/SideEffectLogger';
+import { SideEffectList } from '../components/features/side-effects/SideEffectList';
 
 const storage = new AsyncStorageAdapter();
 
@@ -200,6 +202,7 @@ const AIResearchAssistant = () => {
 
 export function HealthScreen() {
   const [activeSection, setActiveSection] = useState('wellness');
+  const [sideEffectRefresh, setSideEffectRefresh] = useState(0);
 
   return (
     <View style={{ flex: 1 }}>
@@ -312,6 +315,19 @@ export function HealthScreen() {
 
           <Card>
             <AIResearchAssistant />
+          </Card>
+
+          <Card>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
+              Side Effect Tracking
+            </Text>
+            <SideEffectLogger
+              onSave={() => setSideEffectRefresh(prev => prev + 1)}
+            />
+          </Card>
+
+          <Card>
+            <SideEffectList key={sideEffectRefresh} />
           </Card>
         </ScrollView>
       )}
