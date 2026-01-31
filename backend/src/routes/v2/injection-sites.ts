@@ -128,20 +128,24 @@ export async function injectionSiteRoutes(app: FastifyInstance) {
       };
     });
 
-    suggestions.sort((a, b) => {
-      if (a.priority !== b.priority) return a.priority - b.priority;
-      return b.daysSinceUse - a.daysSinceUse;
-    });
+    if (Array.isArray(suggestions)) {
+      suggestions.sort((a, b) => {
+        if (a.priority !== b.priority) return a.priority - b.priority;
+        return b.daysSinceUse - a.daysSinceUse;
+      });
+    }
 
     const recommended = suggestions[0];
-    const recentSites = sites
-      .filter((s: SiteType) => s.lastUsedDate)
-      .sort((a: SiteType, b: SiteType) => {
-        if (!a.lastUsedDate || !b.lastUsedDate) return 0;
-        return b.lastUsedDate.getTime() - a.lastUsedDate.getTime();
-      })
-      .slice(0, 3)
-      .map((s: SiteType) => s.siteLocation);
+    const recentSites = Array.isArray(sites)
+      ? sites
+          .filter((s: SiteType) => s.lastUsedDate)
+          .sort((a: SiteType, b: SiteType) => {
+            if (!a.lastUsedDate || !b.lastUsedDate) return 0;
+            return b.lastUsedDate.getTime() - a.lastUsedDate.getTime();
+          })
+          .slice(0, 3)
+          .map((s: SiteType) => s.siteLocation)
+      : [];
 
     const needsRotation = recentSites.length >= 3 && new Set(recentSites).size === 1;
 

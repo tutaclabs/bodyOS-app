@@ -36,6 +36,10 @@ export function getUnreadCount(notifications) {
 }
 
 export function filterNotifications(notifications, filters = {}) {
+  if (!Array.isArray(notifications)) {
+    return [];
+  }
+
   let filtered = [...notifications];
 
   if (filters.unreadOnly) {

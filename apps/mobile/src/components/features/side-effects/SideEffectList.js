@@ -32,7 +32,7 @@ export function SideEffectList() {
   const loadSideEffects = () => {
     const allEffects = storage.load(STORAGE_KEYS.SIDE_EFFECTS, []);
     
-    let filtered = allEffects;
+    let filtered = Array.isArray(allEffects) ? allEffects : [];
     
     if (filters.startDate) {
       filtered = filtered.filter(se => se.date >= filters.startDate);
@@ -47,7 +47,9 @@ export function SideEffectList() {
       filtered = filtered.filter(se => se.severity >= parseInt(filters.minSeverity, 10));
     }
     
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    if (Array.isArray(filtered)) {
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
     setSideEffects(filtered);
   };
 

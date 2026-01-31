@@ -484,7 +484,7 @@ export function TrackerScreen() {
       }
     });
 
-    return upcoming.sort((a, b) => a.date.localeCompare(b.date));
+    return Array.isArray(upcoming) ? upcoming.sort((a, b) => a.date.localeCompare(b.date)) : [];
   };
 
   const selectedDateLogs = loadLogsForDate(selectedDate);

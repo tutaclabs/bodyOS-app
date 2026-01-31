@@ -86,8 +86,12 @@ export async function protocolRoutes(app: FastifyInstance) {
       }
     });
 
-    expiring.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
-    expired.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
+    if (Array.isArray(expiring)) {
+      expiring.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
+    }
+    if (Array.isArray(expired)) {
+      expired.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
+    }
 
     return { expiring, expired };
   });
