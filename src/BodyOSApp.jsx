@@ -480,7 +480,7 @@ const ProtocolDashboard = () => {
                 className="p-2 rounded-lg text-slate-400 hover:text-[#F26101] hover:bg-[#F26101]/10 transition-colors"
                 title="Set expiration date"
               >
-                <Calendar size={16} strokeWidth={1.5} />
+                <Calendar size={16} strokeWidth={1.5} style={{ color: '#64748b' }} />
               </button>
               <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></div>
               <button
@@ -923,6 +923,10 @@ export default function BodyOSApp() {
       <div className="space-y-8">
         <ProtocolDashboard />
         <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
+          <h3 className="text-lg font-bold text-slate-800 mb-4">Injection Site Tracker</h3>
+          <InjectionSiteMap />
+        </div>
+        <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Expiration Alerts</h3>
           <ExpirationNotifications />
         </div>
@@ -981,6 +985,10 @@ export default function BodyOSApp() {
           <div className="space-y-8">
             <ReconstitutionWizard />
             <ProtocolDashboard />
+            <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
+              <h3 className="text-lg font-bold text-slate-800 mb-4">Injection Site Tracker</h3>
+              <InjectionSiteMap />
+            </div>
             <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
               <h3 className="text-lg font-bold text-slate-800 mb-4">Expiration Alerts</h3>
               <ExpirationNotifications />
