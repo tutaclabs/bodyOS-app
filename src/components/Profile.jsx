@@ -74,7 +74,7 @@ export default function Profile({ onLogout }) {
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
         <div className="flex items-center gap-3 mb-6">
-          <User className="text-[#F26101]" size={20} />
+          <User className="text-[#FF4F41]" size={20} />
           <h2 className="text-lg font-bold text-slate-800">Profile</h2>
         </div>
 
@@ -99,7 +99,7 @@ export default function Profile({ onLogout }) {
                   {goals.map((goal, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1.5 bg-[#F261010D] border border-[#F2610133] rounded-lg text-xs font-semibold text-[#F26101]"
+                      className="px-3 py-1.5 bg-[#FF4F410D] border border-[#FF4F4133] rounded-lg text-xs font-semibold text-[#FF4F41]"
                     >
                       {getGoalLabel(goal)}
                     </span>
@@ -129,7 +129,7 @@ export default function Profile({ onLogout }) {
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#F26101] transition-all"
+                        className="h-full bg-[#FF4F41] transition-all"
                         style={{ width: `${((lifestyle.sleepQuality || 5) / 10) * 100}%` }}
                       />
                     </div>
@@ -146,7 +146,7 @@ export default function Profile({ onLogout }) {
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#F26101] transition-all"
+                        className="h-full bg-[#FF4F41] transition-all"
                         style={{ width: `${((lifestyle.stress || 5) / 10) * 100}%` }}
                       />
                     </div>
@@ -163,7 +163,7 @@ export default function Profile({ onLogout }) {
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#F26101] transition-all"
+                        className="h-full bg-[#FF4F41] transition-all"
                         style={{ width: `${((lifestyle.trainingFreq || 3) / 7) * 100}%` }}
                       />
                     </div>
@@ -195,14 +195,14 @@ export default function Profile({ onLogout }) {
         {onLogout && (
           <button
             onClick={onLogout}
-            className="w-full mt-6 py-3.5 bg-[#F26101] hover:bg-[#D95400] text-white rounded-lg font-semibold transition-colors"
+            className="w-full mt-6 py-3.5 bg-accent text-white rounded-lg font-semibold transition-colors"
           >
             Logout
           </button>
         )}
       </div>
 
-      <div className="bg-slate-900 p-6 rounded-card-lg text-white shadow-soft-lg">
+      <div className="bg-slate-900 p-6 rounded-card-lg text-slate-900 shadow-soft-lg">
         <h3 className="font-semibold mb-2 text-slate-200">Data Privacy</h3>
         <p className="text-xs leading-relaxed text-slate-300">
           All your data is stored locally in your browser. No information is sent to external servers

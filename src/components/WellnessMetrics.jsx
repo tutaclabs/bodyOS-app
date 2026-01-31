@@ -37,7 +37,7 @@ export default function WellnessMetrics() {
   return (
     <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
       <div className="flex items-center gap-2 mb-6">
-        <Activity className="text-[#F26101]" size={20} />
+        <Activity className="text-[#FF4F41]" size={20} />
         <h2 className="text-lg font-bold text-slate-800">{t.wellness.title}</h2>
         <span className="ml-auto text-xs text-slate-500">{t.wellness.today}</span>
         <button
@@ -102,7 +102,7 @@ export default function WellnessMetrics() {
               setMetrics({ ...metrics, metabolism: e.target.value })
             }
             placeholder="Notes about metabolism, digestion, etc."
-            className="w-full p-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none transition-colors resize-none"
+            className="w-full p-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors resize-none"
             rows="3"
           />
         </div>
@@ -168,8 +168,8 @@ export default function WellnessMetrics() {
           onClick={handleSave}
           className={`w-full py-3 rounded-button-pill font-semibold transition-colors flex items-center justify-center gap-2 ${
             saved
-              ? 'bg-emerald-500 text-white'
-              : 'bg-[#F26101] text-white hover:bg-[#D95400]'
+              ? 'bg-emerald-500 text-slate-900'
+              : 'bg-accent text-white hover:bg-gradient-nuraform'
           }`}
         >
           <Save size={18} />

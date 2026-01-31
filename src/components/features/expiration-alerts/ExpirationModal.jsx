@@ -68,7 +68,7 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
                 type="date"
                 value={reconstitutionDate}
                 onChange={(e) => handleReconstitutionChange(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+                className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
                   setExpirationDate(reconDate.toISOString().split('T')[0]);
                 }
               }}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
             />
           </div>
 
@@ -105,7 +105,7 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
                 type="date"
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+                className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 py-2 bg-[#F26101] text-white rounded-lg font-semibold hover:bg-[#D95400] transition-colors disabled:opacity-50"
+              className="flex-1 py-2 bg-accent text-white rounded-lg font-semibold hover:bg-gradient-nuraform transition-colors disabled:opacity-50"
             >
               {saving ? t.common.loading : t.common.save}
             </button>

@@ -17,12 +17,20 @@ export default {
           800: '#7C6015',
           900: '#5E4610',
         },
+        accent: {
+          DEFAULT: '#FF4F41',
+          dark: '#E03D30',
+          50: '#FF4F4110',
+          100: '#FF4F4120',
+          500: '#FF4F41',
+          600: '#E03D30',
+        },
         dark: {
-          bg: '#0A0C10',
-          card: '#161B22',
-          border: 'rgba(255, 255, 255, 0.1)',
-          text: '#FFFFFF',
-          muted: '#8B949E',
+          bg: '#FFFFFF',
+          card: '#FFFFFF',
+          border: 'rgba(0, 0, 0, 0.1)',
+          text: '#1E293B',
+          muted: '#64748B',
         },
         luxury: {
           beige: '#F5F1E8',
@@ -34,7 +42,11 @@ export default {
           'neutral-warm': '#F0EDE5',
           'neutral-cool': '#E8E5DD',
         },
-        background: '#0A0C10',
+        background: '#FFFFFF',
+      },
+      backgroundImage: {
+        'gradient-nuraform': 'linear-gradient(to right, #FF4F41, #E289D9, #7D52FF)',
+        'gradient-nuraform-hover': 'linear-gradient(to right, #FF4F41, #E289D9, #7D52FF)',
       },
       borderRadius: {
         'card': '20px',
@@ -48,14 +60,22 @@ export default {
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',
-        'soft-lg': '0 4px 16px rgba(0, 0, 0, 0.08)',
+        'soft-lg': '0 4px 16px rgba(0, 0, 0, 0.12)',
         'glass': '0 4px 12px rgba(0, 0, 0, 0.08)',
+        'coral-glow': '0 4px 12px rgba(255, 79, 65, 0.3)',
+        'coral-glow-lg': '0 8px 24px rgba(255, 79, 65, 0.4)',
         'inner-glow': 'inset 0 0 20px rgba(255, 255, 255, 0.05)',
         'inner-glow-gold': 'inset 0 0 20px rgba(212, 175, 55, 0.1)',
       },
       backdropBlur: {
         'glass': '10px',
         'glass-lg': '20px',
+      },
+      backgroundColor: {
+        'glass': 'rgba(255, 255, 255, 0.7)',
+      },
+      borderColor: {
+        'glass': 'rgba(0, 0, 0, 0.1)',
       }
     }
   },

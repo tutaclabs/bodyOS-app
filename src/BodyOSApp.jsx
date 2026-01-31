@@ -56,15 +56,15 @@ const ReconstitutionWizard = () => {
   const showSafetyWarning = units > 50 || desiredMcg > 2000;
 
   return (
-    <div className="bg-dark-card p-6 rounded-card border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+    <div className="bg-white p-6 rounded-card border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
       <div className="flex items-center gap-2 mb-8">
         <Calculator className="text-primary" size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
-        <h2 className="text-lg font-bold text-white font-serif">{t.reconstitution.title}</h2>
+        <h2 className="text-lg font-bold text-slate-900 font-serif">{t.reconstitution.title}</h2>
       </div>
 
       <div className="space-y-6 mb-8">
         <div>
-          <label className="block text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wider">
             Step 1: {t.reconstitution.vialMg}
           </label>
           <input
@@ -73,20 +73,20 @@ const ReconstitutionWizard = () => {
             onChange={(e) => setVialMg(Number(e.target.value) || 0)}
             onFocus={() => setFocusedInput('vialMg')}
             onBlur={() => setFocusedInput(null)}
-            className={`w-full p-4 rounded-lg outline-none transition-all text-white ${
+            className={`w-full p-4 rounded-lg outline-none transition-all text-slate-900 bg-white border border-slate-200 ${
               focusedInput === 'vialMg' 
                 ? 'border-b-2 border-b-primary' 
                 : 'border-b-0'
             }`}
             style={{ 
-              backgroundColor: '#161B22',
-              borderBottomColor: focusedInput === 'vialMg' ? '#D4AF37' : 'transparent'
+              backgroundColor: '#FFFFFF',
+              borderBottomColor: focusedInput === 'vialMg' ? '#FF4F41' : 'transparent'
             }}
             placeholder="e.g. 5"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wider">
             Step 2: {t.reconstitution.bacMl}
           </label>
           <input
@@ -95,20 +95,20 @@ const ReconstitutionWizard = () => {
             onChange={(e) => setBacMl(Number(e.target.value) || 0)}
             onFocus={() => setFocusedInput('bacMl')}
             onBlur={() => setFocusedInput(null)}
-            className={`w-full p-4 rounded-lg outline-none transition-all text-white ${
+            className={`w-full p-4 rounded-lg outline-none transition-all text-slate-900 bg-white border border-slate-200 ${
               focusedInput === 'bacMl' 
                 ? 'border-b-2 border-b-primary' 
                 : 'border-b-0'
             }`}
             style={{ 
-              backgroundColor: '#161B22',
-              borderBottomColor: focusedInput === 'bacMl' ? '#D4AF37' : 'transparent'
+              backgroundColor: '#FFFFFF',
+              borderBottomColor: focusedInput === 'bacMl' ? '#FF4F41' : 'transparent'
             }}
             placeholder="e.g. 2"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wider">
             Step 3: {t.reconstitution.desiredMcg}
           </label>
           <input
@@ -117,14 +117,14 @@ const ReconstitutionWizard = () => {
             onChange={(e) => setDesiredMcg(Number(e.target.value) || 0)}
             onFocus={() => setFocusedInput('desiredMcg')}
             onBlur={() => setFocusedInput(null)}
-            className={`w-full p-4 rounded-lg outline-none transition-all text-white ${
+            className={`w-full p-4 rounded-lg outline-none transition-all text-slate-900 bg-white border border-slate-200 ${
               focusedInput === 'desiredMcg' 
                 ? 'border-b-2 border-b-primary' 
                 : 'border-b-0'
             }`}
             style={{ 
-              backgroundColor: '#161B22',
-              borderBottomColor: focusedInput === 'desiredMcg' ? '#D4AF37' : 'transparent'
+              backgroundColor: '#FFFFFF',
+              borderBottomColor: focusedInput === 'desiredMcg' ? '#FF4F41' : 'transparent'
             }}
             placeholder="e.g. 250"
           />
@@ -140,14 +140,14 @@ const ReconstitutionWizard = () => {
         )}
       </div>
 
-      <div className="p-8 bg-dark-card border border-dark-border rounded-card flex flex-col items-center justify-center" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-        <span className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-6">
+      <div className="p-8 bg-white border border-dark-border rounded-card flex flex-col items-center justify-center shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+        <span className="text-xs text-slate-600 uppercase tracking-widest font-bold mb-6">
           {t.reconstitution.drawAmount}
         </span>
         <span className="text-7xl font-mono font-black text-primary mb-3" style={{ color: '#D4AF37', letterSpacing: '-4px' }}>
           {units.toFixed(1)}
         </span>
-        <span className="text-sm text-gray-400 font-semibold uppercase tracking-wider">{t.reconstitution.units}</span>
+        <span className="text-sm text-slate-600 font-semibold uppercase tracking-wider">{t.reconstitution.units}</span>
       </div>
     </div>
   );
@@ -263,11 +263,11 @@ const ProtocolDashboard = () => {
   };
 
   return (
-    <div className="bg-dark-card p-6 rounded-card border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+    <div className="bg-white p-6 rounded-card border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2">
           <Calendar className="text-primary" size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
-          <h2 className="text-lg font-bold text-white font-serif">{t.protocols.title}</h2>
+          <h2 className="text-lg font-bold text-slate-900 font-serif">{t.protocols.title}</h2>
         </div>
         <div className="flex items-center gap-2">
           {Array.isArray(protocols) && protocols.length > 0 && (
@@ -282,7 +282,7 @@ const ProtocolDashboard = () => {
           )}
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="p-2 bg-[#F26101]/10 text-[#F26101] rounded-button-pill hover:bg-[#F26101]/20 transition-colors"
+            className="p-2 bg-accent/10 text-accent rounded-button-pill hover:bg-accent/20 transition-colors"
           >
             <Plus size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
           </button>
@@ -339,14 +339,14 @@ const ProtocolDashboard = () => {
       )}
 
       {isAdding && (
-        <div className="mb-6 p-4 border border-[#F26101]/20 bg-[#F26101]/5 rounded-xl space-y-3">
+        <div className="mb-6 p-4 border border-accent/20 bg-accent/5 rounded-xl space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <button
               onClick={() => setUseNaturalLanguage(false)}
               className={`flex-1 py-1.5 rounded-button text-xs font-semibold transition-colors ${
                 !useNaturalLanguage
                   ? 'bg-primary text-black'
-                  : 'bg-dark-card text-gray-400 hover:bg-dark-card/80'
+                  : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               {t.protocols.manualEntry}
@@ -356,7 +356,7 @@ const ProtocolDashboard = () => {
               className={`flex-1 py-1.5 rounded-button text-xs font-semibold transition-colors ${
                 useNaturalLanguage
                   ? 'bg-primary text-black'
-                  : 'bg-dark-card text-gray-400 hover:bg-dark-card/80'
+                  : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               ⚡ {t.protocols.aiParse}
@@ -383,7 +383,7 @@ const ProtocolDashboard = () => {
               <button
                 onClick={handleParseAndAdd}
                 disabled={parsing || !naturalLanguageInput.trim()}
-                className="w-full bg-[#F26101] text-white py-2.5 rounded-button-pill font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-[#D95400] transition-colors"
+                className="w-full bg-accent text-white py-2.5 rounded-button-pill font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-gradient-nuraform transition-all"
               >
                 {parsing ? (
                   <>
@@ -410,8 +410,8 @@ const ProtocolDashboard = () => {
                 onChange={(e) => setNewProtocol({ ...newProtocol, name: e.target.value })}
               />
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-2 bg-dark-card p-2 rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <span className="text-xs text-slate-400">{t.protocols.daysOn}</span>
+                <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-xs text-slate-600">{t.protocols.daysOn}</span>
                   <input
                     type="number"
                     className="w-full outline-none"
@@ -424,8 +424,8 @@ const ProtocolDashboard = () => {
                     }
                   />
                 </div>
-                <div className="flex items-center gap-2 bg-dark-card p-2 rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <span className="text-xs text-slate-400">{t.protocols.daysOff}</span>
+                <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+                  <span className="text-xs text-slate-600">{t.protocols.daysOff}</span>
                   <input
                     type="number"
                     className="w-full outline-none"
@@ -441,7 +441,7 @@ const ProtocolDashboard = () => {
               </div>
               <button
                 onClick={addProtocol}
-                className="w-full bg-[#F26101] text-white py-2.5 rounded-button-pill font-semibold hover:bg-[#D95400] transition-colors"
+                className="w-full bg-accent text-white py-2.5 rounded-button-pill font-semibold hover:bg-gradient-nuraform transition-colors"
               >
                 {t.protocols.saveProtocol}
               </button>
@@ -461,7 +461,7 @@ const ProtocolDashboard = () => {
             key={p.id}
             className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors group relative overflow-hidden"
           >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F26101]"></div>
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent"></div>
             <div className="flex flex-col ml-3 flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-slate-700">{p.name}</span>
@@ -478,7 +478,7 @@ const ProtocolDashboard = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setExpirationModalProtocol(p)}
-                className="p-2 rounded-lg text-slate-400 hover:text-[#F26101] hover:bg-[#F26101]/10 transition-colors"
+                className="p-2 rounded-lg text-slate-400 hover:text-accent hover:bg-accent/10 transition-colors"
                 title="Set expiration date"
               >
                 <Calendar size={16} strokeWidth={1.5} style={{ color: '#64748b' }} />
@@ -486,7 +486,7 @@ const ProtocolDashboard = () => {
               <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></div>
               <button
                 onClick={() => deleteProtocol(p.id)}
-                className="p-2 rounded-lg text-slate-300 hover:text-[#F26101] hover:bg-[#F26101]/10 transition-colors"
+                className="p-2 rounded-lg text-slate-300 hover:text-accent hover:bg-accent/10 transition-colors"
                 title="Delete protocol"
               >
                 <Trash2 size={16} strokeWidth={1.5} style={{ color: '#8B949E' }} />
@@ -545,16 +545,16 @@ const PersonalizedInsights = () => {
   };
 
   return (
-    <div className="bg-dark-card p-6 rounded-card border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+    <div className="bg-white p-6 rounded-card border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Zap className="text-primary" size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
-          <h2 className="text-lg font-bold text-white font-serif">{t.insights.title}</h2>
+          <h2 className="text-lg font-bold text-slate-900 font-serif">{t.insights.title}</h2>
         </div>
         <button
           onClick={handleGenerateInsights}
           disabled={loading}
-          className="px-4 py-2 bg-[#F26101] text-white rounded-button-pill text-xs font-semibold hover:bg-[#D95400] transition-colors disabled:opacity-50 flex items-center gap-1.5"
+          className="px-4 py-2 bg-accent text-white rounded-button-pill text-xs font-semibold hover:bg-gradient-nuraform transition-colors disabled:opacity-50 flex items-center gap-1.5"
         >
           {loading ? (
             <>
@@ -581,7 +581,7 @@ const PersonalizedInsights = () => {
           {insights.map((insight, idx) => (
             <div
               key={idx}
-              className="p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}
+              className="p-3 bg-white rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}
             >
               <p className="text-sm text-slate-700 leading-relaxed">{insight}</p>
             </div>
@@ -624,10 +624,10 @@ const FloorTracker = () => {
   };
 
   return (
-    <div className="bg-dark-card p-6 rounded-card border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+    <div className="bg-white p-6 rounded-card border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
       <div className="flex items-center gap-2 mb-6">
         <Activity className="text-primary" size={20} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
-        <h2 className="text-lg font-bold text-white font-serif">{t.floors.title}</h2>
+        <h2 className="text-lg font-bold text-slate-900 font-serif">{t.floors.title}</h2>
         <span className="ml-auto text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full uppercase tracking-tighter">
           {t.floors.noCalorieTracking}
         </span>
@@ -653,7 +653,7 @@ const FloorTracker = () => {
               </div>
               <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden mb-3">
                 <div
-                  className="h-full bg-[#F26101] transition-all duration-500 ease-out rounded-full"
+                  className="h-full bg-accent transition-all duration-500 ease-out rounded-full"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -738,7 +738,7 @@ const AIResearchAssistant = () => {
   };
 
   return (
-    <div className="p-4 bg-gradient-to-br from-[#F26101]/5 to-[#F26101]/10 rounded-xl border border-[#F26101]/20">
+    <div className="p-4 bg-gradient-to-br from-[#FF4F41]/5 to-[#FF4F41]/10 rounded-xl border border-accent/20">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
           <Zap size={14} strokeWidth={1.5} style={{ color: '#D4AF37' }} /> AI Research Assistant
@@ -753,7 +753,7 @@ const AIResearchAssistant = () => {
         ) : (
           <button
             onClick={() => setShowKeyInput(!showKeyInput)}
-            className="text-xs text-[#F26101] hover:text-[#D95400] font-semibold transition-colors"
+            className="text-xs text-accent hover:text-accent-600 font-semibold transition-colors"
           >
             {showKeyInput ? 'Cancel' : 'Add API Key'}
           </button>
@@ -761,25 +761,25 @@ const AIResearchAssistant = () => {
       </div>
 
       {showKeyInput && !keySaved && (
-        <div className="mb-3 p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+        <div className="mb-3 p-3 bg-white rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
           <input
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="Enter your OpenAI API key"
-            className="w-full p-2 border border-slate-200 rounded-lg text-xs mb-2 focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none transition-colors"
+            className="w-full p-2 border border-slate-200 rounded-lg text-xs mb-2 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
           />
           <div className="flex gap-2">
             <button
               onClick={handleSaveKey}
-              className="flex-1 bg-[#F26101] text-white py-1.5 rounded-button text-xs font-semibold hover:bg-[#D95400] transition-colors"
+              className="flex-1 bg-accent text-white py-1.5 rounded-button text-xs font-semibold hover:bg-gradient-nuraform transition-colors"
             >
               Save Key
             </button>
           </div>
           <p className="text-[10px] text-slate-500 mt-2">
             Your API key is stored locally and never shared. Get one at{' '}
-            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-[#F26101] underline hover:text-[#D95400]">
+            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-accent underline hover:text-accent-600">
               platform.openai.com
             </a>
           </p>
@@ -793,14 +793,14 @@ const AIResearchAssistant = () => {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Ask about compounds, protocols, dosing..."
-            className="w-full p-2.5 border border-slate-200 rounded-lg mb-2 text-sm focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none transition-colors"
+            className="w-full p-2.5 border border-slate-200 rounded-lg mb-2 text-sm focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
             onKeyPress={(e) => e.key === 'Enter' && !loading && handleAsk()}
             disabled={loading}
           />
           <button
             onClick={handleAsk}
             disabled={loading || !question.trim()}
-            className="w-full bg-[#F26101] text-white py-2.5 rounded-button-pill text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#D95400] transition-colors"
+            className="w-full bg-accent text-white py-2.5 rounded-button-pill text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gradient-nuraform transition-colors"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -820,8 +820,8 @@ const AIResearchAssistant = () => {
       )}
 
       {answer && (
-        <div className="mt-3 p-3 bg-dark-card rounded-lg border border-dark-border" style={{ backgroundColor: '#161B22', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-          <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">{answer}</p>
+        <div className="mt-3 p-3 bg-white rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">{answer}</p>
         </div>
       )}
     </div>
@@ -940,13 +940,13 @@ export default function BodyOSApp() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg font-sans text-white pb-20 md:pb-8" style={{ backgroundColor: '#0A0C10' }}>
+    <div className="min-h-screen bg-white font-sans text-slate-900 pb-20 md:pb-8" style={{ backgroundColor: '#FFFFFF' }}>
       <MedicalDisclaimerModal
         isOpen={showDisclaimer}
         onClose={() => setShowDisclaimer(false)}
         onAccept={handleAcceptDisclaimer}
       />
-      <nav className="sticky top-0 z-10 bg-dark-card/80 backdrop-blur-md border-b border-dark-border px-6 py-4 flex justify-between items-center" style={{ backgroundColor: 'rgba(22, 27, 34, 0.8)', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+      <nav className="sticky top-0 z-10 bg-glass backdrop-blur-glass border-b border-glass px-6 py-4 flex justify-between items-center shadow-soft" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
@@ -956,7 +956,7 @@ export default function BodyOSApp() {
             <Home size={20} strokeWidth={1.5} style={{ color: '#8B949E' }} />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#F26101] rounded-lg flex items-center justify-center text-white font-bold">
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-white font-bold">
               L
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-800">{t.app.name}</span>
@@ -998,7 +998,7 @@ export default function BodyOSApp() {
           <div className="space-y-8">
             <FloorTracker />
             <WellnessMetrics />
-            <div className="p-6 bg-slate-900 rounded-card-lg text-white shadow-soft-lg">
+            <div className="p-6 bg-slate-50 rounded-card-lg text-slate-900 border border-slate-200 shadow-soft-lg">
               <h3 className="font-semibold mb-2 flex items-center gap-2 text-slate-200">
                 <Info size={16} strokeWidth={1.5} style={{ color: '#8B949E' }} /> Data Sovereignty
               </h3>
@@ -1018,34 +1018,34 @@ export default function BodyOSApp() {
       </main>
 
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden">
-        <div className="bg-dark-card/90 backdrop-blur-xl border border-dark-border rounded-[24px] px-6 py-4 flex items-center justify-around gap-4" style={{ backgroundColor: 'rgba(22, 27, 34, 0.9)', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+        <div className="bg-glass backdrop-blur-glass-lg border border-glass rounded-[24px] px-6 py-4 flex items-center justify-around gap-4 shadow-soft-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`p-2 transition-colors ${activeTab === 'dashboard' ? 'text-[#F26101]' : 'text-slate-400'}`}
+            className={`p-2 transition-colors ${activeTab === 'dashboard' ? 'text-accent' : 'text-slate-400'}`}
           >
             <Calendar size={24} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
           </button>
           <button
             onClick={() => setActiveTab('calc')}
-            className={`p-2 transition-colors ${activeTab === 'calc' ? 'text-[#F26101]' : 'text-slate-400'}`}
+            className={`p-2 transition-colors ${activeTab === 'calc' ? 'text-accent' : 'text-slate-400'}`}
           >
             <Calculator size={24} strokeWidth={activeTab === 'calc' ? 2.5 : 2} />
           </button>
           <button
             onClick={() => setActiveTab('health')}
-            className={`p-2 transition-colors ${activeTab === 'health' ? 'text-[#F26101]' : 'text-slate-400'}`}
+            className={`p-2 transition-colors ${activeTab === 'health' ? 'text-accent' : 'text-slate-400'}`}
           >
             <Activity size={24} strokeWidth={activeTab === 'health' ? 2.5 : 2} />
           </button>
           <button
             onClick={() => setActiveTab('goals')}
-            className={`p-2 transition-colors ${activeTab === 'goals' ? 'text-[#F26101]' : 'text-slate-400'}`}
+            className={`p-2 transition-colors ${activeTab === 'goals' ? 'text-accent' : 'text-slate-400'}`}
           >
             <Target size={24} strokeWidth={activeTab === 'goals' ? 2.5 : 2} />
           </button>
           <button
             onClick={() => setActiveTab('profile')}
-            className={`p-2 transition-colors ${activeTab === 'profile' ? 'text-[#F26101]' : 'text-slate-400'}`}
+            className={`p-2 transition-colors ${activeTab === 'profile' ? 'text-accent' : 'text-slate-400'}`}
           >
             <User size={24} strokeWidth={activeTab === 'profile' ? 2.5 : 2} />
           </button>
@@ -1055,7 +1055,7 @@ export default function BodyOSApp() {
       {showScrollUp && (
         <button
           onClick={scrollToTop}
-          className="fixed right-6 bottom-24 md:bottom-8 z-50 p-3 bg-[#F26101] text-white rounded-full shadow-soft-lg hover:bg-[#D95400] transition-all hover:scale-110 active:scale-95"
+          className="fixed right-6 bottom-24 md:bottom-8 z-50 p-3 bg-accent text-white rounded-full shadow-soft-lg hover:bg-gradient-nuraform transition-all hover:scale-110 active:scale-95"
           title="Scroll to top"
         >
           <ChevronUp size={20} />
@@ -1065,7 +1065,7 @@ export default function BodyOSApp() {
       {showScrollDown && (
         <button
           onClick={scrollToBottom}
-          className="fixed right-6 bottom-32 md:bottom-20 z-50 p-3 bg-[#F26101] text-white rounded-full shadow-soft-lg hover:bg-[#D95400] transition-all hover:scale-110 active:scale-95"
+          className="fixed right-6 bottom-32 md:bottom-20 z-50 p-3 bg-accent text-white rounded-full shadow-soft-lg hover:bg-gradient-nuraform transition-all hover:scale-110 active:scale-95"
           title="Scroll to bottom"
         >
           <ChevronDown size={20} />

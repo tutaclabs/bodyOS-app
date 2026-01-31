@@ -74,7 +74,7 @@ export default function GoalMode() {
         <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Target className="text-[#F26101]" size={20} />
+              <Target className="text-[#FF4F41]" size={20} />
               <h2 className="text-lg font-bold text-slate-800">
                 {t.goals.activeProgram}
               </h2>
@@ -108,7 +108,7 @@ export default function GoalMode() {
             </div>
             <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#F26101] transition-all duration-500"
+                className="h-full bg-[#FF4F41] transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -141,7 +141,7 @@ export default function GoalMode() {
 
         <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
           <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <CheckCircle2 className="text-[#F26101]" size={18} />
+            <CheckCircle2 className="text-[#FF4F41]" size={18} />
             {t.goals.dailyHabits}
           </h3>
           <div className="space-y-2">
@@ -167,7 +167,7 @@ export default function GoalMode() {
                       }`}
                     >
                       {isCompleted && (
-                        <CheckCircle2 className="text-white" size={14} />
+                        <CheckCircle2 className="text-slate-900" size={14} />
                       )}
                     </div>
                     <span
@@ -187,9 +187,9 @@ export default function GoalMode() {
         </div>
 
         {reading && (
-          <div className="bg-gradient-to-br from-[#F26101]/5 to-[#F26101]/10 p-6 rounded-card border border-[#F26101]/20 shadow-soft">
+          <div className="bg-gradient-to-br from-[#FF4F41]/5 to-[#FF4F41]/10 p-6 rounded-card border border-[#FF4F41]/20 shadow-soft">
             <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="text-[#F26101]" size={18} />
+              <BookOpen className="text-[#FF4F41]" size={18} />
               <h3 className="text-base font-bold text-slate-800">
                 {t.goals.reading}
               </h3>
@@ -210,7 +210,7 @@ export default function GoalMode() {
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
         <div className="flex items-center gap-2 mb-6">
-          <Target className="text-[#F26101]" size={20} />
+          <Target className="text-[#FF4F41]" size={20} />
           <h2 className="text-lg font-bold text-slate-800">
             {t.goals.title}
           </h2>
@@ -233,7 +233,7 @@ export default function GoalMode() {
               </p>
               <button
                 onClick={() => startProgram(program)}
-                className="w-full py-2.5 bg-[#F26101] text-white rounded-button-pill font-semibold hover:bg-[#D95400] transition-colors"
+                className="w-full py-2.5 bg-accent text-white rounded-button-pill font-semibold hover:bg-gradient-nuraform transition-colors"
               >
                 {t.goals.startProgram}
               </button>

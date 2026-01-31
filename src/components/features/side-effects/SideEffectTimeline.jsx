@@ -85,8 +85,8 @@ export function SideEffectTimeline() {
           <svg className="w-full h-full" viewBox="0 0 800 200" preserveAspectRatio="none">
             <defs>
               <linearGradient id="severityGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#F26101" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#F26101" stopOpacity="0" />
+                <stop offset="0%" stopColor="#FF4F41" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#FF4F41" stopOpacity="0" />
               </linearGradient>
             </defs>
             <g>
@@ -102,7 +102,7 @@ export function SideEffectTimeline() {
                 }
                 return (
                   <g key={idx}>
-                    <circle cx={x} cy={y} r="4" fill="#F26101" />
+                    <circle cx={x} cy={y} r="4" fill="#FF4F41" />
                     <title>
                       {point.symptom} - {point.severity}/10 - {point.date}
                     </title>
@@ -116,7 +116,7 @@ export function SideEffectTimeline() {
                     const y = 200 - (point.severity / maxSeverity) * 180;
                     return `${idx === 0 ? 'M' : 'L'} ${x} ${y}`;
                   }).join(' ')}
-                  stroke="#F26101"
+                  stroke="#FF4F41"
                   strokeWidth="2"
                   fill="none"
                 />
@@ -139,7 +139,7 @@ export function SideEffectTimeline() {
         </div>
         <div className="mt-4 flex items-center gap-4 text-xs text-slate-600">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#F26101]"></div>
+            <div className="w-3 h-3 rounded-full bg-[#FF4F41]"></div>
             <span>{t.sideEffects.severity}</span>
           </div>
         </div>

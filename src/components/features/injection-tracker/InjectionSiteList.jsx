@@ -131,7 +131,7 @@ export function InjectionSiteList() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleSaveNotes(site.id)}
-                    className="px-3 py-1.5 bg-[#F26101] text-white rounded text-sm font-medium"
+                    className="px-3 py-1.5 bg-accent text-white rounded text-sm font-medium"
                   >
                     {t.common.save}
                   </button>

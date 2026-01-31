@@ -1,18 +1,25 @@
 export const theme = {
-  bg: '#0A0C10',
-  card: '#161B22',
-  border: '#ffffff1a',
-  text: '#FFFFFF',
-  muted: '#8B949E',
-  primary: '#D4AF37',
-  primaryDark: '#B8941F',
-  primaryLight: '#E8D5A3',
+  bg: '#FFFFFF',
+  card: '#FFFFFF',
+  border: 'rgba(0, 0, 0, 0.1)',
+  text: '#1E293B',
+  muted: '#64748B',
+  primary: '#FF4F41',
+  primaryDark: '#E03D30',
+  primaryLight: '#FF4F41',
+  accent: '#FF4F41',
+  accentDark: '#E03D30',
+  gradient: {
+    start: '#FF4F41',
+    middle: '#E289D9',
+    end: '#7D52FF',
+  },
   emeraldBg: '#0D2818',
   emeraldText: '#3FB881',
-  indigo: '#D4AF37',
-  indigoDark: '#B8941F',
-  shadow: 'rgba(0, 0, 0, 0.3)',
-  gold: '#D4AF37',
-  goldMuted: 'rgba(212, 175, 55, 0.3)'
+  shadow: 'rgba(0, 0, 0, 0.1)',
+  glassmorphism: {
+    background: 'rgba(255, 255, 255, 0.7)',
+    border: 'rgba(0, 0, 0, 0.1)',
+  },
 };
 

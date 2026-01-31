@@ -18,9 +18,9 @@ import {
 
 const MobileFeature = ({ icon, label, color }) => {
   const colors = {
-    indigo: 'text-[#F26101] bg-[#F26101]/10',
+    indigo: 'text-[#FF4F41] bg-[#FF4F41]/10',
     sky: 'text-sky-600 bg-sky-50',
-    violet: 'text-[#F26101] bg-[#F26101]/10',
+    violet: 'text-[#FF4F41] bg-[#FF4F41]/10',
     slate: 'text-slate-600 bg-slate-50'
   };
   return (
@@ -35,11 +35,11 @@ const MobileFeature = ({ icon, label, color }) => {
 
 const NavIcon = ({ icon, label, active, onClick }) => (
   <button onClick={onClick} className="flex flex-col items-center gap-1 p-2">
-    <div className={`transition-colors ${active ? 'text-[#F26101]' : 'text-slate-400'}`}>
+    <div className={`transition-colors ${active ? 'text-[#FF4F41]' : 'text-slate-400'}`}>
       {React.cloneElement(icon, { size: 22 })}
     </div>
     <span
-      className={`text-[10px] font-bold tracking-tight transition-colors ${active ? 'text-[#F26101]' : 'text-slate-400'}`}
+      className={`text-[10px] font-bold tracking-tight transition-colors ${active ? 'text-[#FF4F41]' : 'text-slate-400'}`}
     >
       {label}
     </span>
@@ -82,11 +82,11 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F8F8] text-slate-900 font-sans selection:bg-[#F26101]/20 pb-24 md:pb-0">
+    <div className="min-h-screen bg-[#F8F8F8] text-slate-900 font-sans selection:bg-[#FF4F41]/20 pb-24 md:pb-0">
       {/* Top Bar */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#F26101] rounded-lg flex items-center justify-center shadow-lg shadow-[#F26101]/20">
+          <div className="w-8 h-8 bg-[#FF4F41] rounded-lg flex items-center justify-center shadow-lg shadow-[#FF4F41]/20">
             <Activity size={18} className="text-white" />
           </div>
           <span className="font-extrabold tracking-tight text-lg italic">bodyOS</span>
@@ -104,17 +104,17 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-          <div className="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-[#F26101]/10 rounded-full blur-[80px]"></div>
-          <div className="absolute bottom-0 left-[-20%] w-[300px] h-[300px] bg-[#F26101]/5 rounded-full blur-[80px]"></div>
+          <div className="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-[#FF4F41]/10 rounded-full blur-[80px]"></div>
+          <div className="absolute bottom-0 left-[-20%] w-[300px] h-[300px] bg-[#FF4F41]/5 rounded-full blur-[80px]"></div>
         </div>
 
         <div className="max-w-md mx-auto md:max-w-5xl md:grid md:grid-cols-2 md:gap-10 md:items-center space-y-10 md:space-y-0">
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-100 text-[#F26101] text-[10px] font-bold uppercase tracking-widest shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-100 text-[#FF4F41] text-[10px] font-bold uppercase tracking-widest shadow-sm">
               <Smartphone size={12} /> The Lab in Your Pocket
             </div>
             <h1 className="text-4xl md:text-5xl font-[900] text-slate-900 leading-[1.1] tracking-tight">
-              Biohacking, <span className="text-[#F26101]">Simplified.</span>
+              Biohacking, <span className="text-[#FF4F41]">Simplified.</span>
             </h1>
             <p className="text-base text-slate-600 font-medium leading-relaxed">
               Manage peptides, track nutrient floors, and optimize your biology with clinical precision.
@@ -125,7 +125,7 @@ export default function LandingPage() {
                 Download on iOS <ArrowUpRight size={18} />
               </button>
               <button
-                className="w-full md:w-auto md:px-8 py-4 bg-[#F26101] text-white rounded-button-pill font-bold text-base shadow-soft-lg shadow-[#F26101]/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-[#D95400]"
+                className="w-full md:w-auto md:px-8 py-4 bg-[#FF4F41] text-white rounded-button-pill font-bold text-base shadow-soft-lg shadow-[#FF4F41]/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-gradient-nuraform"
                 onClick={handleEnterApp}
               >
                 Preview Web App <ArrowUpRight size={18} />
@@ -141,21 +141,21 @@ export default function LandingPage() {
             <div className="bg-white rounded-[32px] p-6 shadow-soft-lg border border-slate-50 relative overflow-hidden">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-black text-slate-900">Today's Protocol</h3>
-                <span className="text-xs font-bold text-[#F26101] bg-[#F26101]/10 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold text-[#FF4F41] bg-[#FF4F41]/10 px-3 py-1 rounded-full">
                   85% Complete
                 </span>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 group">
-                  <div className="w-10 h-10 bg-[#F26101] rounded-xl flex items-center justify-center text-white">
+                  <div className="w-10 h-10 bg-[#FF4F41] rounded-xl flex items-center justify-center text-white">
                     <Zap size={20} />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-slate-900">BPC-157 / TB-500</p>
                     <p className="text-[11px] text-slate-500 font-medium">0.25ml • 10:00 AM</p>
                   </div>
-                  <div className="w-6 h-6 rounded-full border-2 border-[#F26101]/30"></div>
+                  <div className="w-6 h-6 rounded-full border-2 border-[#FF4F41]/30"></div>
                 </div>
 
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm">
@@ -204,8 +204,8 @@ export default function LandingPage() {
       {/* Privacy Message */}
       <section className="px-6 py-10">
         <div className="bg-[#0F172A] rounded-[32px] p-8 text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26101]/10 blur-3xl"></div>
-          <Smartphone size={48} className="text-[#F26101] mx-auto mb-6" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF4F41]/10 blur-3xl"></div>
+          <Smartphone size={48} className="text-[#FF4F41] mx-auto mb-6" />
           <h3 className="text-white text-xl font-bold mb-3">Privacy First. Always.</h3>
           <p className="text-slate-400 text-sm font-medium leading-relaxed">
             Your biological data never leaves your device. We use zero-knowledge architecture to protect your sovereignty.
@@ -221,7 +221,7 @@ export default function LandingPage() {
           <div className="relative -top-6">
             <button
               onClick={handleEnterApp}
-              className="w-14 h-14 bg-[#F26101] rounded-2xl shadow-soft-lg shadow-[#F26101]/20 flex items-center justify-center text-white active:scale-90 transition-transform hover:bg-[#D95400]"
+              className="w-14 h-14 bg-[#FF4F41] rounded-2xl shadow-soft-lg shadow-[#FF4F41]/20 flex items-center justify-center text-white active:scale-90 transition-transform hover:bg-gradient-nuraform"
             >
               <Zap fill="currentColor" size={24} />
             </button>
@@ -234,7 +234,7 @@ export default function LandingPage() {
       {showScrollUp && (
         <button
           onClick={scrollToTop}
-          className="fixed right-6 bottom-32 z-50 p-3 bg-[#F26101] text-white rounded-full shadow-soft-lg hover:bg-[#D95400] transition-all hover:scale-110 active:scale-95"
+          className="fixed right-6 bottom-32 z-50 p-3 bg-[#FF4F41] text-white rounded-full shadow-soft-lg hover:bg-gradient-nuraform transition-all hover:scale-110 active:scale-95"
           title="Scroll to top"
         >
           <ChevronUp size={20} />
@@ -244,7 +244,7 @@ export default function LandingPage() {
       {showScrollDown && (
         <button
           onClick={scrollToBottom}
-          className="fixed right-6 bottom-40 z-50 p-3 bg-[#F26101] text-white rounded-full shadow-soft-lg hover:bg-[#D95400] transition-all hover:scale-110 active:scale-95"
+          className="fixed right-6 bottom-40 z-50 p-3 bg-[#FF4F41] text-white rounded-full shadow-soft-lg hover:bg-gradient-nuraform transition-all hover:scale-110 active:scale-95"
           title="Scroll to bottom"
         >
           <ChevronDown size={20} />

@@ -50,7 +50,7 @@ export default function Library() {
   return (
     <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft col-span-full">
       <div className="flex items-center gap-2 mb-6">
-        <BookOpen className="text-[#F26101]" size={20} />
+        <BookOpen className="text-[#FF4F41]" size={20} />
         <h2 className="text-lg font-bold text-slate-800">{t.library.title}</h2>
       </div>
 
@@ -62,7 +62,7 @@ export default function Library() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.library.search}
-            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
           />
         </div>
 
@@ -73,7 +73,7 @@ export default function Library() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-button-pill text-xs font-semibold transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-[#F26101] text-white'
+                  ? 'bg-accent text-white'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
@@ -86,7 +86,7 @@ export default function Library() {
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
           <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2 mb-2">
-            <ShieldCheck size={14} className="text-[#F26101]" /> "White Market"
+            <ShieldCheck size={14} className="text-[#FF4F41]" /> "White Market"
             Checklist
           </h3>
           <ul className="text-xs text-slate-600 space-y-2">

@@ -73,8 +73,8 @@ export default function Onboarding() {
     <div className="min-h-screen bg-[#F8F8F8] flex items-center justify-center p-4">
       <div className="bg-white rounded-card-lg max-w-md w-full p-8 shadow-soft-lg border border-slate-200">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#F26101] rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Zap className="text-white" size={32} />
+          <div className="w-16 h-16 bg-[#FF4F41] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Zap className="text-slate-900" size={32} />
           </div>
           <h1 className="text-2xl font-bold text-slate-800 mb-2">
             {t.onboarding.title}
@@ -88,7 +88,7 @@ export default function Onboarding() {
               <div
                 key={s}
                 className={`flex-1 h-1.5 rounded-full ${
-                  s <= step ? 'bg-[#F26101]' : 'bg-slate-200'
+                  s <= step ? 'bg-[#FF4F41]' : 'bg-slate-200'
                 }`}
               />
             ))}
@@ -106,7 +106,7 @@ export default function Onboarding() {
                     onClick={() => toggleGoal(goal.key)}
                     className={`p-4 rounded-xl border-2 transition-all ${
                       selectedGoals.includes(goal.key)
-                        ? 'border-[#F26101] bg-[#F26101]/5'
+                        ? 'border-[#FF4F41] bg-[#FF4F41]/5'
                         : 'border-slate-200 hover:border-slate-300'
                     }`}
                   >
@@ -115,7 +115,7 @@ export default function Onboarding() {
                         {goal.label}
                       </span>
                       {selectedGoals.includes(goal.key) && (
-                        <Check className="text-[#F26101]" size={18} />
+                        <Check className="text-[#FF4F41]" size={18} />
                       )}
                     </div>
                   </button>
@@ -136,7 +136,7 @@ export default function Onboarding() {
                     onClick={() => setExperienceLevel(level.key)}
                     className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                       experienceLevel === level.key
-                        ? 'border-[#F26101] bg-[#F26101]/5'
+                        ? 'border-[#FF4F41] bg-[#FF4F41]/5'
                         : 'border-slate-200 hover:border-slate-300'
                     }`}
                   >
@@ -145,7 +145,7 @@ export default function Onboarding() {
                         {level.label}
                       </span>
                       {experienceLevel === level.key && (
-                        <Check className="text-[#F26101]" size={18} />
+                        <Check className="text-[#FF4F41]" size={18} />
                       )}
                     </div>
                   </button>
@@ -256,7 +256,7 @@ export default function Onboarding() {
           <button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="flex-1 py-3 bg-[#F26101] text-white rounded-button-pill font-semibold hover:bg-[#D95400] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 bg-accent text-white rounded-button-pill font-semibold hover:bg-gradient-nuraform transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {step === 3 ? t.onboarding.finish : t.onboarding.next}
           </button>

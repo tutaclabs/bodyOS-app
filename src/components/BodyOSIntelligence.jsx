@@ -70,7 +70,7 @@ export default function BodyOSIntelligence() {
   return (
     <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
       <div className="flex items-center gap-2 mb-6">
-        <Bot className="text-[#F26101]" size={20} />
+        <Bot className="text-[#FF4F41]" size={20} />
         <h2 className="text-lg font-bold text-slate-800">
           {t.ai.bodyos.title}
         </h2>
@@ -90,14 +90,14 @@ export default function BodyOSIntelligence() {
             }`}
           >
             {msg.role === 'assistant' && (
-              <div className="w-8 h-8 bg-[#F26101]/10 rounded-full flex items-center justify-center shrink-0">
-                <Bot className="text-[#F26101]" size={16} />
+              <div className="w-8 h-8 bg-[#FF4F41]/10 rounded-full flex items-center justify-center shrink-0">
+                <Bot className="text-[#FF4F41]" size={16} />
               </div>
             )}
             <div
               className={`max-w-[80%] p-3 rounded-xl ${
                 msg.role === 'user'
-                  ? 'bg-[#F26101] text-white'
+                  ? 'bg-accent text-white'
                   : 'bg-white border border-slate-200 text-slate-700'
               }`}
             >
@@ -114,8 +114,8 @@ export default function BodyOSIntelligence() {
         ))}
         {loading && (
           <div className="flex gap-3 justify-start">
-            <div className="w-8 h-8 bg-[#F26101]/10 rounded-full flex items-center justify-center shrink-0">
-              <Bot className="text-[#F26101]" size={16} />
+            <div className="w-8 h-8 bg-[#FF4F41]/10 rounded-full flex items-center justify-center shrink-0">
+              <Bot className="text-[#FF4F41]" size={16} />
             </div>
             <div className="bg-white border border-slate-200 p-3 rounded-xl">
               <p className="text-sm text-slate-500">{t.ai.bodyos.thinking}</p>
@@ -138,13 +138,13 @@ export default function BodyOSIntelligence() {
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && !loading && handleSend()}
           placeholder={t.ai.bodyos.placeholder}
-          className="flex-1 p-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none transition-colors"
+          className="flex-1 p-3 border border-slate-200 rounded-button text-sm focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
           disabled={loading}
         />
         <button
           onClick={handleSend}
           disabled={loading || !message.trim()}
-          className="p-3 bg-[#F26101] text-white rounded-button hover:bg-[#D95400] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-3 bg-accent text-white rounded-button hover:bg-gradient-nuraform transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send size={18} />
         </button>

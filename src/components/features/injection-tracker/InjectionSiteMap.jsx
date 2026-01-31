@@ -73,7 +73,7 @@ export function InjectionSiteMap({ onSiteClick }) {
           <button
             key={siteLocation}
             onClick={() => handleSiteClick(siteLocation)}
-            className={`absolute w-8 h-8 rounded-full ${colorClass} text-white text-xs font-bold shadow-md transition-all hover:scale-110 cursor-pointer`}
+            className={`absolute w-8 h-8 rounded-full ${colorClass} text-slate-900 text-xs font-bold shadow-md transition-all hover:scale-110 cursor-pointer`}
             style={{
               left: `${coords.x}%`,
               top: `${coords.y}%`,
@@ -93,7 +93,7 @@ export function InjectionSiteMap({ onSiteClick }) {
           onClick={() => setView('front')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             view === 'front'
-              ? 'bg-[#F26101] text-white'
+              ? 'bg-accent text-white'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
           }`}
         >
@@ -103,7 +103,7 @@ export function InjectionSiteMap({ onSiteClick }) {
           onClick={() => setView('back')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             view === 'back'
-              ? 'bg-[#F26101] text-white'
+              ? 'bg-accent text-white'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
           }`}
         >
@@ -113,7 +113,7 @@ export function InjectionSiteMap({ onSiteClick }) {
           onClick={() => setView('list')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             view === 'list'
-              ? 'bg-[#F26101] text-white'
+              ? 'bg-accent text-white'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
           }`}
         >

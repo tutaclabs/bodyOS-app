@@ -32,7 +32,7 @@ export function MedicalDisclaimerModal({ isOpen, onClose, onAccept }) {
         <div className="flex gap-3">
           <button
             onClick={onAccept}
-            className="flex-1 bg-[#F26101] text-white py-2.5 rounded-button-pill font-semibold hover:bg-[#D95400] transition-colors"
+            className="flex-1 bg-accent text-white py-2.5 rounded-button-pill font-semibold hover:bg-gradient-nuraform transition-colors"
           >
             {t.disclaimer.accept}
           </button>

@@ -61,10 +61,10 @@ export function InjectionSiteSelector({ onSelect, selectedSite }) {
               onClick={() => handleSelect(site.value)}
               className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
                 isSelected
-                  ? 'bg-[#F26101] text-white border-[#F26101]'
+                  ? 'bg-accent text-white border-[#FF4F41]'
                   : isRecommended
                   ? 'bg-amber-50 text-amber-800 border-amber-300'
-                  : 'bg-white text-slate-700 border-slate-200 hover:border-[#F26101]'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-[#FF4F41]'
               }`}
             >
               <div className="flex items-center gap-2">

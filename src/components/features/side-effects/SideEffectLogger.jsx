@@ -81,7 +81,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
         <select
           value={formData.protocolId}
           onChange={(e) => setFormData({ ...formData, protocolId: e.target.value })}
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
         >
           <option value="">{t.sideEffects.noProtocol}</option>
           {Array.isArray(protocols) && protocols.map((p) => (
@@ -100,7 +100,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
           type="date"
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
         />
       </div>
 
@@ -125,7 +125,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
           value={formData.symptom}
           onChange={(e) => setFormData({ ...formData, symptom: e.target.value })}
           placeholder={t.sideEffects.symptomPlaceholder}
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
           required
         />
       </div>
@@ -157,7 +157,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
           value={formData.duration}
           onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
           placeholder="e.g., 2 hours, 1 day"
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
         />
       </div>
 
@@ -169,7 +169,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
           placeholder={t.sideEffects.notesPlaceholder}
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none resize-none"
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none resize-none"
           rows="3"
         />
       </div>
@@ -177,7 +177,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
       <button
         type="submit"
         disabled={saving || !formData.symptom.trim()}
-        className="w-full py-3 bg-[#F26101] text-white rounded-lg font-semibold hover:bg-[#D95400] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full py-3 bg-accent text-white rounded-lg font-semibold hover:bg-gradient-nuraform transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
         <Save size={18} />
         {saving ? t.common.loading : t.sideEffects.save}
