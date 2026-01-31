@@ -21,7 +21,7 @@ export async function checkProtocolSafety(protocols, apiKey) {
     throw new Error('OpenAI API key is required');
   }
 
-  if (!protocols || protocols.length === 0) {
+  if (!protocols || !Array.isArray(protocols) || protocols.length === 0) {
     return { safe: true, warnings: [], recommendations: [] };
   }
 

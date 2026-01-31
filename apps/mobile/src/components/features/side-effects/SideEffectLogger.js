@@ -39,7 +39,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
 
   const loadProtocols = () => {
     const savedProtocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
-    setProtocols(savedProtocols);
+    setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   };
 
   const handleSubmit = async () => {
@@ -97,7 +97,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
               {t.sideEffects.noProtocol}
             </Text>
           </Pressable>
-          {protocols.map((p) => (
+          {Array.isArray(protocols) && protocols.map((p) => (
             <Pressable
               key={p.id}
               onPress={() => setFormData({ ...formData, protocolId: p.id })}

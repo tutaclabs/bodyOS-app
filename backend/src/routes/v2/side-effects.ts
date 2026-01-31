@@ -173,7 +173,7 @@ export async function sideEffectRoutes(app: FastifyInstance) {
       select: { protocols: true },
     });
 
-    const protocols = (state?.protocols as any[]) || [];
+    const protocols = Array.isArray(state?.protocols) ? (state.protocols as any[]) : [];
     const protocolMap = new Map(protocols.map((p: any) => [p.id, p]));
 
     type SideEffectType = { id: string; date: Date; symptom: string; severity: number; protocolId: string | null };

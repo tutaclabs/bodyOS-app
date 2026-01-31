@@ -50,7 +50,7 @@ export function analyzeStackRedundancies(protocols) {
   const redundancies = [];
   const categoryGroups = {};
   
-  if (!protocols || protocols.length < 2) {
+  if (!protocols || !Array.isArray(protocols) || protocols.length < 2) {
     return { hasRedundancies: false, warnings: [] };
   }
   

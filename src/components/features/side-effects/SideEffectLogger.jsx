@@ -39,7 +39,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
 
   const loadProtocols = () => {
     const savedProtocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
-    setProtocols(savedProtocols);
+    setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   };
 
   const handleSubmit = async (e) => {
@@ -84,7 +84,7 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
           className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#F26101] focus:border-[#F26101] outline-none"
         >
           <option value="">{t.sideEffects.noProtocol}</option>
-          {protocols.map((p) => (
+          {Array.isArray(protocols) && protocols.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name || p.id}
             </option>

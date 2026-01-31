@@ -53,7 +53,7 @@ function findCompoundInName(compound, protocolName) {
 export function checkProtocolInteractions(protocols) {
   const warnings = [];
   
-  if (!protocols || protocols.length < 2) {
+  if (!protocols || !Array.isArray(protocols) || protocols.length < 2) {
     return { hasConflicts: false, warnings: [] };
   }
   

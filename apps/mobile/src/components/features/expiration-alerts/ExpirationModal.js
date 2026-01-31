@@ -20,7 +20,8 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
     try {
       setSaving(true);
       const protocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
-      const updated = protocols.map(p => 
+      const protocolsArray = Array.isArray(protocols) ? protocols : [];
+      const updated = protocolsArray.map(p => 
         p.id === protocol.id 
           ? { ...p, reconstitutionDate, expirationDate, expirationDays }
           : p

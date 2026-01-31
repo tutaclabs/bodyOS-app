@@ -115,6 +115,7 @@ export function DashboardScreen() {
   useEffect(() => {
     (async () => {
       let savedProtocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
+      savedProtocols = Array.isArray(savedProtocols) ? savedProtocols : [];
       // Migration: Add timeOfDay to existing protocols
       const needsMigration = savedProtocols.some(p => !p.timeOfDay);
       if (needsMigration) {
@@ -131,17 +132,17 @@ export function DashboardScreen() {
     })();
   }, []);
 
-  const activeCount = useMemo(() => protocols.length, [protocols]);
+  const activeCount = useMemo(() => (Array.isArray(protocols) ? protocols.length : 0), [protocols]);
 
   const addProtocol = async () => {
     if (!name.trim()) return;
     
     if (editingProtocol) {
-      const next = protocols.map(p => 
+      const next = Array.isArray(protocols) ? protocols.map(p => 
         p.id === editingProtocol.id 
           ? { ...p, name: name.trim(), cycleOn: Number(cycleOn) || 0, cycleOff: Number(cycleOff) || 0, timeOfDay: timeOfDay }
           : p
-      );
+      ) : [];
       setProtocols(next);
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
       await pushProtocols(next).catch(() => {});
@@ -209,7 +210,7 @@ export function DashboardScreen() {
   };
 
   const deleteProtocol = async (id) => {
-    const next = protocols.filter((p) => p.id !== id);
+    const next = Array.isArray(protocols) ? protocols.filter((p) => p.id !== id) : [];
     setProtocols(next);
     await storage.save(STORAGE_KEYS.PROTOCOLS, next);
     await pushProtocols(next).catch(() => {});
@@ -243,7 +244,7 @@ export function DashboardScreen() {
   const handleSafetyCheck = async () => {
     const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
     
-    if (protocols.length === 0) {
+    if (!Array.isArray(protocols) || protocols.length === 0) {
       setSafetyCheck({
         safe: true,
         warnings: [],
@@ -370,7 +371,7 @@ export function DashboardScreen() {
             <SmallPill>{activeCount} Active</SmallPill>
           </View>
 
-          {protocols.length > 0 && (
+          {Array.isArray(protocols) && protocols.length > 0 && (
             <Pressable
               onPress={handleSafetyCheck}
               disabled={checkingSafety}
@@ -671,7 +672,7 @@ export function DashboardScreen() {
               </Text>
             ) : (
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-                {protocols.map((p, index) => {
+                {Array.isArray(protocols) && protocols.map((p, index) => {
                   const isLarge = index % 3 === 0;
                   return (
                     <Pressable
@@ -749,14 +750,14 @@ export function DashboardScreen() {
           </View>
         </Card>
 
-        {protocols.length > 0 && (
+        {Array.isArray(protocols) && protocols.length > 0 && (
           <Card>
             <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
               Daily Timeline
             </Text>
             <View style={{ gap: 16 }}>
               {['morning', 'afternoon', 'evening'].map((time) => {
-                const timeProtocols = protocols.filter(p => p.timeOfDay === time);
+                const timeProtocols = Array.isArray(protocols) ? protocols.filter(p => p.timeOfDay === time) : [];
                 if (timeProtocols.length === 0) return null;
                 
                 const timeLabels = {
@@ -783,7 +784,7 @@ export function DashboardScreen() {
                   </View>
                 );
               })}
-              {protocols.filter(p => !p.timeOfDay || p.timeOfDay === 'flexible').length > 0 && (
+              {Array.isArray(protocols) && protocols.filter(p => !p.timeOfDay || p.timeOfDay === 'flexible').length > 0 && (
                 <View style={{ gap: 8 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                     <Text style={{ fontSize: 16 }}>🔄</Text>

@@ -286,7 +286,7 @@ export function TrackerScreen() {
     const savedLogs = await storage.load(STORAGE_KEYS.PEPTIDE_LOGS, {});
     const savedProtocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
     setLogs(savedLogs);
-    setProtocols(savedProtocols);
+    setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   };
 
   const loadLogsForDate = (date) => {
@@ -392,7 +392,8 @@ export function TrackerScreen() {
       });
     }
 
-    protocols.forEach(protocol => {
+    if (Array.isArray(protocols)) {
+      protocols.forEach(protocol => {
       let currentDate = new Date(todayDate);
       currentDate.setDate(currentDate.getDate() - 29);
       let daysOnCount = 0;
@@ -416,7 +417,8 @@ export function TrackerScreen() {
         
         currentDate.setDate(currentDate.getDate() + 1);
       }
-    });
+      });
+    }
 
     return last30Days.map(day => ({
       date: day.date,
@@ -452,7 +454,8 @@ export function TrackerScreen() {
       next7Days.push(date.toISOString().split('T')[0]);
     }
 
-    protocols.forEach(protocol => {
+    if (Array.isArray(protocols)) {
+      protocols.forEach(protocol => {
       let currentDate = new Date(todayDate);
       let daysOnCount = 0;
       let cycleDay = 0;
@@ -482,7 +485,8 @@ export function TrackerScreen() {
         
         currentDate.setDate(currentDate.getDate() + 1);
       }
-    });
+      });
+    }
 
     return Array.isArray(upcoming) ? upcoming.sort((a, b) => a.date.localeCompare(b.date)) : [];
   };
@@ -596,7 +600,7 @@ export function TrackerScreen() {
         </Card>
       )}
 
-      {complianceData.length > 0 && protocols.length > 0 && (
+      {complianceData.length > 0 && Array.isArray(protocols) && protocols.length > 0 && (
         <Card>
           <SimpleChart
             data={complianceData}
@@ -667,7 +671,7 @@ export function TrackerScreen() {
                     </Text>
                   ) : (
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                      {protocols.map((protocol) => (
+                      {Array.isArray(protocols) && protocols.map((protocol) => (
                         <Pressable
                           key={protocol.id}
                           onPress={() => setFormData({ ...formData, protocolId: String(protocol.id) })}

@@ -172,7 +172,8 @@ const ProtocolDashboard = () => {
   const [expirationModalProtocol, setExpirationModalProtocol] = useState(null);
 
   useEffect(() => {
-    setProtocols(storage.load(STORAGE_KEYS.PROTOCOLS, []));
+    const savedProtocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+    setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   }, []);
 
   const handleSafetyCheck = async () => {
@@ -186,7 +187,7 @@ const ProtocolDashboard = () => {
       return;
     }
 
-    if (protocols.length === 0) {
+    if (!Array.isArray(protocols) || protocols.length === 0) {
       setSafetyCheck({
         safe: true,
         warnings: [],
@@ -256,7 +257,7 @@ const ProtocolDashboard = () => {
   };
 
   const deleteProtocol = (id) => {
-    const updated = protocols.filter((p) => p.id !== id);
+    const updated = Array.isArray(protocols) ? protocols.filter((p) => p.id !== id) : [];
     setProtocols(updated);
     storage.save(STORAGE_KEYS.PROTOCOLS, updated);
   };
@@ -269,7 +270,7 @@ const ProtocolDashboard = () => {
           <h2 className="text-lg font-bold text-white font-serif">{t.protocols.title}</h2>
         </div>
         <div className="flex items-center gap-2">
-          {protocols.length > 0 && (
+          {Array.isArray(protocols) && protocols.length > 0 && (
             <button
               onClick={handleSafetyCheck}
               disabled={checkingSafety}
@@ -450,12 +451,12 @@ const ProtocolDashboard = () => {
       )}
 
       <div className="space-y-3">
-        {protocols.length === 0 && (
+        {(!Array.isArray(protocols) || protocols.length === 0) && (
           <p className="text-center text-slate-400 py-8 text-sm italic">
             {t.protocols.noProtocols}
           </p>
         )}
-        {protocols.map((p) => (
+        {Array.isArray(protocols) && protocols.map((p) => (
           <div
             key={p.id}
             className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors group relative overflow-hidden"
@@ -525,7 +526,7 @@ const PersonalizedInsights = () => {
       return;
     }
 
-    if (protocols.length === 0 && !floors) {
+    if ((!Array.isArray(protocols) || protocols.length === 0) && !floors) {
       setError('Add protocols or nutrition data to generate insights.');
       return;
     }
