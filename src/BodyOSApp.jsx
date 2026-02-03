@@ -505,7 +505,6 @@ const ProtocolDashboard = () => {
           }}
         />
       )}
-      </div>
     </div>
   );
 };

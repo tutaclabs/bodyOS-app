@@ -12,19 +12,24 @@ export function ToolsScreen() {
   const [activeSection, setActiveSection] = useState('calc');
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.bg }}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: '#F7F7F7', backgroundColor: '#FFFFFF' }}>
         <Pressable
           onPress={() => setActiveSection('calc')}
           style={{
             flex: 1,
-            paddingVertical: 10,
-            borderRadius: 12,
-            backgroundColor: activeSection === 'calc' ? theme.primary : theme.card,
-            alignItems: 'center'
+            paddingVertical: 12,
+            borderRadius: 16,
+            backgroundColor: activeSection === 'calc' ? theme.primary : '#F7F7F7',
+            alignItems: 'center',
+            shadowColor: activeSection === 'calc' ? theme.primary : 'transparent',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: activeSection === 'calc' ? 0.2 : 0,
+            shadowRadius: 4,
+            elevation: activeSection === 'calc' ? 2 : 0,
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'calc' ? '#000000' : theme.text }}>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: activeSection === 'calc' ? '#000000' : '#131313' }}>
             🧪 Calculator
           </Text>
         </Pressable>
@@ -32,13 +37,18 @@ export function ToolsScreen() {
           onPress={() => setActiveSection('library')}
           style={{
             flex: 1,
-            paddingVertical: 10,
-            borderRadius: 12,
-            backgroundColor: activeSection === 'library' ? theme.primary : theme.card,
-            alignItems: 'center'
+            paddingVertical: 12,
+            borderRadius: 16,
+            backgroundColor: activeSection === 'library' ? theme.primary : '#F7F7F7',
+            alignItems: 'center',
+            shadowColor: activeSection === 'library' ? theme.primary : 'transparent',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: activeSection === 'library' ? 0.2 : 0,
+            shadowRadius: 4,
+            elevation: activeSection === 'library' ? 2 : 0,
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'library' ? '#000000' : theme.text }}>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: activeSection === 'library' ? '#000000' : '#131313' }}>
             📚 Library
           </Text>
         </Pressable>
@@ -66,15 +76,15 @@ function CalcSection() {
   const showSafetyWarning = units > 50 || (Number(desiredMcg) || 0) > 2000;
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text, marginBottom: 24 }}>
+        <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313', marginBottom: 24 }}>
           {t.reconstitution.title}
         </Text>
 
-        <View style={{ gap: 16 }}>
+        <View style={{ gap: 20 }}>
           <View>
-            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               Step 1: {t.reconstitution.vialMg}
             </Text>
             <TextInput
@@ -82,24 +92,25 @@ function CalcSection() {
               onChangeText={setVialMg}
               keyboardType="numeric"
               placeholder="e.g. 5"
-              placeholderTextColor={theme.muted}
+              placeholderTextColor="#B5B5B5"
               onFocus={() => setFocusedInput('vialMg')}
               onBlur={() => setFocusedInput(null)}
               style={{
-                backgroundColor: theme.card,
-                borderRadius: 12,
+                backgroundColor: '#F7F7F7',
+                borderRadius: 16,
                 paddingHorizontal: 16,
-                paddingVertical: 14,
-                color: theme.text,
+                paddingVertical: 16,
+                color: '#131313',
                 fontSize: 16,
-                borderBottomWidth: focusedInput === 'vialMg' ? 2 : 0,
-                borderBottomColor: focusedInput === 'vialMg' ? theme.primary : 'transparent',
+                fontWeight: '700',
+                borderWidth: focusedInput === 'vialMg' ? 2 : 0,
+                borderColor: focusedInput === 'vialMg' ? theme.primary : 'transparent',
               }}
             />
           </View>
 
           <View>
-            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               Step 2: {t.reconstitution.bacMl}
             </Text>
             <TextInput
@@ -107,24 +118,25 @@ function CalcSection() {
               onChangeText={setBacMl}
               keyboardType="numeric"
               placeholder="e.g. 2"
-              placeholderTextColor={theme.muted}
+              placeholderTextColor="#B5B5B5"
               onFocus={() => setFocusedInput('bacMl')}
               onBlur={() => setFocusedInput(null)}
               style={{
-                backgroundColor: theme.card,
-                borderRadius: 12,
+                backgroundColor: '#F7F7F7',
+                borderRadius: 16,
                 paddingHorizontal: 16,
-                paddingVertical: 14,
-                color: theme.text,
+                paddingVertical: 16,
+                color: '#131313',
                 fontSize: 16,
-                borderBottomWidth: focusedInput === 'bacMl' ? 2 : 0,
-                borderBottomColor: focusedInput === 'bacMl' ? theme.primary : 'transparent',
+                fontWeight: '700',
+                borderWidth: focusedInput === 'bacMl' ? 2 : 0,
+                borderColor: focusedInput === 'bacMl' ? theme.primary : 'transparent',
               }}
             />
           </View>
 
           <View>
-            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               Step 3: {t.reconstitution.desiredMcg}
             </Text>
             <TextInput
@@ -132,18 +144,19 @@ function CalcSection() {
               onChangeText={setDesiredMcg}
               keyboardType="numeric"
               placeholder="e.g. 250"
-              placeholderTextColor={theme.muted}
+              placeholderTextColor="#B5B5B5"
               onFocus={() => setFocusedInput('desiredMcg')}
               onBlur={() => setFocusedInput(null)}
               style={{
-                backgroundColor: theme.card,
-                borderRadius: 12,
+                backgroundColor: '#F7F7F7',
+                borderRadius: 16,
                 paddingHorizontal: 16,
-                paddingVertical: 14,
-                color: theme.text,
+                paddingVertical: 16,
+                color: '#131313',
                 fontSize: 16,
-                borderBottomWidth: focusedInput === 'desiredMcg' ? 2 : 0,
-                borderBottomColor: focusedInput === 'desiredMcg' ? theme.primary : 'transparent',
+                fontWeight: '700',
+                borderWidth: focusedInput === 'desiredMcg' ? 2 : 0,
+                borderColor: focusedInput === 'desiredMcg' ? theme.primary : 'transparent',
               }}
             />
           </View>
@@ -153,21 +166,19 @@ function CalcSection() {
           style={{
             marginTop: 24,
             padding: 32,
-            backgroundColor: theme.card,
-            borderWidth: 1,
-            borderColor: theme.border,
-            borderRadius: 20,
+            backgroundColor: '#F7F7F7',
+            borderRadius: 24,
             alignItems: 'center',
             justifyContent: 'center'
           }}
         >
-          <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted, letterSpacing: 2, marginBottom: 16, textTransform: 'uppercase' }}>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#B5B5B5', letterSpacing: 2, marginBottom: 16, textTransform: 'uppercase' }}>
             {t.reconstitution.drawAmount}
           </Text>
           <Text style={{ fontSize: 64, fontWeight: '900', color: theme.primary, marginBottom: 8, fontFamily: 'monospace', letterSpacing: -2 }}>
             {units.toFixed(1)}
           </Text>
-          <Text style={{ fontSize: 12, color: theme.muted, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
+          <Text style={{ fontSize: 12, color: '#B5B5B5', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 }}>
             {t.reconstitution.units}
           </Text>
         </View>
@@ -175,15 +186,15 @@ function CalcSection() {
         {showSafetyWarning && (
           <View
             style={{
-              marginTop: 14,
-              padding: 12,
-              borderRadius: 12,
-              backgroundColor: theme.card,
+              marginTop: 16,
+              padding: 16,
+              borderRadius: 16,
+              backgroundColor: '#FEF3C7',
               borderColor: '#FDE68A',
               borderWidth: 1
             }}
           >
-            <Text style={{ fontSize: 12, color: '#92400E' }}>
+            <Text style={{ fontSize: 13, color: '#92400E', fontWeight: '600' }}>
               {t.reconstitution.safetyNote}
             </Text>
           </View>
@@ -235,11 +246,11 @@ function LibrarySection() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 20 }}>
           <Text style={{ fontSize: 20 }}>📚</Text>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text }}>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313' }}>
             {t.library.title}
           </Text>
         </View>
@@ -248,16 +259,18 @@ function LibrarySection() {
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder={t.library.search}
+          placeholderTextColor="#B5B5B5"
           style={{
             borderWidth: 1,
-            borderColor: '#E2E8F0',
-            borderRadius: 12,
-            paddingHorizontal: 12,
-            paddingVertical: 12,
+            borderColor: '#F7F7F7',
+            borderRadius: 16,
+            paddingHorizontal: 16,
+            paddingVertical: 14,
             fontSize: 14,
-            color: theme.text,
-            backgroundColor: theme.card,
-            marginBottom: 12,
+            color: '#131313',
+            backgroundColor: '#F7F7F7',
+            marginBottom: 16,
+            fontWeight: '600',
           }}
         />
 
@@ -269,16 +282,21 @@ function LibrarySection() {
                 onPress={() => setSelectedCategory(cat)}
                 style={{
                   paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  borderRadius: 20,
-                  backgroundColor: selectedCategory === cat ? theme.primary : theme.card,
+                  paddingVertical: 10,
+                  borderRadius: 16,
+                  backgroundColor: selectedCategory === cat ? theme.primary : '#F7F7F7',
+                  shadowColor: selectedCategory === cat ? theme.primary : 'transparent',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: selectedCategory === cat ? 0.2 : 0,
+                  shadowRadius: 4,
+                  elevation: selectedCategory === cat ? 2 : 0,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 12,
-                    fontWeight: '700',
-                    color: selectedCategory === cat ? '#000000' : theme.text,
+                    fontSize: 13,
+                    fontWeight: '900',
+                    color: selectedCategory === cat ? '#000000' : '#131313',
                   }}
                 >
                   {cat}
@@ -290,25 +308,23 @@ function LibrarySection() {
 
         <View
           style={{
-            backgroundColor: theme.card,
-            borderColor: '#E2E8F0',
-            borderWidth: 1,
-            borderRadius: 14,
-            padding: 12,
+            backgroundColor: '#F7F7F7',
+            borderRadius: 24,
+            padding: 16,
             marginBottom: 16,
           }}
         >
-          <Text style={{ fontSize: 13, fontWeight: '800', color: '#334155', marginBottom: 8 }}>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', marginBottom: 12 }}>
             "White Market" Checklist
           </Text>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 12, color: '#475569' }}>
+          <View style={{ gap: 8 }}>
+            <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
               • Verifiable physical business address (not just a PO Box).
             </Text>
-            <Text style={{ fontSize: 12, color: '#475569' }}>
+            <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
               • Recent 3rd-party HPLC testing with batch-specific COAs.
             </Text>
-            <Text style={{ fontSize: 12, color: '#475569' }}>
+            <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
               • Domain registration age and transparent ownership.
             </Text>
           </View>
@@ -317,7 +333,7 @@ function LibrarySection() {
 
       {filteredItems.length === 0 ? (
         <Card>
-          <Text style={{ textAlign: 'center', color: theme.muted, paddingVertical: 20 }}>
+          <Text style={{ textAlign: 'center', color: '#B5B5B5', paddingVertical: 20, fontSize: 14, fontWeight: '600' }}>
             No items found matching your search.
           </Text>
         </Card>
@@ -330,65 +346,65 @@ function LibrarySection() {
               <Pressable onPress={() => toggleExpand(item.id)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                   <View style={{ flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+                      <Text style={{ fontSize: 16, fontWeight: '900', color: '#131313' }}>
                         {item.name}
                       </Text>
                       <View
                         style={{
-                          paddingHorizontal: 8,
+                          paddingHorizontal: 10,
                           paddingVertical: 4,
-                          borderRadius: 8,
-                          backgroundColor: theme.card,
+                          borderRadius: 12,
+                          backgroundColor: '#F7F7F7',
                         }}
                       >
-                        <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: '#131313' }}>
                           {item.category}
                         </Text>
                       </View>
                       <View
                         style={{
-                          paddingHorizontal: 8,
+                          paddingHorizontal: 10,
                           paddingVertical: 4,
-                          borderRadius: 8,
+                          borderRadius: 12,
                           backgroundColor: evidenceColor.bg,
                         }}
                       >
-                        <Text style={{ fontSize: 10, fontWeight: '700', color: evidenceColor.text }}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: evidenceColor.text }}>
                           {item.evidenceLevel}
                         </Text>
                       </View>
                     </View>
                     <Text
-                      style={{ fontSize: 12, color: theme.muted, lineHeight: 16 }}
+                      style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}
                       numberOfLines={isExpanded ? 0 : 2}
                     >
                       {item.mechanismOfAction}
                     </Text>
                   </View>
-                  <Text style={{ fontSize: 20, color: theme.muted, marginLeft: 12 }}>
+                  <Text style={{ fontSize: 18, color: '#B5B5B5', marginLeft: 12, fontWeight: '700' }}>
                     {isExpanded ? '▲' : '▼'}
                   </Text>
                 </View>
               </Pressable>
 
               {isExpanded && (
-                <View style={{ marginTop: 16, gap: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#E2E8F0' }}>
+                <View style={{ marginTop: 20, gap: 20, paddingTop: 20, borderTopWidth: 1, borderTopColor: '#F7F7F7' }}>
                   <View>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 6 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 8 }}>
                       {t.library.mechanism}
                     </Text>
-                    <Text style={{ fontSize: 12, color: theme.muted, lineHeight: 18 }}>
+                    <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                       {item.mechanismOfAction}
                     </Text>
                   </View>
 
                   <View>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 6 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 8 }}>
                       {t.library.uses}
                     </Text>
                     {item.wellnessUses.map((use, idx) => (
-                      <Text key={idx} style={{ fontSize: 12, color: theme.muted, marginBottom: 4 }}>
+                      <Text key={idx} style={{ fontSize: 13, color: '#131313', marginBottom: 6, lineHeight: 20, fontWeight: '400' }}>
                         • {use}
                       </Text>
                     ))}
@@ -396,31 +412,31 @@ function LibrarySection() {
 
                   <View style={{ flexDirection: 'row', gap: 12 }}>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>
+                      <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                         {t.library.forms}
                       </Text>
-                      <Text style={{ fontSize: 12, color: theme.muted }}>{item.commonForms}</Text>
+                      <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>{item.commonForms}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>
+                      <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                         {t.library.timing}
                       </Text>
-                      <Text style={{ fontSize: 12, color: theme.muted }}>{item.timing}</Text>
+                      <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>{item.timing}</Text>
                     </View>
                   </View>
 
                   <View>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                       {t.library.avoid}
                     </Text>
-                    <Text style={{ fontSize: 12, color: theme.muted }}>{item.whoShouldAvoid}</Text>
+                    <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>{item.whoShouldAvoid}</Text>
                   </View>
 
                   <View>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                       {t.library.interactions}
                     </Text>
-                    <Text style={{ fontSize: 12, color: theme.muted }}>{item.interactions}</Text>
+                    <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>{item.interactions}</Text>
                   </View>
 
                   {(item.researchOnly || item.prescriptionOnly) && (
@@ -429,31 +445,31 @@ function LibrarySection() {
                         backgroundColor: '#FEF3C7',
                         borderWidth: 1,
                         borderColor: '#FDE68A',
-                        borderRadius: 12,
-                        padding: 12,
+                        borderRadius: 16,
+                        padding: 16,
                         marginBottom: 12
                       }}
                     >
-                      <Text style={{ fontSize: 12, fontWeight: '800', color: '#92400E', marginBottom: 8 }}>
+                      <Text style={{ fontSize: 13, fontWeight: '900', color: '#92400E', marginBottom: 10 }}>
                         ⚠️ Safety Information
                       </Text>
                       {item.researchOnly && (
-                        <Text style={{ fontSize: 11, color: '#92400E', marginBottom: 4 }}>
+                        <Text style={{ fontSize: 12, color: '#92400E', marginBottom: 6, lineHeight: 18, fontWeight: '600' }}>
                           • Research-only compound. Not FDA-approved for human use.
                         </Text>
                       )}
                       {item.prescriptionOnly && (
-                        <Text style={{ fontSize: 11, color: '#92400E', marginBottom: 4 }}>
+                        <Text style={{ fontSize: 12, color: '#92400E', marginBottom: 6, lineHeight: 18, fontWeight: '600' }}>
                           • Prescription-only. Requires medical supervision.
                         </Text>
                       )}
                       {item.questionsForClinician && item.questionsForClinician.length > 0 && (
-                        <View style={{ marginTop: 8 }}>
-                          <Text style={{ fontSize: 11, fontWeight: '700', color: '#92400E', marginBottom: 6 }}>
+                        <View style={{ marginTop: 10 }}>
+                          <Text style={{ fontSize: 12, fontWeight: '800', color: '#92400E', marginBottom: 8 }}>
                             Questions to Ask a Clinician:
                           </Text>
                           {item.questionsForClinician.map((q, idx) => (
-                            <Text key={idx} style={{ fontSize: 11, color: '#92400E', marginBottom: 4, marginLeft: 8 }}>
+                            <Text key={idx} style={{ fontSize: 12, color: '#92400E', marginBottom: 6, marginLeft: 8, lineHeight: 18, fontWeight: '600' }}>
                               • {q}
                             </Text>
                           ))}
@@ -463,10 +479,10 @@ function LibrarySection() {
                   )}
 
                   <View>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>
+                    <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                       {t.library.regulatory}
                     </Text>
-                    <Text style={{ fontSize: 12, color: theme.text, fontWeight: '700' }}>
+                    <Text style={{ fontSize: 13, color: '#131313', fontWeight: '700' }}>
                       {item.regulatoryStatus}
                     </Text>
                   </View>
