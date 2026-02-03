@@ -5,6 +5,8 @@ import { useLanguage } from '../contexts/LanguageContext.jsx';
 import { WebLocalStorageAdapter } from '../core/storage.js';
 import { STORAGE_KEYS } from '../core/keys.js';
 import { chatWithBodyOS } from '../core/ai-bodyos-chat.js';
+import { isBackendConfigured } from '../core/auth-api.js';
+import { chatWithBodyOSBackend } from '../core/ai-backend.js';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -32,7 +34,7 @@ export default function BodyOSIntelligence() {
     if (!message.trim() || loading) return;
 
     const apiKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setError(t.ai.research.addKey);
       return;
     }
@@ -50,11 +52,20 @@ export default function BodyOSIntelligence() {
     storage.save(STORAGE_KEYS.CHAT_HISTORY, newMessages);
 
     try {
-      const response = await chatWithBodyOS(userMessage, apiKey, language);
-      const updatedMessages = [
-        ...newMessages,
-        { role: 'assistant', content: response },
-      ];
+      let assistantText = '';
+      let updatedMessages = null;
+
+      if (isBackendConfigured()) {
+        const result = await chatWithBodyOSBackend(userMessage, language, messages);
+        assistantText = result.assistantMessage;
+        updatedMessages = Array.isArray(result.updatedHistory)
+          ? result.updatedHistory
+          : [...newMessages, { role: 'assistant', content: assistantText }];
+      } else {
+        assistantText = await chatWithBodyOS(userMessage, apiKey, language);
+        updatedMessages = [...newMessages, { role: 'assistant', content: assistantText }];
+      }
+
       setMessages(updatedMessages);
       storage.save(STORAGE_KEYS.CHAT_HISTORY, updatedMessages);
     } catch (err) {

@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 export async function apiFetch(path, options = {}) {
   const url = `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
@@ -9,13 +9,21 @@ export async function apiFetch(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(url, {
+  const fetchOptions = {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...headers,
     },
-  });
+  };
+
+  if (options.body && typeof options.body === 'string') {
+    fetchOptions.body = options.body;
+  } else if (options.body) {
+    fetchOptions.body = JSON.stringify(options.body);
+  }
+
+  const res = await fetch(url, fetchOptions);
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: 'Request failed' }));

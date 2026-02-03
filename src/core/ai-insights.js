@@ -1,4 +1,19 @@
+import { isBackendConfigured } from './auth-api';
+import { apiFetch } from './api-client';
+
 export async function generateInsights(protocols, nutritionFloors, apiKey) {
+  if (isBackendConfigured()) {
+    try {
+      const res = await apiFetch('/ai/insights', {
+        method: 'POST',
+        body: JSON.stringify({ protocols: protocols || [], nutritionFloors: nutritionFloors || null }),
+      });
+      return { insights: Array.isArray(res?.insights) ? res.insights : [] };
+    } catch (error) {
+      throw new Error(error.message || 'Failed to generate insights');
+    }
+  }
+
   if (!apiKey) {
     throw new Error('OpenAI API key is required');
   }
