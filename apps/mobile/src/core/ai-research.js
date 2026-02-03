@@ -1,55 +1,21 @@
 import { isBackendConfigured } from './auth-api';
 import { apiFetch } from './api-client';
 
-export async function askResearchQuestion(question, apiKey) {
-  if (isBackendConfigured()) {
-    if (!question || !question.trim()) throw new Error('Question cannot be empty');
-    const res = await apiFetch('/ai/research', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: question.trim() }),
-    });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);
-    return json?.answer ?? '';
-  }
-
-  if (!apiKey) {
-    throw new Error('OpenAI API key is required');
+export async function askResearchQuestion(question) {
+  if (!isBackendConfigured()) {
+    throw new Error('Backend not configured. Please set API_URL in environment variables.');
   }
 
   if (!question || !question.trim()) {
     throw new Error('Question cannot be empty');
   }
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const res = await apiFetch('/ai/research', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a biohacking research assistant specializing in peptides, compounds, and longevity protocols. Provide evidence-based, concise answers. Always emphasize safety considerations and cite general research findings when relevant. Keep responses under 300 words.'
-        },
-        {
-          role: 'user',
-          content: question.trim()
-        }
-      ],
-      max_tokens: 400,
-      temperature: 0.7
-    })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question: question.trim() }),
   });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: { message: 'API request failed' } }));
-    throw new Error(error.error?.message || `API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data.choices[0].message.content;
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);
+  return json?.answer ?? '';
 }

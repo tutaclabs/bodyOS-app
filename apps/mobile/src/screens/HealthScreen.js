@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TextInput, Pressable, ScrollView, Linking, ActivityIndicator } from 'react-native';
+import { Text, View, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
 import { STORAGE_KEYS } from '../core/keys';
@@ -19,38 +19,6 @@ const AIResearchAssistant = () => {
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [showKeyInput, setShowKeyInput] = useState(false);
-  const [keySaved, setKeySaved] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      if (isBackendConfigured()) {
-        setKeySaved(true);
-        return;
-      }
-      const savedKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-      if (savedKey) {
-        setApiKey(savedKey);
-        setKeySaved(true);
-      }
-    })();
-  }, []);
-
-  const handleSaveKey = async () => {
-    if (apiKey.trim()) {
-      await storage.save(STORAGE_KEYS.OPENAI_API_KEY, apiKey.trim());
-      setKeySaved(true);
-      setShowKeyInput(false);
-    }
-  };
-
-  const handleRemoveKey = async () => {
-    await storage.save(STORAGE_KEYS.OPENAI_API_KEY, '');
-    setApiKey('');
-    setKeySaved(false);
-    setAnswer('');
-  };
 
   const handleAsk = async () => {
     if (!question.trim()) {
@@ -58,9 +26,8 @@ const AIResearchAssistant = () => {
       return;
     }
 
-    if (!isBackendConfigured() && !apiKey) {
-      setError('OpenAI API key is required');
-      setShowKeyInput(true);
+    if (!isBackendConfigured()) {
+      setError('Backend not configured. Please set API_URL in environment variables.');
       return;
     }
 
@@ -69,10 +36,10 @@ const AIResearchAssistant = () => {
     setAnswer('');
 
     try {
-      const response = await askResearchQuestion(question, apiKey);
+      const response = await askResearchQuestion(question);
       setAnswer(response);
     } catch (err) {
-      setError(err.message || 'Failed to get response. Please check your API key.');
+      setError(err.message || 'Failed to get response.');
     } finally {
       setLoading(false);
     }
@@ -90,113 +57,49 @@ const AIResearchAssistant = () => {
         <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313' }}>
           ⚡ AI Research Assistant
         </Text>
-        {keySaved ? (
-          <Pressable onPress={handleRemoveKey}>
-            <Text style={{ fontSize: 12, color: '#B5B5B5', fontWeight: '700' }}>Remove Key</Text>
-          </Pressable>
-        ) : (
-          <Pressable onPress={() => setShowKeyInput(!showKeyInput)}>
-            <Text style={{ fontSize: 12, color: theme.primary, fontWeight: '900' }}>
-              {showKeyInput ? 'Cancel' : 'Add API Key'}
-            </Text>
-          </Pressable>
-        )}
       </View>
 
-      {showKeyInput && !keySaved && !isBackendConfigured() && (
-        <View style={{ marginBottom: 16, padding: 16, backgroundColor: '#F7F7F7', borderRadius: 16 }}>
-          <TextInput
-            value={apiKey}
-            onChangeText={setApiKey}
-            placeholder="Enter your OpenAI API key"
-            placeholderTextColor="#B5B5B5"
-            secureTextEntry
-            style={{
-              borderWidth: 1,
-              borderColor: '#F7F7F7',
-              borderRadius: 16,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-              fontSize: 13,
-              color: '#131313',
-              backgroundColor: '#FFFFFF',
-              marginBottom: 12,
-              fontWeight: '600',
-            }}
-          />
-          <Pressable
-            onPress={handleSaveKey}
-            style={{
-              backgroundColor: theme.primary,
-              borderRadius: 16,
-              paddingVertical: 14,
-              alignItems: 'center',
-              shadowColor: theme.primary,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
-          >
-            <Text style={{ color: '#000000', fontWeight: '900', fontSize: 14 }}>Save Key</Text>
-          </Pressable>
-          <Text style={{ fontSize: 11, color: '#B5B5B5', marginTop: 12, lineHeight: 16, fontWeight: '400' }}>
-            Your API key is stored locally. Get one at{' '}
-            <Text
-              style={{ color: theme.primary, textDecorationLine: 'underline', fontWeight: '700' }}
-              onPress={() => Linking.openURL('https://platform.openai.com/api-keys')}
-            >
-              platform.openai.com
-            </Text>
-          </Text>
-        </View>
-      )}
-
-      {keySaved && (
-        <>
-          <TextInput
-            value={question}
-            onChangeText={setQuestion}
-            placeholder="Ask about compounds, protocols, dosing..."
-            placeholderTextColor="#B5B5B5"
-            style={{
-              borderWidth: 1,
-              borderColor: '#F7F7F7',
-              borderRadius: 16,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-              fontSize: 13,
-              color: '#131313',
-              backgroundColor: '#F7F7F7',
-              marginBottom: 12,
-              fontWeight: '600',
-            }}
-            editable={!loading}
-          />
-          <Pressable
-            onPress={handleAsk}
-            disabled={loading || !question.trim()}
-            style={{
-              backgroundColor: theme.primary,
-              borderRadius: 16,
-              paddingVertical: 14,
-              alignItems: 'center',
-              opacity: loading || !question.trim() ? 0.5 : 1,
-              shadowColor: theme.primary,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
-          >
-            {loading ? (
-              <ActivityIndicator color="#000000" />
-            ) : (
-              <Text style={{ color: '#000000', fontWeight: '900', fontSize: 14 }}>Ask AI</Text>
-            )}
-          </Pressable>
-        </>
-      )}
+      <TextInput
+        value={question}
+        onChangeText={setQuestion}
+        placeholder="Ask about compounds, protocols, dosing..."
+        placeholderTextColor="#B5B5B5"
+        style={{
+          borderWidth: 1,
+          borderColor: '#F7F7F7',
+          borderRadius: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          fontSize: 13,
+          color: '#131313',
+          backgroundColor: '#F7F7F7',
+          marginBottom: 12,
+          fontWeight: '600',
+        }}
+        editable={!loading}
+      />
+      <Pressable
+        onPress={handleAsk}
+        disabled={loading || !question.trim()}
+        style={{
+          backgroundColor: theme.primary,
+          borderRadius: 16,
+          paddingVertical: 14,
+          alignItems: 'center',
+          opacity: loading || !question.trim() ? 0.5 : 1,
+          shadowColor: theme.primary,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 4,
+        }}
+      >
+        {loading ? (
+          <ActivityIndicator color="#000000" />
+        ) : (
+          <Text style={{ color: '#000000', fontWeight: '900', fontSize: 14 }}>Ask AI</Text>
+        )}
+      </Pressable>
 
       {error && (
         <View style={{ marginTop: 16, padding: 14, backgroundColor: '#FEE2E2', borderRadius: 16, borderWidth: 1, borderColor: '#FECACA' }}>
