@@ -94,6 +94,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
             paddingVertical: 12,
             alignItems: 'center',
             opacity: loading ? 0.5 : 1,
+            marginBottom: 12,
           }}
         >
           {loading ? (
@@ -102,8 +103,130 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
             <Text style={{ color: '#000000', fontWeight: '700', fontSize: 13 }}>✨ {t.recommendations.getRecommendations}</Text>
           )}
         </Pressable>
+        
         {error && (
-          <Text style={{ fontSize: 11, color: '#DC2626', marginTop: 8 }}>{error}</Text>
+          <Text style={{ fontSize: 11, color: '#DC2626', marginTop: 8, marginBottom: 12 }}>{error}</Text>
+        )}
+
+        {recommendations && (
+          <View style={{ gap: 12, marginTop: 12 }}>
+            {recommendations.warnings && recommendations.warnings.length > 0 && (
+              <View style={{ padding: 12, backgroundColor: '#FEF3C7', borderRadius: 12, borderWidth: 1, borderColor: '#FDE68A' }}>
+                <Text style={{ fontSize: 12, fontWeight: '800', color: '#92400E', marginBottom: 8 }}>⚠️ {t.recommendations.warnings}</Text>
+                {recommendations.warnings.map((warning, idx) => (
+                  <Text key={idx} style={{ fontSize: 11, color: '#92400E', marginLeft: 8, marginBottom: 4 }}>
+                    • {warning}
+                  </Text>
+                ))}
+              </View>
+            )}
+
+            {recommendations.recommendations && recommendations.recommendations.length > 0 ? (
+              <View style={{ gap: 10 }}>
+                {recommendations.recommendations.map((rec, idx) => {
+                  const isExpanded = expandedRec.has(idx);
+                  const categoryColors = getCategoryColor(rec.category);
+                  return (
+                    <View
+                      key={idx}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: theme.border,
+                        borderRadius: 12,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Pressable
+                        onPress={() => toggleExpand(idx)}
+                        style={{
+                          padding: 14,
+                          backgroundColor: theme.card,
+                        }}
+                      >
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <View style={{ flex: 1 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                              <Text style={{ fontWeight: '800', color: theme.text, fontSize: 15 }}>{rec.compoundName}</Text>
+                              <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, backgroundColor: categoryColors.bg, borderWidth: 1, borderColor: categoryColors.border }}>
+                                <Text style={{ fontSize: 10, fontWeight: '700', color: categoryColors.text }}>{rec.category}</Text>
+                              </View>
+                            </View>
+                            <Text style={{ fontSize: 12, color: theme.muted }} numberOfLines={1}>{rec.rationale}</Text>
+                          </View>
+                          {onAddToProtocols && (
+                            <Pressable
+                              onPress={() => handleAddToProtocols(rec)}
+                              style={{
+                                padding: 8,
+                                backgroundColor: theme.primary,
+                                borderRadius: 8,
+                                marginLeft: 8,
+                              }}
+                            >
+                              <Text style={{ color: '#000000', fontSize: 16, fontWeight: '800' }}>+</Text>
+                            </Pressable>
+                          )}
+                        </View>
+                      </Pressable>
+
+                      {isExpanded && (
+                        <View style={{ padding: 14, backgroundColor: theme.card, borderTopWidth: 1, borderTopColor: theme.border, gap: 12 }}>
+                          <View>
+                            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.rationale}</Text>
+                            <Text style={{ fontSize: 12, color: theme.muted, lineHeight: 18 }}>{rec.rationale}</Text>
+                          </View>
+
+                          <View style={{ flexDirection: 'row', gap: 12 }}>
+                            <View style={{ flex: 1 }}>
+                              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.dosageRange}</Text>
+                              <Text style={{ fontSize: 12, color: theme.muted }}>{rec.dosageRange}</Text>
+                            </View>
+                            <View style={{ flex: 1 }}>
+                              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.timing}</Text>
+                              <Text style={{ fontSize: 12, color: theme.muted }}>{rec.timing}</Text>
+                            </View>
+                          </View>
+
+                          {rec.cycleOn && rec.cycleOff && (
+                            <View>
+                              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.cycle}</Text>
+                              <Text style={{ fontSize: 12, color: theme.muted }}>
+                                {rec.cycleOn} {t.protocols.daysOn} / {rec.cycleOff} {t.protocols.daysOff}
+                              </Text>
+                            </View>
+                          )}
+
+                          {rec.safetyNotes && rec.safetyNotes.length > 0 && (
+                            <View>
+                              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>ℹ️ {t.recommendations.safetyNotes}</Text>
+                              {rec.safetyNotes.map((note, noteIdx) => (
+                                <Text key={noteIdx} style={{ fontSize: 11, color: theme.muted, marginLeft: 8, marginBottom: 2 }}>
+                                  • {note}
+                                </Text>
+                              ))}
+                            </View>
+                          )}
+                        </View>
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            ) : recommendations && (
+              <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', paddingVertical: 12 }}>{t.recommendations.noRecommendations}</Text>
+            )}
+
+            {recommendations.considerations && recommendations.considerations.length > 0 && (
+              <View style={{ padding: 12, backgroundColor: '#DBEAFE', borderRadius: 12, borderWidth: 1, borderColor: '#93C5FD' }}>
+                <Text style={{ fontSize: 12, fontWeight: '800', color: '#1E40AF', marginBottom: 8 }}>ℹ️ {t.recommendations.considerations}</Text>
+                {recommendations.considerations.map((consideration, idx) => (
+                  <Text key={idx} style={{ fontSize: 11, color: '#1E40AF', marginLeft: 8, marginBottom: 4 }}>
+                    • {consideration}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
         )}
       </Card>
     );
