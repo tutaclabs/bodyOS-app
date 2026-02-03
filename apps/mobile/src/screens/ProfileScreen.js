@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, Pressable, Alert } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
+import { Screen } from '../ui/Screen';
+import { SectionHeader } from '../ui/SectionHeader';
+import { Chip } from '../ui/Chip';
+import { PrimaryButton } from '../ui/PrimaryButton';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
@@ -74,13 +78,13 @@ export function ProfileScreen({ onLogout }) {
 
   if (!userSettings) {
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
+      <Screen>
         <Card>
           <Text style={{ textAlign: 'center', color: theme.muted, paddingVertical: 20 }}>
             Loading profile...
           </Text>
         </Card>
-      </ScrollView>
+      </Screen>
     );
   }
 
@@ -90,12 +94,9 @@ export function ProfileScreen({ onLogout }) {
   const lifestyle = userSettings.lifestyle || {};
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <Screen>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 24 }}>
-          <Text style={{ fontSize: 20 }}>👤</Text>
-          <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313' }}>Profile</Text>
-        </View>
+        <SectionHeader title="Profile" subtitle="Your onboarding and goals" />
 
         {currentUser && (
             <View style={{ marginBottom: 24, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: '#F7F7F7' }}>
@@ -122,21 +123,7 @@ export function ProfileScreen({ onLogout }) {
               {goals.length > 0 ? (
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {goals.map((goal, idx) => (
-                    <View
-                      key={idx}
-                      style={{
-                        paddingHorizontal: 14,
-                        paddingVertical: 10,
-                        backgroundColor: '#F261010D',
-                        borderRadius: 16,
-                        borderWidth: 1,
-                        borderColor: '#F2610133',
-                      }}
-                    >
-                      <Text style={{ fontSize: 13, fontWeight: '900', color: theme.primary }}>
-                        {getGoalLabel(goal)}
-                      </Text>
-                    </View>
+                    <Chip key={idx} label={getGoalLabel(goal)} selected />
                   ))}
                 </View>
               ) : (
@@ -272,23 +259,7 @@ export function ProfileScreen({ onLogout }) {
         )}
 
         {onLogout && (
-          <Pressable
-            onPress={onLogout}
-            style={{
-              marginTop: 24,
-              paddingVertical: 16,
-              backgroundColor: theme.primary,
-              borderRadius: 16,
-              alignItems: 'center',
-              shadowColor: theme.primary,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
-          >
-            <Text style={{ color: '#000000', fontWeight: '900', fontSize: 16 }}>Logout</Text>
-          </Pressable>
+          <PrimaryButton label="Logout" onPress={onLogout} style={{ marginTop: 16 }} />
         )}
       </Card>
 
@@ -301,6 +272,6 @@ export function ProfileScreen({ onLogout }) {
           are also stored locally for offline access. AI features require your OpenAI API key.
         </Text>
       </Card>
-    </ScrollView>
+    </Screen>
   );
 }

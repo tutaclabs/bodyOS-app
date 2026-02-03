@@ -8,8 +8,15 @@ export function Card({ children, style }) {
       style={[
         {
           backgroundColor: '#FFFFFF',
-          borderRadius: 24,
+          borderRadius: 20,
           padding: 16,
+          borderWidth: 1,
+          borderColor: theme.border,
+          shadowColor: theme.shadow,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
+          elevation: 2,
           overflow: 'hidden',
         },
         style
@@ -21,4 +28,3 @@ export function Card({ children, style }) {
     </View>
   );
 }
-

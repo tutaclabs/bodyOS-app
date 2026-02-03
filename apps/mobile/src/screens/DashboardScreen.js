@@ -16,6 +16,9 @@ import { isBackendConfigured } from '../core/auth-api';
 import { ExpirationBadge } from '../components/features/expiration-alerts/ExpirationBadge';
 import { ExpirationModal } from '../components/features/expiration-alerts/ExpirationModal';
 import Recommendations from '../components/Recommendations';
+import { SectionHeader } from '../ui/SectionHeader';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { EmptyState } from '../ui/EmptyState';
 
 const storage = new AsyncStorageAdapter();
 
@@ -100,6 +103,10 @@ export function DashboardScreen() {
   const [parseError, setParseError] = useState('');
   const [editingProtocol, setEditingProtocol] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
+  const [planDefaults, setPlanDefaults] = useState({});
+  const [defaultDose, setDefaultDose] = useState('');
+  const [defaultUnits, setDefaultUnits] = useState('');
+  const [defaultTime, setDefaultTime] = useState('');
 
   const [floors, setFloors] = useState({
     protein: { current: 120, target: 160, unit: 'g' },
@@ -117,6 +124,8 @@ export function DashboardScreen() {
     (async () => {
       let savedProtocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
       savedProtocols = Array.isArray(savedProtocols) ? savedProtocols : [];
+      const savedDefaults = await storage.load(STORAGE_KEYS.PEPTIDE_PLAN_DEFAULTS, {});
+      setPlanDefaults(savedDefaults || {});
       // Migration: Add timeOfDay to existing protocols
       const needsMigration = savedProtocols.some(p => !p.timeOfDay);
       if (needsMigration) {
@@ -134,6 +143,18 @@ export function DashboardScreen() {
   }, []);
 
   const activeCount = useMemo(() => (Array.isArray(protocols) ? protocols.length : 0), [protocols]);
+  const floorsProgress = useMemo(() => {
+    const entries = Object.values(floors || {});
+    if (entries.length === 0) return { percent: 0, completed: 0, total: 0 };
+    const percents = entries.map((item) => {
+      const current = Number(item?.current || 0);
+      const target = Number(item?.target || 1);
+      return Math.min(1, current / target);
+    });
+    const completed = percents.filter((p) => p >= 1).length;
+    const percent = Math.round((percents.reduce((sum, p) => sum + p, 0) / percents.length) * 100);
+    return { percent, completed, total: percents.length };
+  }, [floors]);
 
   const addProtocol = async () => {
     if (!name.trim()) return;
@@ -148,20 +169,48 @@ export function DashboardScreen() {
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
       await pushProtocols(next).catch(() => {});
       setEditingProtocol(null);
+      if (defaultDose || defaultUnits || defaultTime) {
+        const updatedDefaults = {
+          ...(planDefaults || {}),
+          [editingProtocol.id]: {
+            doseAmount: defaultDose ? Number(defaultDose) : null,
+            units: defaultUnits ? Number(defaultUnits) : null,
+            time: defaultTime || ''
+          }
+        };
+        await storage.save(STORAGE_KEYS.PEPTIDE_PLAN_DEFAULTS, updatedDefaults);
+        setPlanDefaults(updatedDefaults);
+      }
     } else {
+      const id = Date.now();
       const next = [
         ...protocols,
-        { id: Date.now(), name: name.trim(), cycleOn: Number(cycleOn) || 0, cycleOff: Number(cycleOff) || 0, timeOfDay: timeOfDay }
+        { id, name: name.trim(), cycleOn: Number(cycleOn) || 0, cycleOff: Number(cycleOff) || 0, timeOfDay: timeOfDay }
       ];
       setProtocols(next);
       await storage.save(STORAGE_KEYS.PROTOCOLS, next);
       await pushProtocols(next).catch(() => {});
+      if (defaultDose || defaultUnits || defaultTime) {
+        const updatedDefaults = {
+          ...(planDefaults || {}),
+          [id]: {
+            doseAmount: defaultDose ? Number(defaultDose) : null,
+            units: defaultUnits ? Number(defaultUnits) : null,
+            time: defaultTime || ''
+          }
+        };
+        await storage.save(STORAGE_KEYS.PEPTIDE_PLAN_DEFAULTS, updatedDefaults);
+        setPlanDefaults(updatedDefaults);
+      }
     }
     
     setName('');
     setCycleOn('5');
     setCycleOff('2');
     setTimeOfDay('flexible');
+    setDefaultDose('');
+    setDefaultUnits('');
+    setDefaultTime('');
     setIsAdding(false);
     setUseNaturalLanguage(false);
   };
@@ -172,6 +221,10 @@ export function DashboardScreen() {
     setCycleOn(String(protocol.cycleOn));
     setCycleOff(String(protocol.cycleOff));
     setTimeOfDay(protocol.timeOfDay || 'flexible');
+    const defaults = planDefaults?.[protocol.id];
+    setDefaultDose(defaults?.doseAmount ? String(defaults.doseAmount) : '');
+    setDefaultUnits(defaults?.units ? String(defaults.units) : '');
+    setDefaultTime(defaults?.time || '');
     setIsAdding(true);
     setUseNaturalLanguage(false);
   };
@@ -373,10 +426,32 @@ export function DashboardScreen() {
           await storage.save(STORAGE_KEYS.PROTOCOLS, next);
           await pushProtocols(next).catch(() => {});
         }} />
+
+        <Card>
+          <SectionHeader title="Today Snapshot" subtitle="Quick view of your current plan" />
+          <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
+            <View style={{ flex: 1, padding: 12, borderRadius: 14, backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: theme.border }}>
+              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Active Protocols
+              </Text>
+              <Text style={{ marginTop: 6, fontSize: 22, fontWeight: '900', color: theme.text }}>
+                {activeCount}
+              </Text>
+            </View>
+            <View style={{ flex: 1, padding: 12, borderRadius: 14, backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: theme.border }}>
+              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Floors
+              </Text>
+              <Text style={{ marginTop: 6, fontSize: 18, fontWeight: '900', color: theme.text }}>
+                {floorsProgress.percent}% <Text style={{ fontSize: 12, color: theme.muted }}>{floorsProgress.completed}/{floorsProgress.total}</Text>
+              </Text>
+            </View>
+          </View>
+        </Card>
         
         <Card>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text }}>Active Stacks</Text>
+          <SectionHeader title="Active Stacks" subtitle="Protocols and cycle details" />
+          <View style={{ marginTop: 8 }}>
             <SmallPill>{activeCount} Active</SmallPill>
           </View>
 
@@ -539,23 +614,11 @@ export function DashboardScreen() {
                   {parseError && (
                     <Text style={{ fontSize: 11, color: '#DC2626' }}>{parseError}</Text>
                   )}
-                  <Pressable
+                  <PrimaryButton
+                    label={parsing ? 'Parsing...' : '⚡ Parse & Add'}
                     onPress={handleParseAndAdd}
                     disabled={parsing || !naturalLanguageInput.trim()}
-                    style={{
-                      backgroundColor: theme.primary,
-                      borderRadius: 12,
-                      paddingVertical: 12,
-                      alignItems: 'center',
-                      opacity: parsing || !naturalLanguageInput.trim() ? 0.5 : 1
-                    }}
-                  >
-                    {parsing ? (
-                      <Text style={{ color: '#fff', fontWeight: '800' }}>Parsing...</Text>
-                    ) : (
-                      <Text style={{ color: '#fff', fontWeight: '800' }}>⚡ Parse & Add</Text>
-                    )}
-                  </Pressable>
+                  />
                   <Text style={{ fontSize: 10, color: '#64748B', textAlign: 'center' }}>
                     Describe your protocol naturally. AI will extract the details.
                   </Text>
@@ -656,19 +719,70 @@ export function DashboardScreen() {
                     </View>
                   </View>
 
-                  <Pressable
-                    onPress={addProtocol}
-                    style={{
-                      backgroundColor: theme.primary,
-                      borderRadius: 12,
-                      paddingVertical: 12,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <Text style={{ color: '#fff', fontWeight: '800' }}>
-                      {editingProtocol ? 'Update Protocol' : 'Save Protocol'}
+                  <View>
+                    <Text style={{ fontSize: 11, fontWeight: '700', color: theme.muted, marginBottom: 6 }}>
+                      Default Dose (Plan)
                     </Text>
-                  </Pressable>
+                    <View style={{ flexDirection: 'row', gap: 10 }}>
+                      <View style={{ flex: 1 }}>
+                        <TextInput
+                          value={defaultDose}
+                          onChangeText={setDefaultDose}
+                          keyboardType="numeric"
+                          placeholder="mcg"
+                          placeholderTextColor={theme.muted}
+                          style={{
+                            backgroundColor: theme.card,
+                            borderRadius: 12,
+                            paddingHorizontal: 12,
+                            paddingVertical: 10,
+                            color: theme.text,
+                            borderWidth: 1,
+                            borderColor: theme.border,
+                          }}
+                        />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <TextInput
+                          value={defaultUnits}
+                          onChangeText={setDefaultUnits}
+                          keyboardType="numeric"
+                          placeholder="units"
+                          placeholderTextColor={theme.muted}
+                          style={{
+                            backgroundColor: theme.card,
+                            borderRadius: 12,
+                            paddingHorizontal: 12,
+                            paddingVertical: 10,
+                            color: theme.text,
+                            borderWidth: 1,
+                            borderColor: theme.border,
+                          }}
+                        />
+                      </View>
+                    </View>
+                    <TextInput
+                      value={defaultTime}
+                      onChangeText={setDefaultTime}
+                      placeholder="default time (e.g., 08:00)"
+                      placeholderTextColor={theme.muted}
+                      style={{
+                        marginTop: 8,
+                        backgroundColor: theme.card,
+                        borderRadius: 12,
+                        paddingHorizontal: 12,
+                        paddingVertical: 10,
+                        color: theme.text,
+                        borderWidth: 1,
+                        borderColor: theme.border,
+                      }}
+                    />
+                  </View>
+
+                  <PrimaryButton
+                    label={editingProtocol ? 'Update Protocol' : 'Save Protocol'}
+                    onPress={addProtocol}
+                  />
                 </>
               )}
             </View>
@@ -676,9 +790,7 @@ export function DashboardScreen() {
 
           <View style={{ marginTop: 14 }}>
             {protocols.length === 0 ? (
-              <Text style={{ color: theme.muted, fontStyle: 'italic', textAlign: 'center', paddingVertical: 18 }}>
-                No active protocols set.
-              </Text>
+              <EmptyState title="No active protocols" subtitle="Add your first protocol to start tracking." />
             ) : (
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
                 {Array.isArray(protocols) && protocols.map((p, index) => {
@@ -907,25 +1019,13 @@ export function DashboardScreen() {
         </Card>
 
         <Card style={{ backgroundColor: '#F261010D', borderColor: '#F2610133' }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text }}>Personalized Insights</Text>
-            <Pressable
+          <SectionHeader title="Personalized Insights" subtitle="Patterns based on your protocols and nutrition" />
+          <View style={{ marginTop: 12 }}>
+            <PrimaryButton
+              label={loadingInsights ? 'Analyzing...' : '⚡ Generate'}
               onPress={handleGenerateInsights}
               disabled={loadingInsights}
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                backgroundColor: theme.primary,
-                borderRadius: 12,
-                opacity: loadingInsights ? 0.5 : 1
-              }}
-            >
-              {loadingInsights ? (
-                <Text style={{ color: '#000000', fontSize: 11, fontWeight: '700' }}>Analyzing...</Text>
-              ) : (
-                <Text style={{ color: '#000000', fontSize: 11, fontWeight: '700' }}>⚡ Generate</Text>
-              )}
-            </Pressable>
+            />
           </View>
 
           {insightsError && (
@@ -954,9 +1054,7 @@ export function DashboardScreen() {
           )}
 
           {insights.length === 0 && !loadingInsights && !insightsError && (
-            <Text style={{ fontSize: 11, color: '#64748B', textAlign: 'center', paddingVertical: 12 }}>
-              Tap "Generate" to analyze your protocols and nutrition data for personalized insights.
-            </Text>
+            <EmptyState title="No insights yet" subtitle="Tap Generate to analyze your protocols and nutrition data." />
           )}
         </Card>
 

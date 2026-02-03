@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Modal } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Modal, Alert } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
+import { Screen } from '../ui/Screen';
+import { SectionHeader } from '../ui/SectionHeader';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { EmptyState } from '../ui/EmptyState';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
@@ -259,8 +263,10 @@ export function TrackerScreen() {
   const [selectedDate, setSelectedDate] = useState(today);
   const [logs, setLogs] = useState({});
   const [protocols, setProtocols] = useState([]);
+  const [planDefaults, setPlanDefaults] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [editingLog, setEditingLog] = useState(null);
+  const [toast, setToast] = useState(null);
   
   const [formData, setFormData] = useState({
     protocolId: '',
@@ -269,7 +275,8 @@ export function TrackerScreen() {
     doseAmount: '',
     units: '',
     injectionSite: '',
-    notes: ''
+    notes: '',
+    saveAsDefault: false
   });
 
   useEffect(() => {
@@ -285,8 +292,10 @@ export function TrackerScreen() {
   const loadData = async () => {
     const savedLogs = await storage.load(STORAGE_KEYS.PEPTIDE_LOGS, {});
     const savedProtocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
+    const savedDefaults = await storage.load(STORAGE_KEYS.PEPTIDE_PLAN_DEFAULTS, {});
     setLogs(savedLogs);
     setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
+    setPlanDefaults(savedDefaults || {});
   };
 
   const loadLogsForDate = (date) => {
@@ -314,6 +323,60 @@ export function TrackerScreen() {
     setLogs(allLogs);
   };
 
+  const oneTapLog = async (protocol) => {
+    const defaults = planDefaults?.[protocol.id];
+    if (!defaults?.doseAmount) {
+      openLogForProtocol(protocol.id, false);
+      return;
+    }
+
+    const entry = {
+      protocolId: protocol.id,
+      protocolName: protocol.name,
+      date: selectedDate,
+      time: defaults.time || new Date().toTimeString().slice(0, 5),
+      doseAmount: Number(defaults.doseAmount),
+      units: defaults.units ?? null,
+      injectionSite: defaults.injectionSite || '',
+      notes: defaults.notes || ''
+    };
+
+    await saveLogEntry(entry);
+    setToast({ message: `${protocol.name} logged for ${selectedDate}` });
+    setTimeout(() => setToast(null), 1800);
+  };
+
+  const getProtocolCompliance = (protocolId, days = 7) => {
+    const todayDate = new Date();
+    let scheduled = 0;
+    let taken = 0;
+    let currentDate = new Date(todayDate);
+    currentDate.setDate(currentDate.getDate() - (days - 1));
+    let daysOnCount = 0;
+    let cycleDay = 0;
+
+    for (let i = 0; i < days; i++) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      if (cycleDay < (protocols.find(p => p.id === protocolId)?.cycleOn || 0)) {
+        scheduled += 1;
+        const dayLogs = logs[dateStr] || [];
+        if (dayLogs.some(log => log.protocolId === protocolId)) {
+          taken += 1;
+        }
+      }
+
+      daysOnCount++;
+      const protocol = protocols.find(p => p.id === protocolId);
+      const totalCycle = (protocol?.cycleOn || 0) + (protocol?.cycleOff || 0);
+      if (totalCycle > 0 && daysOnCount >= totalCycle) {
+        daysOnCount = 0;
+      }
+      cycleDay = daysOnCount;
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return { scheduled, taken };
+  };
   const deleteLogEntry = async (id, date) => {
     const allLogs = await storage.load(STORAGE_KEYS.PEPTIDE_LOGS, {});
     if (allLogs[date]) {
@@ -347,6 +410,20 @@ export function TrackerScreen() {
     };
 
     await saveLogEntry(entry);
+    if (formData.saveAsDefault) {
+      const nextDefaults = {
+        ...(planDefaults || {}),
+        [protocol.id]: {
+          doseAmount: Number(formData.doseAmount),
+          units: formData.units ? Number(formData.units) : null,
+          time: formData.time,
+          injectionSite: formData.injectionSite || '',
+          notes: formData.notes || ''
+        }
+      };
+      await storage.save(STORAGE_KEYS.PEPTIDE_PLAN_DEFAULTS, nextDefaults);
+      setPlanDefaults(nextDefaults);
+    }
     resetForm();
   };
 
@@ -358,7 +435,8 @@ export function TrackerScreen() {
       doseAmount: '',
       units: '',
       injectionSite: '',
-      notes: ''
+      notes: '',
+      saveAsDefault: false
     });
     setEditingLog(null);
     setShowForm(false);
@@ -373,7 +451,30 @@ export function TrackerScreen() {
       doseAmount: String(log.doseAmount),
       units: log.units ? String(log.units) : '',
       injectionSite: log.injectionSite || '',
-      notes: log.notes || ''
+      notes: log.notes || '',
+      saveAsDefault: false
+    });
+    setShowForm(true);
+  };
+
+  const openLatestLogForProtocol = (protocolId, date) => {
+    const dayLogs = logs[date] || [];
+    const match = dayLogs.find((log) => log.protocolId === protocolId);
+    if (match) startEdit(match);
+  };
+
+  const openLogForProtocol = (protocolId, useDefaults = true) => {
+    const defaults = planDefaults?.[protocolId];
+    setEditingLog(null);
+    setFormData({
+      protocolId: String(protocolId),
+      date: selectedDate,
+      time: useDefaults && defaults?.time ? defaults.time : new Date().toTimeString().slice(0, 5),
+      doseAmount: useDefaults && defaults?.doseAmount ? String(defaults.doseAmount) : '',
+      units: useDefaults && defaults?.units ? String(defaults.units) : '',
+      injectionSite: useDefaults && defaults?.injectionSite ? defaults.injectionSite : '',
+      notes: useDefaults && defaults?.notes ? defaults.notes : '',
+      saveAsDefault: !useDefaults
     });
     setShowForm(true);
   };
@@ -497,11 +598,118 @@ export function TrackerScreen() {
   const upcomingDoses = getUpcomingDoses();
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <Screen>
       <Card>
-        <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
-          {t.tracker?.title || 'Peptide Tracker'}
-        </Text>
+        <SectionHeader title="Plan" subtitle="Your active protocols and default doses" />
+        {Array.isArray(protocols) && protocols.length > 0 ? (
+          <View style={{ marginTop: 12, gap: 10 }}>
+            {protocols.map((protocol) => {
+              const defaults = planDefaults?.[protocol.id];
+              const compliance = getProtocolCompliance(protocol.id, 7);
+              const todayLogs = logs[selectedDate] || [];
+              const isLoggedToday = todayLogs.some(log => log.protocolId === protocol.id);
+              const compliancePercent = compliance.scheduled > 0 ? Math.round((compliance.taken / compliance.scheduled) * 100) : 0;
+              return (
+                <View
+                  key={protocol.id}
+                  style={{
+                    padding: 12,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: theme.border,
+                    backgroundColor: theme.card,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontWeight: '800', color: theme.text, fontSize: 14 }}>
+                        {protocol.name}
+                      </Text>
+                      <Text style={{ fontSize: 11, color: theme.muted, marginTop: 4 }}>
+                        {defaults?.doseAmount ? `${defaults.doseAmount} mcg` : 'No default dose set'}
+                        {defaults?.units ? ` • ${defaults.units} units` : ''}
+                      </Text>
+                      <Text style={{ fontSize: 11, color: theme.muted, marginTop: 4 }}>
+                        {compliance.taken}/{compliance.scheduled} logged • last 7 days
+                      </Text>
+                      <View
+                        style={{
+                          marginTop: 6,
+                          alignSelf: 'flex-start',
+                          paddingHorizontal: 8,
+                          paddingVertical: 4,
+                          borderRadius: 999,
+                          backgroundColor: compliancePercent >= 80 ? '#ECFDF5' : compliancePercent >= 50 ? '#FEF3C7' : '#FEE2E2',
+                          borderWidth: 1,
+                          borderColor: compliancePercent >= 80 ? '#A7F3D0' : compliancePercent >= 50 ? '#FDE68A' : '#FECACA'
+                        }}
+                      >
+                        <Text style={{ fontSize: 10, fontWeight: '800', color: compliancePercent >= 80 ? '#065F46' : compliancePercent >= 50 ? '#92400E' : '#B91C1C' }}>
+                          {compliancePercent}% compliance
+                        </Text>
+                      </View>
+                      {isLoggedToday && (
+                        <View style={{ marginTop: 6, alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 999, backgroundColor: '#ECFDF5', borderWidth: 1, borderColor: '#A7F3D0' }}>
+                          <Text style={{ fontSize: 10, fontWeight: '800', color: '#065F46' }}>Logged today</Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                      <Pressable
+                        onPress={() => {
+                          if (isLoggedToday) return;
+                          oneTapLog(protocol);
+                        }}
+                        style={{
+                          paddingHorizontal: 10,
+                          paddingVertical: 6,
+                          borderRadius: 10,
+                          backgroundColor: isLoggedToday ? '#E2E8F0' : theme.primary,
+                        }}
+                      >
+                        <Text style={{ fontSize: 11, fontWeight: '800', color: '#000000' }}>
+                          {isLoggedToday ? 'Logged' : 'Log Now'}
+                        </Text>
+                      </Pressable>
+                      {isLoggedToday && (
+                        <Pressable
+                          onPress={() => openLatestLogForProtocol(protocol.id, selectedDate)}
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 6,
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: theme.border,
+                          }}
+                        >
+                          <Text style={{ fontSize: 11, fontWeight: '700', color: theme.text }}>View Log</Text>
+                        </Pressable>
+                      )}
+                      <Pressable
+                        onPress={() => openLogForProtocol(protocol.id, false)}
+                        style={{
+                          paddingHorizontal: 10,
+                          paddingVertical: 6,
+                          borderRadius: 10,
+                          borderWidth: 1,
+                          borderColor: theme.border,
+                        }}
+                      >
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: theme.text }}>Set Default</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <EmptyState title="No active protocols" subtitle="Add protocols in Dashboard to build your plan." />
+        )}
+      </Card>
+
+      <Card>
+        <SectionHeader title={t.tracker?.title || 'Peptide Tracker'} subtitle="Log, review, and adjust your protocol usage" />
         <CalendarView
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
@@ -514,28 +722,18 @@ export function TrackerScreen() {
           <Text style={{ fontSize: 16, fontWeight: '700', color: theme.text }}>
             {new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </Text>
-          <Pressable
+          <PrimaryButton
+            label={t.tracker?.addDose || '+ Add Dose'}
             onPress={() => {
               resetForm();
               setShowForm(true);
             }}
-            style={{
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-              backgroundColor: theme.primary,
-              borderRadius: 8
-            }}
-          >
-            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 12 }}>
-              {t.tracker?.addDose || '+ Add Dose'}
-            </Text>
-          </Pressable>
+            style={{ paddingHorizontal: 12, paddingVertical: 6 }}
+          />
         </View>
 
         {selectedDateLogs.length === 0 ? (
-          <Text style={{ color: theme.muted, textAlign: 'center', paddingVertical: 20, fontStyle: 'italic' }}>
-            {t.tracker?.noLogs || 'No doses logged for this date.'}
-          </Text>
+          <EmptyState title={t.tracker?.noLogs || 'No doses logged'} subtitle="Tap “Add Dose” to log your first entry." />
         ) : (
           <View style={{ gap: 10 }}>
             {selectedDateLogs.map((log) => (
@@ -804,6 +1002,24 @@ export function TrackerScreen() {
                 </View>
 
                 <Pressable
+                  onPress={() => setFormData({ ...formData, saveAsDefault: !formData.saveAsDefault })}
+                  style={{
+                    padding: 12,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: formData.saveAsDefault ? theme.primary : theme.border,
+                    backgroundColor: formData.saveAsDefault ? `${theme.primary}15` : theme.card,
+                  }}
+                >
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: formData.saveAsDefault ? theme.primary : theme.text }}>
+                    {formData.saveAsDefault ? '✓ Save as protocol default' : 'Save as protocol default'}
+                  </Text>
+                  <Text style={{ fontSize: 11, color: theme.muted, marginTop: 4 }}>
+                    Use this dose as your plan default for quicker logging.
+                  </Text>
+                </Pressable>
+
+                <Pressable
                   onPress={handleSave}
                   disabled={!formData.protocolId || !formData.doseAmount}
                   style={{
@@ -823,6 +1039,13 @@ export function TrackerScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      {toast && (
+        <View style={{ position: 'absolute', bottom: 24, left: 16, right: 16, alignItems: 'center' }}>
+          <View style={{ paddingHorizontal: 16, paddingVertical: 10, backgroundColor: '#0F172A', borderRadius: 999 }}>
+            <Text style={{ color: '#FFFFFF', fontSize: 12, fontWeight: '700' }}>{toast.message}</Text>
+          </View>
+        </View>
+      )}
+    </Screen>
   );
 }

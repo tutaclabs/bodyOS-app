@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
+import { Screen } from '../ui/Screen';
+import { SectionHeader } from '../ui/SectionHeader';
+import { Chip } from '../ui/Chip';
+import { EmptyState } from '../ui/EmptyState';
 import { useTranslation } from '../hooks/useTranslation';
 import { libraryItems } from '../data/library-items';
 import { BodyOSIntelligenceScreen } from './BodyOSIntelligenceScreen';
@@ -48,14 +52,13 @@ export function LibraryScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <Screen>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <Text style={{ fontSize: 20 }}>📚</Text>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text }}>
-            {t.library.title}
-          </Text>
-        </View>
+        <SectionHeader
+          title={t.library.title}
+          subtitle={t.library.subtitle}
+          actionLabel="Explore"
+        />
 
         <TextInput
           value={searchQuery}
@@ -77,26 +80,12 @@ export function LibraryScreen() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             {categories.map((cat) => (
-              <Pressable
+              <Chip
                 key={cat}
+                label={cat}
+                selected={selectedCategory === cat}
                 onPress={() => setSelectedCategory(cat)}
-                style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  borderRadius: 20,
-                  backgroundColor: selectedCategory === cat ? theme.primary : theme.card,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '700',
-                    color: selectedCategory === cat ? '#000000' : theme.text,
-                  }}
-                >
-                  {cat}
-                </Text>
-              </Pressable>
+              />
             ))}
           </View>
         </ScrollView>
@@ -130,9 +119,10 @@ export function LibraryScreen() {
 
       {filteredItems.length === 0 ? (
         <Card>
-          <Text style={{ textAlign: 'center', color: theme.muted, paddingVertical: 20 }}>
-            No items found matching your search.
-          </Text>
+          <EmptyState
+            title="No results"
+            subtitle="Try a different search or category."
+          />
         </Card>
       ) : (
         filteredItems.map((item) => {
@@ -293,6 +283,6 @@ export function LibraryScreen() {
       <View style={{ marginTop: 16 }}>
         <BodyOSIntelligenceScreen />
       </View>
-    </ScrollView>
+    </Screen>
   );
 }

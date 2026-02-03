@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Plus, AlertTriangle, Info, Loader2 } from 'lucide-react';
+import { Sparkles, Plus, AlertTriangle, Info, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation.js';
 import { WebLocalStorageAdapter } from '../core/storage.js';
 import { STORAGE_KEYS } from '../core/keys.js';
@@ -175,10 +175,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                     key={idx}
                     className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-soft transition-shadow"
                   >
-                    <button
-                      onClick={() => toggleExpand(idx)}
-                      className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition-colors text-left"
-                    >
+                    <div className="w-full p-4 flex items-start justify-between gap-3 hover:bg-slate-50 transition-colors">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
                           <h3 className="font-bold text-slate-800">{rec.compoundName}</h3>
@@ -188,21 +185,25 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                         </div>
                         <p className="text-xs text-slate-600 line-clamp-1">{rec.rationale}</p>
                       </div>
-                      <div className="flex items-center gap-2 ml-4">
+                      <div className="flex items-center gap-2">
                         {onAddToProtocols && (
                           <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToProtocols(rec);
-                            }}
+                            onClick={() => handleAddToProtocols(rec)}
                             className="p-1.5 bg-[#FF4F41] text-white rounded-lg hover:bg-[#D43A2E] transition-colors"
                             title={t.recommendations.addToProtocols}
                           >
                             <Plus size={14} />
                           </button>
                         )}
+                        <button
+                          onClick={() => toggleExpand(idx)}
+                          className="p-1.5 border border-slate-200 text-slate-700 rounded-lg hover:bg-white transition-colors"
+                          aria-expanded={isExpanded}
+                        >
+                          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
                       </div>
-                    </button>
+                    </div>
 
                     {isExpanded && (
                       <div className="p-4 pt-0 border-t border-slate-100 bg-slate-50/50 space-y-3">

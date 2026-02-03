@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, Pressable, Alert } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
+import { SectionHeader } from '../ui/SectionHeader';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { EmptyState } from '../ui/EmptyState';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
@@ -80,29 +83,13 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
   if (compact) {
     return (
       <Card style={{ backgroundColor: `${theme.primary}15`, borderColor: `${theme.primary}33` }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <Text style={{ fontSize: 18 }}>✨</Text>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text }}>{t.recommendations.title}</Text>
-        </View>
-        <Text style={{ fontSize: 12, color: theme.muted, marginBottom: 12 }}>{t.recommendations.compactDescription}</Text>
-        <Pressable
+        <SectionHeader title={t.recommendations.title} subtitle={t.recommendations.compactDescription} />
+        <PrimaryButton
+          label={`✨ ${t.recommendations.getRecommendations}`}
           onPress={handleGetRecommendations}
-          disabled={loading}
-          style={{
-            backgroundColor: theme.primary,
-            borderRadius: 12,
-            paddingVertical: 12,
-            alignItems: 'center',
-            opacity: loading ? 0.5 : 1,
-            marginBottom: 12,
-          }}
-        >
-          {loading ? (
-            <ActivityIndicator color="#000000" />
-          ) : (
-            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 13 }}>✨ {t.recommendations.getRecommendations}</Text>
-          )}
-        </Pressable>
+          loading={loading}
+          style={{ marginBottom: 12 }}
+        />
         
         {error && (
           <Text style={{ fontSize: 11, color: '#DC2626', marginTop: 8, marginBottom: 12 }}>{error}</Text>
@@ -136,8 +123,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                         overflow: 'hidden',
                       }}
                     >
-                      <Pressable
-                        onPress={() => toggleExpand(idx)}
+                      <View
                         style={{
                           padding: 14,
                           backgroundColor: theme.card,
@@ -166,8 +152,23 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                               <Text style={{ color: '#000000', fontSize: 16, fontWeight: '800' }}>+</Text>
                             </Pressable>
                           )}
+                          <Pressable
+                            onPress={() => toggleExpand(idx)}
+                            style={{
+                              paddingHorizontal: 10,
+                              paddingVertical: 6,
+                              borderRadius: 8,
+                              borderWidth: 1,
+                              borderColor: theme.border,
+                              marginLeft: 8,
+                            }}
+                          >
+                            <Text style={{ fontSize: 11, fontWeight: '700', color: theme.text }}>
+                              {isExpanded ? 'Hide' : 'Details'}
+                            </Text>
+                          </Pressable>
                         </View>
-                      </Pressable>
+                      </View>
 
                       {isExpanded && (
                         <View style={{ padding: 14, backgroundColor: theme.card, borderTopWidth: 1, borderTopColor: theme.border, gap: 12 }}>
@@ -213,7 +214,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                 })}
               </View>
             ) : recommendations && (
-              <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', paddingVertical: 12 }}>{t.recommendations.noRecommendations}</Text>
+              <EmptyState title={t.recommendations.noRecommendations} />
             )}
 
             {recommendations.considerations && recommendations.considerations.length > 0 && (
@@ -234,29 +235,12 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
 
   return (
     <Card>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Text style={{ fontSize: 20 }}>✨</Text>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text }}>{t.recommendations.title}</Text>
-        </View>
-        <Pressable
-          onPress={handleGetRecommendations}
-          disabled={loading}
-          style={{
-            paddingHorizontal: 12,
-            paddingVertical: 6,
-            backgroundColor: theme.primary,
-            borderRadius: 12,
-            opacity: loading ? 0.5 : 1,
-          }}
-        >
-          {loading ? (
-            <ActivityIndicator color="#000000" size="small" />
-          ) : (
-            <Text style={{ color: '#000000', fontSize: 11, fontWeight: '700' }}>✨ {t.recommendations.getRecommendations}</Text>
-          )}
-        </Pressable>
-      </View>
+      <SectionHeader
+        title={t.recommendations.title}
+        subtitle={t.recommendations.description}
+        actionLabel={t.recommendations.getRecommendations}
+        onPress={handleGetRecommendations}
+      />
 
       {error && (
         <View style={{ marginBottom: 12, padding: 10, backgroundColor: '#FEE2E2', borderRadius: 10, borderWidth: 1, borderColor: '#FECACA' }}>
@@ -292,8 +276,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                       overflow: 'hidden',
                     }}
                   >
-                    <Pressable
-                      onPress={() => toggleExpand(idx)}
+                    <View
                       style={{
                         padding: 14,
                         backgroundColor: theme.card,
@@ -322,8 +305,23 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                             <Text style={{ color: '#000000', fontSize: 16, fontWeight: '800' }}>+</Text>
                           </Pressable>
                         )}
+                        <Pressable
+                          onPress={() => toggleExpand(idx)}
+                          style={{
+                            paddingHorizontal: 10,
+                            paddingVertical: 6,
+                            borderRadius: 8,
+                            borderWidth: 1,
+                            borderColor: theme.border,
+                            marginLeft: 8,
+                          }}
+                        >
+                          <Text style={{ fontSize: 11, fontWeight: '700', color: theme.text }}>
+                            {isExpanded ? 'Hide' : 'Details'}
+                          </Text>
+                        </Pressable>
                       </View>
-                    </Pressable>
+                    </View>
 
                     {isExpanded && (
                       <View style={{ padding: 14, backgroundColor: theme.card, borderTopWidth: 1, borderTopColor: theme.border, gap: 12 }}>
@@ -369,7 +367,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
               })}
             </View>
           ) : (
-            <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', paddingVertical: 12 }}>{t.recommendations.noRecommendations}</Text>
+            <EmptyState title={t.recommendations.noRecommendations} />
           )}
 
           {recommendations.considerations && recommendations.considerations.length > 0 && (
@@ -386,7 +384,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
       )}
 
       {!recommendations && !loading && !error && (
-        <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', paddingVertical: 12 }}>{t.recommendations.description}</Text>
+        <EmptyState title={t.recommendations.description} />
       )}
     </Card>
   );

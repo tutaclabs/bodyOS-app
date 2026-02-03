@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView, TextInput } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
 import { theme } from '../ui/theme';
+import { Screen } from '../ui/Screen';
+import { Chip } from '../ui/Chip';
+import { PrimaryButton } from '../ui/PrimaryButton';
 
 const storage = new AsyncStorageAdapter();
 
@@ -69,10 +72,7 @@ export function OnboardingScreen({ onComplete }) {
   };
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: theme.bg }}
-      contentContainerStyle={{ padding: 20, paddingTop: 60 }}
-    >
+    <Screen contentStyle={{ paddingTop: 60 }}>
       <View style={{ alignItems: 'center', marginBottom: 32 }}>
         <View
           style={{
@@ -115,34 +115,12 @@ export function OnboardingScreen({ onComplete }) {
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
               {goals.map((goal) => (
-                <Pressable
+                <Chip
                   key={goal.key}
+                  label={goal.label}
+                  selected={selectedGoals.includes(goal.key)}
                   onPress={() => toggleGoal(goal.key)}
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 12,
-                    borderRadius: 12,
-                    borderWidth: 2,
-                    borderColor: selectedGoals.includes(goal.key) ? theme.primary : '#E2E8F0',
-                    backgroundColor: selectedGoals.includes(goal.key) ? `${theme.primary}15` : theme.card,
-                    minWidth: '45%',
-                  }}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '700',
-                        color: theme.text,
-                      }}
-                    >
-                      {goal.label}
-                    </Text>
-                    {selectedGoals.includes(goal.key) && (
-                      <Text style={{ color: theme.primary, fontSize: 16 }}>✓</Text>
-                    )}
-                  </View>
-                </Pressable>
+                />
               ))}
             </View>
           </View>
@@ -342,38 +320,19 @@ export function OnboardingScreen({ onComplete }) {
 
       <View style={{ flexDirection: 'row', gap: 12, marginTop: 'auto' }}>
         {step > 1 && (
-          <Pressable
+          <PrimaryButton
+            label={t.onboarding.back}
             onPress={() => setStep(step - 1)}
-            style={{
-              flex: 1,
-              paddingVertical: 14,
-              backgroundColor: theme.card,
-              borderRadius: 12,
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ color: theme.text, fontWeight: '700', fontSize: 15 }}>
-              {t.onboarding.back}
-            </Text>
-          </Pressable>
+            style={{ flex: 1, backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border }}
+          />
         )}
-        <Pressable
+        <PrimaryButton
+          label={step === 3 ? t.onboarding.finish : t.onboarding.next}
           onPress={handleNext}
           disabled={!canProceed()}
-          style={{
-            flex: 1,
-            paddingVertical: 14,
-            backgroundColor: canProceed() ? theme.primary : '#E2E8F0',
-            borderRadius: 12,
-            alignItems: 'center',
-            opacity: canProceed() ? 1 : 0.5,
-          }}
-        >
-          <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>
-            {step === 3 ? t.onboarding.finish : t.onboarding.next}
-          </Text>
-        </Pressable>
+          style={{ flex: 1 }}
+        />
       </View>
-    </ScrollView>
+    </Screen>
   );
 }

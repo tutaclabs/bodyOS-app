@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: 'bodyos_refresh_token',
   AUTH_TOKEN: 'bodyos_auth_token',
   PEPTIDE_LOGS: 'bodyos_peptide_logs',
+  PEPTIDE_PLAN_DEFAULTS: 'bodyos_peptide_plan_defaults',
   NOTIFICATIONS: 'bodyos_notifications',
   SIDE_EFFECTS: 'bodyos_side_effects',
 };

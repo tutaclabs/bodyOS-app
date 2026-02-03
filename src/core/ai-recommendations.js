@@ -2,6 +2,7 @@ import { isBackendConfigured } from './auth-api';
 import { apiFetch } from './api-client';
 import { WebLocalStorageAdapter } from './storage';
 import { STORAGE_KEYS } from './keys';
+import { libraryItems } from '../data/library-items.js';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -35,51 +36,6 @@ export async function getPersonalizedRecommendations(apiKey, language = 'en') {
   const settings = storage.load(STORAGE_KEYS.USER_SETTINGS, {});
   const protocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
 
-  const libraryItemsPlaceholder = [
-    {
-      id: 'bpc157',
-      name: 'BPC-157',
-      category: 'Peptide',
-      wellnessUses: ['Tissue repair support', 'Gut health optimization', 'Recovery enhancement'],
-      evidenceLevel: 'Moderate',
-    },
-    {
-      id: 'ghkcu',
-      name: 'GHK-Cu',
-      category: 'Peptide',
-      wellnessUses: ['Skin health and appearance', 'Hair follicle support', 'Anti-inflammatory support'],
-      evidenceLevel: 'Moderate',
-    },
-    {
-      id: 'tb500',
-      name: 'TB-500',
-      category: 'Peptide',
-      wellnessUses: ['Recovery and repair support', 'Mobility enhancement', 'Tissue healing support'],
-      evidenceLevel: 'Low to Moderate',
-    },
-    {
-      id: 'vitamind',
-      name: 'Vitamin D3',
-      category: 'Vitamin',
-      wellnessUses: ['Immune system support', 'Bone health', 'Mood and cognitive function'],
-      evidenceLevel: 'Strong',
-    },
-    {
-      id: 'magnesium',
-      name: 'Magnesium',
-      category: 'Mineral',
-      wellnessUses: ['Muscle function and recovery', 'Sleep quality', 'Stress management'],
-      evidenceLevel: 'Strong',
-    },
-    {
-      id: 'omega3',
-      name: 'Omega-3 Fatty Acids',
-      category: 'Fatty Acid',
-      wellnessUses: ['Cardiovascular health', 'Cognitive function', 'Inflammatory balance'],
-      evidenceLevel: 'Strong',
-    },
-  ];
-
   const userProfile = {
     goals: settings.goals || [],
     experienceLevel: settings.experienceLevel || 'beginner',
@@ -91,10 +47,22 @@ export async function getPersonalizedRecommendations(apiKey, language = 'en') {
     })),
   };
 
+  const availableCompounds = (Array.isArray(libraryItems) ? libraryItems : []).map((item) => ({
+    id: item?.id,
+    name: item?.name,
+    category: item?.category,
+    wellnessUses: Array.isArray(item?.wellnessUses) ? item.wellnessUses : [],
+    evidenceLevel: item?.evidenceLevel,
+    timing: item?.timing,
+    interactions: item?.interactions,
+    whoShouldAvoid: item?.whoShouldAvoid,
+    regulatoryStatus: item?.regulatoryStatus,
+  })).filter((item) => item?.id && item?.name);
+
   const systemPrompt = language === 'pt'
     ? `Você é um assistente de educação em biohacking. Com base nos objetivos e perfil do usuário, sugira peptídeos e vitaminas relevantes da biblioteca fornecida.
 
-    Compostos disponíveis: ${JSON.stringify(libraryItemsPlaceholder)}
+    Compostos disponíveis: ${JSON.stringify(availableCompounds)}
 
     Regras:
     - Forneça apenas sugestões EDUCACIONAIS, não conselhos médicos
@@ -122,7 +90,7 @@ export async function getPersonalizedRecommendations(apiKey, language = 'en') {
     }`
     : `You are a biohacking education assistant. Based on user goals and profile, suggest relevant peptides and vitamins from the provided library.
 
-    Available compounds: ${JSON.stringify(libraryItemsPlaceholder)}
+    Available compounds: ${JSON.stringify(availableCompounds)}
 
     Rules:
     - Provide EDUCATIONAL suggestions only, not medical advice
