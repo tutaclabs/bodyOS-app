@@ -1,4 +1,20 @@
+import { isBackendConfigured } from './auth-api';
+import { apiFetch } from './api-client';
+
 export async function askResearchQuestion(question, apiKey) {
+  if (isBackendConfigured()) {
+    if (!question || !question.trim()) throw new Error('Question cannot be empty');
+    try {
+      const res = await apiFetch('/ai/research', {
+        method: 'POST',
+        body: JSON.stringify({ question: question.trim() }),
+      });
+      return res?.answer ?? '';
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get response');
+    }
+  }
+
   if (!apiKey) {
     throw new Error('OpenAI API key is required');
   }

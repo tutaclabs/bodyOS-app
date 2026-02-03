@@ -26,6 +26,7 @@ import { askResearchQuestion } from './core/ai-research.js';
 import { checkProtocolSafety } from './core/ai-safety.js';
 import { generateInsights } from './core/ai-insights.js';
 import { parseProtocolFromText } from './core/ai-protocol-parser.js';
+import { isBackendConfigured } from './core/auth-api.js';
 import { useTranslation } from './hooks/useTranslation.js';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import { MedicalDisclaimerModal, MedicalDisclaimerFooter } from './components/MedicalDisclaimer.jsx';
@@ -179,7 +180,7 @@ const ProtocolDashboard = () => {
 
   const handleSafetyCheck = async () => {
     const apiKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setSafetyCheck({
         safe: false,
         warnings: ['OpenAI API key required. Add it in the Knowledge Base section.'],
@@ -231,7 +232,7 @@ const ProtocolDashboard = () => {
     }
 
     const apiKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setParseError('OpenAI API key required. Add it in the Knowledge Base section.');
       return;
     }
@@ -521,7 +522,7 @@ const PersonalizedInsights = () => {
 
   const handleGenerateInsights = async () => {
     const apiKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setError('OpenAI API key required. Add it in the Knowledge Base section.');
       return;
     }
@@ -689,6 +690,10 @@ const AIResearchAssistant = () => {
   const [keySaved, setKeySaved] = useState(false);
 
   useEffect(() => {
+    if (isBackendConfigured()) {
+      setKeySaved(true);
+      return;
+    }
     const savedKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
     if (savedKey) {
       setApiKey(savedKey);
@@ -717,7 +722,7 @@ const AIResearchAssistant = () => {
       return;
     }
 
-    if (!apiKey) {
+    if (!isBackendConfigured() && !apiKey) {
       setError('OpenAI API key is required');
       setShowKeyInput(true);
       return;
@@ -743,24 +748,24 @@ const AIResearchAssistant = () => {
         <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
           <Zap size={14} strokeWidth={1.5} style={{ color: '#D4AF37' }} /> AI Research Assistant
         </h3>
-        {keySaved ? (
+        {keySaved && !isBackendConfigured() ? (
           <button
             onClick={handleRemoveKey}
             className="text-xs text-slate-500 hover:text-slate-700 transition-colors"
           >
             Remove Key
           </button>
-        ) : (
+        ) : !isBackendConfigured() ? (
           <button
             onClick={() => setShowKeyInput(!showKeyInput)}
             className="text-xs text-accent hover:text-accent-600 font-semibold transition-colors"
           >
             {showKeyInput ? 'Cancel' : 'Add API Key'}
           </button>
-        )}
+        ) : null}
       </div>
 
-      {showKeyInput && !keySaved && (
+      {showKeyInput && !keySaved && !isBackendConfigured() && (
         <div className="mb-3 p-3 bg-white rounded-lg border border-dark-border shadow-soft" style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0, 0, 0, 0.1)' }}>
           <input
             type="password"
