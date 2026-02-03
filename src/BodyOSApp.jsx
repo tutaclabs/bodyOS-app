@@ -33,6 +33,7 @@ import Library from './components/Library.jsx';
 import WellnessMetrics from './components/WellnessMetrics.jsx';
 import GoalMode from './components/GoalMode.jsx';
 import Profile from './components/Profile.jsx';
+import Recommendations from './components/Recommendations.jsx';
 import { ExpirationBadge } from './components/features/expiration-alerts/ExpirationBadge.jsx';
 import { ExpirationModal } from './components/features/expiration-alerts/ExpirationModal.jsx';
 import { ExpirationNotifications } from './components/features/expiration-alerts/ExpirationNotifications.jsx';
@@ -919,8 +920,17 @@ export default function BodyOSApp() {
       );
     }
 
+    const handleAddToProtocols = (protocol) => {
+      const protocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+      const updated = [...protocols, protocol];
+      storage.save(STORAGE_KEYS.PROTOCOLS, updated);
+      alert(t.recommendations.addedToProtocols);
+      window.location.reload();
+    };
+
     return (
       <div className="space-y-8">
+        <Recommendations compact={true} onAddToProtocols={handleAddToProtocols} />
         <ProtocolDashboard />
         <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Injection Site Tracker</h3>

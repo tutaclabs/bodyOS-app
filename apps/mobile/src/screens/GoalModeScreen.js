@@ -6,6 +6,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
 import { goalPrograms } from '../data/goal-programs';
+import Recommendations from '../components/Recommendations';
 
 const storage = new AsyncStorageAdapter();
 
@@ -236,8 +237,16 @@ export function GoalModeScreen() {
     );
   }
 
+  const handleAddToProtocols = async (protocol) => {
+    const protocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
+    const updated = [...protocols, protocol];
+    await storage.save(STORAGE_KEYS.PROTOCOLS, updated);
+  };
+
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+      <Recommendations onAddToProtocols={handleAddToProtocols} />
+
       <Card>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <Text style={{ fontSize: 20 }}>🎯</Text>

@@ -230,4 +230,166 @@ export async function aiRoutes(app: FastifyInstance) {
       return reply.code(502).send({ error: 'openai_error', detail: msg });
     }
   });
+
+  app.post('/ai/recommendations', { preHandler: app.authenticate }, async (request, reply) => {
+    if (!env.aiEnabled) return reply.code(503).send({ error: 'ai_disabled' });
+    const body = request.body as {
+      goals?: string[];
+      experienceLevel?: string;
+      lifestyle?: Record<string, any>;
+      healthDetails?: Record<string, any>;
+      currentProtocols?: unknown[];
+      language?: string;
+    };
+
+    const language = typeof body.language === 'string' ? body.language : 'en';
+    const goals = Array.isArray(body.goals) ? body.goals : [];
+    const experienceLevel = typeof body.experienceLevel === 'string' ? body.experienceLevel : 'beginner';
+    const lifestyle = body.lifestyle || {};
+    const currentProtocols = Array.isArray(body.currentProtocols) ? body.currentProtocols : [];
+
+    const libraryItemsPlaceholder = [
+      {
+        id: 'bpc157',
+        name: 'BPC-157',
+        category: 'Peptide',
+        wellnessUses: ['Tissue repair support', 'Gut health optimization', 'Recovery enhancement'],
+        evidenceLevel: 'Moderate',
+      },
+      {
+        id: 'ghkcu',
+        name: 'GHK-Cu',
+        category: 'Peptide',
+        wellnessUses: ['Skin health and appearance', 'Hair follicle support', 'Anti-inflammatory support'],
+        evidenceLevel: 'Moderate',
+      },
+      {
+        id: 'tb500',
+        name: 'TB-500',
+        category: 'Peptide',
+        wellnessUses: ['Recovery and repair support', 'Mobility enhancement', 'Tissue healing support'],
+        evidenceLevel: 'Low to Moderate',
+      },
+      {
+        id: 'vitamind',
+        name: 'Vitamin D3',
+        category: 'Vitamin',
+        wellnessUses: ['Immune system support', 'Bone health', 'Mood and cognitive function'],
+        evidenceLevel: 'Strong',
+      },
+      {
+        id: 'magnesium',
+        name: 'Magnesium',
+        category: 'Mineral',
+        wellnessUses: ['Muscle function and recovery', 'Sleep quality', 'Stress management'],
+        evidenceLevel: 'Strong',
+      },
+      {
+        id: 'omega3',
+        name: 'Omega-3 Fatty Acids',
+        category: 'Fatty Acid',
+        wellnessUses: ['Cardiovascular health', 'Cognitive function', 'Inflammatory balance'],
+        evidenceLevel: 'Strong',
+      },
+    ];
+
+    const userProfile = {
+      goals,
+      experienceLevel,
+      lifestyle,
+      currentProtocols: currentProtocols.map((p: any) => ({
+        name: p?.name || 'Unknown',
+        cycleOn: p?.cycleOn || 0,
+        cycleOff: p?.cycleOff || 0,
+      })),
+    };
+
+    const systemPrompt = language === 'pt'
+      ? `Você é um assistente de educação em biohacking. Com base nos objetivos e perfil do usuário, sugira peptídeos e vitaminas relevantes da biblioteca fornecida.
+
+      Compostos disponíveis: ${JSON.stringify(libraryItemsPlaceholder)}
+
+      Regras:
+      - Forneça apenas sugestões EDUCACIONAIS, não conselhos médicos
+      - Inclua intervalos de dosagem gerais (ex: "tipicamente 200-500mcg diariamente")
+      - Considere o nível de experiência do usuário (iniciante/intermediário/avançado)
+      - Verifique interações com protocolos atuais
+      - Priorize segurança e nível de evidência
+      - Retorne APENAS JSON válido com esta estrutura:
+      {
+        "recommendations": [
+          {
+            "compoundId": "string",
+            "compoundName": "string",
+            "category": "Peptide|Vitamin|Mineral|Fatty Acid",
+            "rationale": "por que isso corresponde aos objetivos deles",
+            "dosageRange": "intervalo de dosagem educacional",
+            "timing": "quando/como tomar",
+            "cycleOn": number,
+            "cycleOff": number,
+            "safetyNotes": ["nota1", "nota2"]
+          }
+        ],
+        "warnings": ["aviso1", "aviso2"],
+        "considerations": ["consideração1", "consideração2"]
+      }`
+      : `You are a biohacking education assistant. Based on user goals and profile, suggest relevant peptides and vitamins from the provided library.
+
+      Available compounds: ${JSON.stringify(libraryItemsPlaceholder)}
+
+      Rules:
+      - Provide EDUCATIONAL suggestions only, not medical advice
+      - Include general dosage ranges (e.g., "typically 200-500mcg daily")
+      - Consider user experience level (beginner/intermediate/advanced)
+      - Check for interactions with current protocols
+      - Prioritize safety and evidence level
+      - Return ONLY valid JSON with this structure:
+      {
+        "recommendations": [
+          {
+            "compoundId": "string",
+            "compoundName": "string",
+            "category": "Peptide|Vitamin|Mineral|Fatty Acid",
+            "rationale": "why this matches their goals",
+            "dosageRange": "educational dosage range",
+            "timing": "when/how to take",
+            "cycleOn": number,
+            "cycleOff": number,
+            "safetyNotes": ["note1", "note2"]
+          }
+        ],
+        "warnings": ["warning1", "warning2"],
+        "considerations": ["consideration1", "consideration2"]
+      }`;
+
+    const messages: ChatMessage[] = [
+      { role: 'system', content: systemPrompt },
+      {
+        role: 'user',
+        content: `Suggest compounds for this user profile: ${JSON.stringify(userProfile)}`,
+      },
+    ];
+
+    try {
+      const json: any = await openaiChatJson({
+        messages,
+        maxTokens: 1200,
+        temperature: 0.4,
+        responseFormat: { type: 'json_object' },
+      });
+
+      const raw = json?.choices?.[0]?.message?.content ?? '{}';
+      const parsed = JSON.parse(raw);
+
+      return {
+        recommendations: Array.isArray(parsed?.recommendations) ? parsed.recommendations : [],
+        warnings: Array.isArray(parsed?.warnings) ? parsed.warnings : [],
+        considerations: Array.isArray(parsed?.considerations) ? parsed.considerations : [],
+      };
+    } catch (e: any) {
+      const msg = typeof e?.message === 'string' ? e.message : 'openai_error';
+      if (msg === 'missing_openai_key') return reply.code(500).send({ error: 'missing_openai_key' });
+      return reply.code(502).send({ error: 'openai_error', detail: msg });
+    }
+  });
 }

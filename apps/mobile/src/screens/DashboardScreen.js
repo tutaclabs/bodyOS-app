@@ -15,6 +15,7 @@ import { pushNutritionFloors } from '../core/cloud';
 import { isBackendConfigured } from '../core/auth-api';
 import { ExpirationBadge } from '../components/features/expiration-alerts/ExpirationBadge';
 import { ExpirationModal } from '../components/features/expiration-alerts/ExpirationModal';
+import Recommendations from '../components/Recommendations';
 
 const storage = new AsyncStorageAdapter();
 
@@ -365,6 +366,13 @@ export function DashboardScreen() {
           scrollEventThrottle={400}
         >
         <View style={{ gap: 16 }}>
+        <Recommendations compact={true} onAddToProtocols={async (protocol) => {
+          const next = [...protocols, protocol];
+          setProtocols(next);
+          await storage.save(STORAGE_KEYS.PROTOCOLS, next);
+          await pushProtocols(next).catch(() => {});
+        }} />
+        
         <Card>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text }}>Active Stacks</Text>

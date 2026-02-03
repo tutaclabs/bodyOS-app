@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { User, Trash2 } from 'lucide-react';
+import { User, Trash2, Sparkles } from 'lucide-react';
 import { WebLocalStorageAdapter } from '../core/storage.js';
 import { STORAGE_KEYS } from '../core/keys.js';
 import { useTranslation } from '../hooks/useTranslation.js';
+import Recommendations from './Recommendations.jsx';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -173,6 +174,10 @@ export default function Profile({ onLogout }) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="mb-6">
+              <Recommendations compact={true} />
             </div>
 
             <button
