@@ -1,7 +1,7 @@
 import { API_URL } from '@env';
 
 export const getApiUrl = () => {
-  return API_URL || 'https://your-backend.onrender.com';
+  return API_URL || '';
 };
 
 export const apiRequest = async (endpoint, options = {}) => {
