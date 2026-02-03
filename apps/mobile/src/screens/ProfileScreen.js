@@ -89,23 +89,23 @@ export function ProfileScreen({ onLogout }) {
   const lifestyle = userSettings.lifestyle || {};
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 24 }}>
           <Text style={{ fontSize: 20 }}>👤</Text>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: theme.text }}>Profile</Text>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313' }}>Profile</Text>
         </View>
 
         {currentUser && (
-            <View style={{ marginBottom: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: theme.border }}>
-            <Text style={{ fontSize: 13, fontWeight: '700', color: theme.muted, marginBottom: 4 }}>
+            <View style={{ marginBottom: 24, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: '#F7F7F7' }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
               Email
             </Text>
-            <Text style={{ fontSize: 15, fontWeight: '600', color: theme.text }}>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: '#131313' }}>
               {currentUser.email}
             </Text>
             {onboarding.completedAt && (
-              <Text style={{ fontSize: 11, color: theme.muted, marginTop: 4 }}>
+              <Text style={{ fontSize: 12, color: '#B5B5B5', marginTop: 6, fontWeight: '400' }}>
                 Member since {new Date(onboarding.completedAt).toLocaleDateString()}
               </Text>
             )}
@@ -114,8 +114,8 @@ export function ProfileScreen({ onLogout }) {
 
         {onboarding.completed ? (
           <>
-            <View style={{ marginBottom: 20 }}>
-              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text, marginBottom: 12 }}>
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: '#131313', marginBottom: 16 }}>
                 Optimization Goals
               </Text>
               {goals.length > 0 ? (
@@ -124,56 +124,54 @@ export function ProfileScreen({ onLogout }) {
                     <View
                       key={idx}
                       style={{
-                        paddingHorizontal: 12,
-                        paddingVertical: 8,
+                        paddingHorizontal: 14,
+                        paddingVertical: 10,
                         backgroundColor: '#F261010D',
-                        borderRadius: 12,
+                        borderRadius: 16,
                         borderWidth: 1,
                         borderColor: '#F2610133',
                       }}
                     >
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.primary }}>
+                      <Text style={{ fontSize: 13, fontWeight: '900', color: theme.primary }}>
                         {getGoalLabel(goal)}
                       </Text>
                     </View>
                   ))}
                 </View>
               ) : (
-                <Text style={{ fontSize: 13, color: theme.muted }}>No goals selected</Text>
+                <Text style={{ fontSize: 13, color: '#B5B5B5', fontWeight: '600' }}>No goals selected</Text>
               )}
             </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text, marginBottom: 12 }}>
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: '#131313', marginBottom: 16 }}>
                 Experience Level
               </Text>
               <View
                 style={{
                   paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  backgroundColor: theme.card,
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.border,
+                  paddingVertical: 14,
+                  backgroundColor: '#F7F7F7',
+                  borderRadius: 16,
                 }}
               >
-                <Text style={{ fontSize: 14, fontWeight: '700', color: theme.text }}>
+                <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313' }}>
                   {getExperienceLabel(experienceLevel) || 'Not set'}
                 </Text>
               </View>
             </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.text, marginBottom: 12 }}>
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ fontSize: 16, fontWeight: '900', color: '#131313', marginBottom: 16 }}>
                 Lifestyle Factors
               </Text>
-              <View style={{ gap: 12 }}>
+              <View style={{ gap: 16 }}>
                 <View>
-                  <Text style={{ fontSize: 13, fontWeight: '700', color: theme.muted, marginBottom: 4 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                     {t.onboarding.lifestyle.sleepQuality}
                   </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                    <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
                       <View
                         style={{
                           height: '100%',
@@ -182,18 +180,18 @@ export function ProfileScreen({ onLogout }) {
                         }}
                       />
                     </View>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, minWidth: 40 }}>
+                    <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', minWidth: 50 }}>
                       {lifestyle.sleepQuality || 5}/10
                     </Text>
                   </View>
                 </View>
 
                 <View>
-                  <Text style={{ fontSize: 13, fontWeight: '700', color: theme.muted, marginBottom: 4 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                     {t.onboarding.lifestyle.stress}
                   </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                    <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
                       <View
                         style={{
                           height: '100%',
@@ -202,18 +200,18 @@ export function ProfileScreen({ onLogout }) {
                         }}
                       />
                     </View>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, minWidth: 40 }}>
+                    <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', minWidth: 50 }}>
                       {lifestyle.stress || 5}/10
                     </Text>
                   </View>
                 </View>
 
                 <View>
-                  <Text style={{ fontSize: 13, fontWeight: '700', color: theme.muted, marginBottom: 4 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                     {t.onboarding.lifestyle.trainingFreq}
                   </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <View style={{ flex: 1, height: 8, backgroundColor: theme.card, borderRadius: 4, overflow: 'hidden', borderWidth: 1, borderColor: theme.border }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                    <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
                       <View
                         style={{
                           height: '100%',
@@ -222,7 +220,7 @@ export function ProfileScreen({ onLogout }) {
                         }}
                       />
                     </View>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: theme.text, minWidth: 40 }}>
+                    <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', minWidth: 50 }}>
                       {lifestyle.trainingFreq || 3} {t.onboarding.lifestyle.perWeek}
                     </Text>
                   </View>
@@ -233,14 +231,14 @@ export function ProfileScreen({ onLogout }) {
             <Pressable
               onPress={handleClearOnboarding}
               style={{
-                paddingVertical: 12,
+                paddingVertical: 14,
                 backgroundColor: '#FEE2E2',
-                borderRadius: 12,
+                borderRadius: 16,
                 alignItems: 'center',
                 marginTop: 8,
               }}
             >
-              <Text style={{ fontSize: 13, fontWeight: '700', color: '#DC2626' }}>
+              <Text style={{ fontSize: 14, fontWeight: '900', color: '#DC2626' }}>
                 Reset Onboarding Data
               </Text>
             </Pressable>
@@ -249,16 +247,14 @@ export function ProfileScreen({ onLogout }) {
           <View
             style={{
               padding: 20,
-              backgroundColor: theme.card,
-              borderRadius: 12,
-              borderWidth: 1,
-              borderColor: theme.border,
+              backgroundColor: '#F7F7F7',
+              borderRadius: 24,
             }}
           >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: theme.text, marginBottom: 8 }}>
+            <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', marginBottom: 8 }}>
               Onboarding Not Completed
             </Text>
-            <Text style={{ fontSize: 12, color: theme.muted, lineHeight: 18 }}>
+            <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
               Complete onboarding to personalize your experience and see your profile information here.
             </Text>
           </View>
@@ -269,22 +265,27 @@ export function ProfileScreen({ onLogout }) {
             onPress={onLogout}
             style={{
               marginTop: 24,
-              paddingVertical: 14,
+              paddingVertical: 16,
               backgroundColor: theme.primary,
-              borderRadius: 12,
+              borderRadius: 16,
               alignItems: 'center',
+              shadowColor: theme.primary,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
             }}
           >
-            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>Logout</Text>
+            <Text style={{ color: '#000000', fontWeight: '900', fontSize: 16 }}>Logout</Text>
           </Pressable>
         )}
       </Card>
 
-      <Card style={{ backgroundColor: '#0F172A', borderColor: '#0F172A' }}>
-        <Text style={{ fontSize: 14, fontWeight: '800', color: '#E2E8F0', marginBottom: 8 }}>
+      <Card style={{ backgroundColor: '#131313', borderRadius: 24 }}>
+        <Text style={{ fontSize: 14, fontWeight: '900', color: '#FFFFFF', marginBottom: 12 }}>
           Data Privacy
         </Text>
-        <Text style={{ fontSize: 12, lineHeight: 16, color: '#94A3B8' }}>
+        <Text style={{ fontSize: 13, lineHeight: 20, color: '#B5B5B5', fontWeight: '400' }}>
           Your account data is synced with the backend server. Some data like protocols and settings
           are also stored locally for offline access. AI features require your OpenAI API key.
         </Text>

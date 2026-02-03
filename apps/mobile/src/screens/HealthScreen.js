@@ -81,24 +81,22 @@ const AIResearchAssistant = () => {
   return (
     <View
       style={{
-        backgroundColor: theme.card,
-        borderColor: theme.border,
-        borderWidth: 1,
-        borderRadius: 14,
-        padding: 14
+        backgroundColor: '#FFFFFF',
+        borderRadius: 24,
+        padding: 16
       }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313' }}>
           ⚡ AI Research Assistant
         </Text>
         {keySaved ? (
           <Pressable onPress={handleRemoveKey}>
-            <Text style={{ fontSize: 11, color: theme.muted }}>Remove Key</Text>
+            <Text style={{ fontSize: 12, color: '#B5B5B5', fontWeight: '700' }}>Remove Key</Text>
           </Pressable>
         ) : (
           <Pressable onPress={() => setShowKeyInput(!showKeyInput)}>
-            <Text style={{ fontSize: 11, color: theme.primary, fontWeight: '700' }}>
+            <Text style={{ fontSize: 12, color: theme.primary, fontWeight: '900' }}>
               {showKeyInput ? 'Cancel' : 'Add API Key'}
             </Text>
           </Pressable>
@@ -106,38 +104,46 @@ const AIResearchAssistant = () => {
       </View>
 
       {showKeyInput && !keySaved && !isBackendConfigured() && (
-        <View style={{ marginBottom: 12, padding: 12, backgroundColor: theme.card, borderRadius: 12, borderWidth: 1, borderColor: theme.border }}>
+        <View style={{ marginBottom: 16, padding: 16, backgroundColor: '#F7F7F7', borderRadius: 16 }}>
           <TextInput
             value={apiKey}
             onChangeText={setApiKey}
             placeholder="Enter your OpenAI API key"
+            placeholderTextColor="#B5B5B5"
             secureTextEntry
             style={{
               borderWidth: 1,
-              borderColor: '#E2E8F0',
-              borderRadius: 10,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              fontSize: 12,
-              color: theme.text,
-              marginBottom: 8
+              borderColor: '#F7F7F7',
+              borderRadius: 16,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              fontSize: 13,
+              color: '#131313',
+              backgroundColor: '#FFFFFF',
+              marginBottom: 12,
+              fontWeight: '600',
             }}
           />
           <Pressable
             onPress={handleSaveKey}
             style={{
               backgroundColor: theme.primary,
-              borderRadius: 10,
-              paddingVertical: 10,
-              alignItems: 'center'
+              borderRadius: 16,
+              paddingVertical: 14,
+              alignItems: 'center',
+              shadowColor: theme.primary,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
             }}
           >
-            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 12 }}>Save Key</Text>
+            <Text style={{ color: '#000000', fontWeight: '900', fontSize: 14 }}>Save Key</Text>
           </Pressable>
-          <Text style={{ fontSize: 10, color: theme.muted, marginTop: 8 }}>
+          <Text style={{ fontSize: 11, color: '#B5B5B5', marginTop: 12, lineHeight: 16, fontWeight: '400' }}>
             Your API key is stored locally. Get one at{' '}
             <Text
-              style={{ color: theme.primary, textDecorationLine: 'underline' }}
+              style={{ color: theme.primary, textDecorationLine: 'underline', fontWeight: '700' }}
               onPress={() => Linking.openURL('https://platform.openai.com/api-keys')}
             >
               platform.openai.com
@@ -152,16 +158,18 @@ const AIResearchAssistant = () => {
             value={question}
             onChangeText={setQuestion}
             placeholder="Ask about compounds, protocols, dosing..."
+            placeholderTextColor="#B5B5B5"
             style={{
               borderWidth: 1,
-              borderColor: '#E2E8F0',
-              borderRadius: 10,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
+              borderColor: '#F7F7F7',
+              borderRadius: 16,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
               fontSize: 13,
-              color: theme.text,
-              backgroundColor: theme.card,
-              marginBottom: 10
+              color: '#131313',
+              backgroundColor: '#F7F7F7',
+              marginBottom: 12,
+              fontWeight: '600',
             }}
             editable={!loading}
           />
@@ -170,30 +178,35 @@ const AIResearchAssistant = () => {
             disabled={loading || !question.trim()}
             style={{
               backgroundColor: theme.primary,
-              borderRadius: 12,
-              paddingVertical: 12,
+              borderRadius: 16,
+              paddingVertical: 14,
               alignItems: 'center',
-              opacity: loading || !question.trim() ? 0.5 : 1
+              opacity: loading || !question.trim() ? 0.5 : 1,
+              shadowColor: theme.primary,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
             }}
           >
             {loading ? (
               <ActivityIndicator color="#000000" />
             ) : (
-              <Text style={{ color: '#000000', fontWeight: '800', fontSize: 13 }}>Ask AI</Text>
+              <Text style={{ color: '#000000', fontWeight: '900', fontSize: 14 }}>Ask AI</Text>
             )}
           </Pressable>
         </>
       )}
 
       {error && (
-        <View style={{ marginTop: 12, padding: 10, backgroundColor: '#FEE2E2', borderRadius: 10, borderWidth: 1, borderColor: '#FECACA' }}>
-          <Text style={{ fontSize: 11, color: '#DC2626' }}>{error}</Text>
+        <View style={{ marginTop: 16, padding: 14, backgroundColor: '#FEE2E2', borderRadius: 16, borderWidth: 1, borderColor: '#FECACA' }}>
+          <Text style={{ fontSize: 12, color: '#DC2626', fontWeight: '600' }}>{error}</Text>
         </View>
       )}
 
       {answer && (
-        <View style={{ marginTop: 12, padding: 12, backgroundColor: theme.card, borderRadius: 10, borderWidth: 1, borderColor: theme.border }}>
-          <Text style={{ fontSize: 12, color: theme.text, lineHeight: 18 }}>{answer}</Text>
+        <View style={{ marginTop: 16, padding: 16, backgroundColor: '#F7F7F7', borderRadius: 16 }}>
+          <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>{answer}</Text>
         </View>
       )}
     </View>
@@ -205,19 +218,24 @@ export function HealthScreen() {
   const [sideEffectRefresh, setSideEffectRefresh] = useState(0);
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.bg }}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={{ flexDirection: 'row', padding: 16, gap: 8, borderBottomWidth: 1, borderBottomColor: '#F7F7F7', backgroundColor: '#FFFFFF' }}>
         <Pressable
           onPress={() => setActiveSection('wellness')}
           style={{
             flex: 1,
-            paddingVertical: 10,
-            borderRadius: 12,
-            backgroundColor: activeSection === 'wellness' ? theme.primary : theme.card,
-            alignItems: 'center'
+            paddingVertical: 12,
+            borderRadius: 16,
+            backgroundColor: activeSection === 'wellness' ? theme.primary : '#F7F7F7',
+            alignItems: 'center',
+            shadowColor: activeSection === 'wellness' ? theme.primary : 'transparent',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: activeSection === 'wellness' ? 0.2 : 0,
+            shadowRadius: 4,
+            elevation: activeSection === 'wellness' ? 2 : 0,
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'wellness' ? '#000000' : theme.text }}>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: activeSection === 'wellness' ? '#000000' : '#131313' }}>
             💊 Wellness
           </Text>
         </Pressable>
@@ -225,13 +243,18 @@ export function HealthScreen() {
           onPress={() => setActiveSection('goals')}
           style={{
             flex: 1,
-            paddingVertical: 10,
-            borderRadius: 12,
-            backgroundColor: activeSection === 'goals' ? theme.primary : theme.card,
-            alignItems: 'center'
+            paddingVertical: 12,
+            borderRadius: 16,
+            backgroundColor: activeSection === 'goals' ? theme.primary : '#F7F7F7',
+            alignItems: 'center',
+            shadowColor: activeSection === 'goals' ? theme.primary : 'transparent',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: activeSection === 'goals' ? 0.2 : 0,
+            shadowRadius: 4,
+            elevation: activeSection === 'goals' ? 2 : 0,
           }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '700', color: activeSection === 'goals' ? '#000000' : theme.text }}>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: activeSection === 'goals' ? '#000000' : '#131313' }}>
             🎯 Goals
           </Text>
         </Pressable>
@@ -240,37 +263,35 @@ export function HealthScreen() {
       {activeSection === 'goals' ? (
         <GoalModeScreen />
       ) : (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
+        <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
           <WellnessMetricsScreen />
           
           <BiohackingInsightsScreen />
           
           <Card>
-        <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text }}>
+        <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313', marginBottom: 20 }}>
           Safety & Vetted Resources
         </Text>
 
-        <View style={{ marginTop: 12, gap: 12 }}>
+        <View style={{ gap: 16 }}>
           <View
             style={{
-              backgroundColor: theme.card,
-              borderColor: '#E2E8F0',
-              borderWidth: 1,
-              borderRadius: 14,
-              padding: 12
+              backgroundColor: '#F7F7F7',
+              borderRadius: 24,
+              padding: 16
             }}
           >
-            <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
+            <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', marginBottom: 12 }}>
               "White Market" Checklist
             </Text>
-            <View style={{ marginTop: 8, gap: 6 }}>
-              <Text style={{ fontSize: 12, color: theme.muted }}>
+            <View style={{ gap: 8 }}>
+              <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                 • Verifiable physical business address (not just a PO Box).
               </Text>
-              <Text style={{ fontSize: 12, color: '#475569' }}>
+              <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                 • Recent 3rd-party HPLC testing with batch-specific COAs.
               </Text>
-              <Text style={{ fontSize: 12, color: '#475569' }}>
+              <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                 • Domain registration age and transparent ownership.
               </Text>
             </View>
@@ -278,31 +299,29 @@ export function HealthScreen() {
 
           <View
             style={{
-              backgroundColor: theme.card,
-              borderColor: '#E2E8F0',
-              borderWidth: 1,
-              borderRadius: 14,
-              padding: 12
+              backgroundColor: '#F7F7F7',
+              borderRadius: 24,
+              padding: 16
             }}
           >
-            <Text style={{ fontSize: 13, fontWeight: '800', color: theme.text }}>
+            <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', marginBottom: 12 }}>
               Empirical Summaries
             </Text>
-            <View style={{ marginTop: 8, gap: 10 }}>
+            <View style={{ gap: 16 }}>
               <View>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: theme.text }}>
+                <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                   BPC-157 Research Summary
                 </Text>
-                <Text style={{ marginTop: 4, fontSize: 12, color: theme.muted }}>
+                <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                   Systemic pentadecapeptide identified in gastric juice. Studies suggest
                   modulation of NO system and growth factor expression in tendon healing.
                 </Text>
               </View>
               <View>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
+                <Text style={{ fontSize: 13, fontWeight: '900', color: '#131313', marginBottom: 6 }}>
                   GHK-Cu Copper Peptide
                 </Text>
-                <Text style={{ marginTop: 4, fontSize: 12, color: '#64748B' }}>
+                <Text style={{ fontSize: 13, color: '#131313', lineHeight: 20, fontWeight: '400' }}>
                   Known for skin remodeling and hair follicle stimulation. Evidence points to
                   broad anti-inflammatory and antioxidant activities via gene expression
                   modulation.
@@ -318,7 +337,7 @@ export function HealthScreen() {
           </Card>
 
           <Card>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
+            <Text style={{ fontSize: 20, fontWeight: '900', color: '#131313', marginBottom: 20 }}>
               Side Effect Tracking
             </Text>
             <SideEffectLogger

@@ -1,7 +1,13 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
+import { ProgressWidget } from '../components/dashboard/ProgressWidget';
+import { ActivityWidget } from '../components/dashboard/ActivityWidget';
+import { WeightWidget } from '../components/dashboard/WeightWidget';
+import { CaloriesWidget } from '../components/dashboard/CaloriesWidget';
+import { BreakfastWidget } from '../components/dashboard/BreakfastWidget';
+import { FeatureCard } from '../components/dashboard/FeatureCard';
 import { STORAGE_KEYS } from '../core/keys';
 import { AsyncStorageAdapter } from '../core/storage';
 import { checkProtocolSafety } from '../core/ai-safety';
@@ -360,11 +366,65 @@ export function DashboardScreen() {
       ) : (
         <ScrollView
           ref={scrollViewRef}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16 }}
           onScroll={handleScroll}
           scrollEventThrottle={400}
         >
         <View style={{ gap: 16 }}>
+        <ProgressWidget 
+          progress={91} 
+          calories={1350} 
+          date="19 September"
+          onDatePress={() => {}}
+        />
+        
+        <View style={{ flexDirection: 'row', gap: 16 }}>
+          <ActivityWidget onGetStarted={() => {}} />
+          <View style={{ gap: 16, flex: 1 }}>
+            <WeightWidget weight="1278" unit="Kkal" change="3 kg (-3.8%)" />
+            <CaloriesWidget calories="1278" unit="Kkal" change="3 kg (-3.8%)" />
+          </View>
+        </View>
+
+        <BreakfastWidget 
+          mealName="Breakfast"
+          calories="350 calories"
+          proteins="62.5"
+          fats="23.6"
+          carbs="45.7"
+          rdc="14%"
+          onAdd={() => {}}
+          onEdit={() => {}}
+          onSeeProgress={() => {}}
+        />
+
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
+          <FeatureCard 
+            title="Sport Data"
+            description="Keep Active, Keep Healthy"
+            icon="📊"
+            onPress={() => {}}
+          />
+          <FeatureCard 
+            title="Sport Data"
+            description="Keep Active, Keep Healthy"
+            icon="📊"
+            onPress={() => {}}
+          />
+          <FeatureCard 
+            title="Sport Data"
+            description="Keep Active, Keep Healthy"
+            icon="📊"
+            onPress={() => {}}
+          />
+          <FeatureCard 
+            title="Sport Data"
+            description="Keep Active, Keep Healthy"
+            icon="📊"
+            onPress={() => {}}
+          />
+        </View>
+
         <Card>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text }}>Active Stacks</Text>

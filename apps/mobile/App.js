@@ -12,6 +12,7 @@ import { ToolsScreen } from './src/screens/ToolsScreen';
 import { HealthScreen } from './src/screens/HealthScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { LandingScreen } from './src/screens/LandingScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { MedicalDisclaimerModal, MedicalDisclaimerFooter } from './src/components/MedicalDisclaimer';
@@ -113,6 +114,7 @@ function Header({ onBackToLanding, onLogout }) {
 function AppContent() {
   const [showLanding, setShowLanding] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -138,7 +140,7 @@ function AppContent() {
         setIsAuthenticated(true);
         const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
         if (!settings.onboarding?.completed) {
-          setShowOnboarding(true);
+          setShowWelcome(true);
           setShowLanding(false);
           setShowLogin(false);
         } else if (!settings.disclaimerAccepted) {
@@ -168,12 +170,17 @@ function AppContent() {
     }
     const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
     if (!settings.onboarding?.completed) {
-      setShowOnboarding(true);
+      setShowWelcome(true);
       return;
     }
     if (!settings.disclaimerAccepted) {
       setShowDisclaimer(true);
     }
+  };
+
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
+    setShowOnboarding(true);
   };
 
   const handleOnboardingComplete = async () => {
@@ -232,6 +239,15 @@ function AppContent() {
     );
   }
 
+  if (showWelcome) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#000000' }}>
+        <WelcomeScreen onGetStarted={handleWelcomeComplete} currentSlide={1} />
+        <StatusBar style="light" />
+      </View>
+    );
+  }
+
   if (showOnboarding) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }} edges={['top']}>
@@ -252,6 +268,7 @@ function AppContent() {
         onBackToLanding={() => {
           setShowLanding(true);
           setShowLogin(false);
+          setShowWelcome(false);
           setShowOnboarding(false);
         }} 
         onLogout={handleLogout}
