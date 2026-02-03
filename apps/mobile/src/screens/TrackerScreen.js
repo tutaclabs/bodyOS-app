@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Modal, Dimensions } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Modal } from 'react-native';
 import { Card } from '../ui/Card';
 import { theme } from '../ui/theme';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
 import { InjectionSiteSelector } from '../components/features/injection-tracker/InjectionSiteSelector';
-import { HeartRateChart } from '../components/tracker/HeartRateChart';
-import { HeartRateInfoWidget } from '../components/tracker/HeartRateInfoWidget';
-import { FeatureCard } from '../components/dashboard/FeatureCard';
 
 const storage = new AsyncStorageAdapter();
 
@@ -499,52 +496,8 @@ export function TrackerScreen() {
   const complianceData = calculateCompliance();
   const upcomingDoses = getUpcomingDoses();
 
-  const [chartDate, setChartDate] = useState(new Date());
-  const formatChartDate = (date) => {
-    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-  };
-  const handlePrevDate = () => {
-    const newDate = new Date(chartDate);
-    newDate.setDate(newDate.getDate() - 1);
-    setChartDate(newDate);
-  };
-  const handleNextDate = () => {
-    const newDate = new Date(chartDate);
-    newDate.setDate(newDate.getDate() + 1);
-    setChartDate(newDate);
-  };
-
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100, gap: 16 }}>
-      <HeartRateChart
-        bpm={88}
-        date={formatChartDate(chartDate)}
-        onPrevDate={handlePrevDate}
-        onNextDate={handleNextDate}
-      />
-
-      <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16 }}>
-        <HeartRateInfoWidget title="Heart Rate Range" value="87 bpm" />
-        <HeartRateInfoWidget title="Heart Rate Range" value="87 bpm" />
-        <HeartRateInfoWidget title="Heart Rate Range" value="87 bpm" />
-      </View>
-
-      <View style={{ flexDirection: 'row', gap: 16, paddingHorizontal: 16 }}>
-        <FeatureCard
-          title="Sport Data"
-          description="Keep Active, Keep Healthy"
-          icon="📊"
-          onPress={() => {}}
-        />
-        <FeatureCard
-          title="Sport Data"
-          description="Keep Active, Keep Healthy"
-          icon="📊"
-          onPress={() => {}}
-        />
-      </View>
-
-      <View style={{ paddingHorizontal: 16, gap: 16 }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 100, gap: 16 }}>
       <Card>
         <Text style={{ fontSize: 18, fontWeight: '700', color: theme.text, marginBottom: 16 }}>
           {t.tracker?.title || 'Peptide Tracker'}
@@ -870,7 +823,6 @@ export function TrackerScreen() {
           </View>
         </View>
       </Modal>
-      </View>
     </ScrollView>
   );
 }
