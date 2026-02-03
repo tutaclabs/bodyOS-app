@@ -6,7 +6,10 @@ import { tokenStore, apiFetch } from './api-client';
 const storage = new AsyncStorageAdapter();
 
 export function isBackendConfigured() {
-  return Boolean(API_BASE_URL);
+  console.log('DEBUG: isBackendConfigured called, API_BASE_URL:', API_BASE_URL);
+  const result = Boolean(API_BASE_URL);
+  console.log('DEBUG: isBackendConfigured result:', result);
+  return result;
 }
 
 export async function registerWithBackend(email, password) {
