@@ -5,6 +5,7 @@ import { theme } from '../ui/theme';
 import { useTranslation } from '../hooks/useTranslation';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
+import Recommendations from '../components/Recommendations';
 
 const storage = new AsyncStorageAdapter();
 
@@ -243,7 +244,17 @@ export function ProfileScreen({ onLogout }) {
               </Text>
             </Pressable>
           </>
-        ) : (
+        ) : null}
+
+        {onboarding.completed && (
+          <Recommendations compact={true} onAddToProtocols={async (protocol) => {
+            const protocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
+            const updated = [...protocols, protocol];
+            await storage.save(STORAGE_KEYS.PROTOCOLS, updated);
+          }} />
+        )}
+
+        {!onboarding.completed && (
           <View
             style={{
               padding: 20,

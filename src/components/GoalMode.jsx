@@ -4,6 +4,7 @@ import { useTranslation } from '../hooks/useTranslation.js';
 import { WebLocalStorageAdapter } from '../core/storage.js';
 import { STORAGE_KEYS } from '../core/keys.js';
 import { goalPrograms } from '../data/goal-programs.js';
+import Recommendations from './Recommendations.jsx';
 
 const storage = new WebLocalStorageAdapter();
 
@@ -206,8 +207,17 @@ export default function GoalMode() {
     );
   }
 
+  const handleAddToProtocols = (protocol) => {
+    const protocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+    const updated = [...protocols, protocol];
+    storage.save(STORAGE_KEYS.PROTOCOLS, updated);
+    alert(t.recommendations.addedToProtocols);
+  };
+
   return (
     <div className="space-y-6">
+      <Recommendations onAddToProtocols={handleAddToProtocols} />
+
       <div className="bg-white p-6 rounded-card border border-slate-200 shadow-soft">
         <div className="flex items-center gap-2 mb-6">
           <Target className="text-[#FF4F41]" size={20} />

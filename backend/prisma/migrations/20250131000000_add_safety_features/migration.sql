@@ -1,12 +1,3 @@
--- AlterTable
-DO $$ 
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name = 'UserState' AND column_name = 'notifications') THEN
-        ALTER TABLE "UserState" ADD COLUMN "notifications" JSONB NOT NULL DEFAULT '[]';
-    END IF;
-END $$;
-
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "InjectionSite" (
     "id" TEXT NOT NULL,
