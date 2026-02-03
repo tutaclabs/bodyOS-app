@@ -6,7 +6,6 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useLanguage } from '../contexts/LanguageContext';
 import { AsyncStorageAdapter } from '../core/storage';
 import { STORAGE_KEYS } from '../core/keys';
-import { chatWithBodyOS } from '../core/ai-bodyos-chat';
 import { isBackendConfigured } from '../core/auth-api';
 import { chatWithBodyOSBackend } from '../core/ai-backend';
 import { pushChatHistory } from '../core/cloud';
@@ -38,9 +37,8 @@ export function BodyOSIntelligenceScreen() {
   const handleSend = async () => {
     if (!message.trim() || loading) return;
 
-    const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!isBackendConfigured() && !apiKey) {
-      setError(t.ai.research.addKey);
+    if (!isBackendConfigured()) {
+      setError('Backend not configured. Please set API_URL in environment variables.');
       return;
     }
 
@@ -55,19 +53,11 @@ export function BodyOSIntelligenceScreen() {
     await pushChatHistory(newMessages).catch(() => {});
 
     try {
-      let assistantText = '';
-      let updatedMessages = null;
-
-      if (isBackendConfigured()) {
-        const result = await chatWithBodyOSBackend(userMessage, language, messages);
-        assistantText = result.assistantMessage;
-        updatedMessages = Array.isArray(result.updatedHistory)
-          ? result.updatedHistory
-          : [...newMessages, { role: 'assistant', content: assistantText }];
-      } else {
-        assistantText = await chatWithBodyOS(userMessage, apiKey, language);
-        updatedMessages = [...newMessages, { role: 'assistant', content: assistantText }];
-      }
+      const result = await chatWithBodyOSBackend(userMessage, language, messages);
+      const assistantText = result.assistantMessage;
+      const updatedMessages = Array.isArray(result.updatedHistory)
+        ? result.updatedHistory
+        : [...newMessages, { role: 'assistant', content: assistantText }];
 
       setMessages(updatedMessages);
       await storage.save(STORAGE_KEYS.CHAT_HISTORY, updatedMessages);

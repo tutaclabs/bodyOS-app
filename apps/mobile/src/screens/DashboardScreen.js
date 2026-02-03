@@ -182,9 +182,8 @@ export function DashboardScreen() {
       return;
     }
 
-    const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!isBackendConfigured() && !apiKey) {
-      setParseError('OpenAI API key required. Add it in the Health tab.');
+    if (!isBackendConfigured()) {
+      setParseError('Backend not configured. Please set API_URL in environment variables.');
       return;
     }
 
@@ -192,7 +191,7 @@ export function DashboardScreen() {
     setParseError('');
 
     try {
-      const parsed = await parseProtocolFromText(naturalLanguageInput, apiKey);
+      const parsed = await parseProtocolFromText(naturalLanguageInput);
       const next = [
         ...protocols,
         { id: Date.now(), name: parsed.name, cycleOn: parsed.cycleOn, cycleOff: parsed.cycleOff, timeOfDay: parsed.timeOfDay || 'flexible' }
@@ -243,13 +242,20 @@ export function DashboardScreen() {
   };
 
   const handleSafetyCheck = async () => {
-    const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    
     if (!Array.isArray(protocols) || protocols.length === 0) {
       setSafetyCheck({
         safe: true,
         warnings: [],
         recommendations: ['No protocols to check. Add protocols to analyze for safety.']
+      });
+      return;
+    }
+
+    if (!isBackendConfigured()) {
+      setSafetyCheck({
+        safe: false,
+        warnings: ['Backend not configured. Please set API_URL in environment variables.'],
+        recommendations: []
       });
       return;
     }
@@ -274,13 +280,9 @@ export function DashboardScreen() {
         });
       }
       
-      if (isBackendConfigured() || apiKey) {
-        const aiResult = await checkProtocolSafety(protocols, apiKey);
-        if (aiResult.warnings) allWarnings.push(...aiResult.warnings);
-        if (aiResult.recommendations) allRecommendations.push(...aiResult.recommendations);
-      } else {
-        allRecommendations.push('Add OpenAI API key in Health tab for AI-powered safety analysis.');
-      }
+      const aiResult = await checkProtocolSafety(protocols);
+      if (aiResult.warnings) allWarnings.push(...aiResult.warnings);
+      if (aiResult.recommendations) allRecommendations.push(...aiResult.recommendations);
       
       setSafetyCheck({
         safe: allWarnings.length === 0,
@@ -299,9 +301,8 @@ export function DashboardScreen() {
   };
 
   const handleGenerateInsights = async () => {
-    const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!isBackendConfigured() && !apiKey) {
-      setInsightsError('OpenAI API key required. Add it in the Health tab.');
+    if (!isBackendConfigured()) {
+      setInsightsError('Backend not configured. Please set API_URL in environment variables.');
       return;
     }
 
@@ -314,7 +315,7 @@ export function DashboardScreen() {
     setInsightsError('');
 
     try {
-      const result = await generateInsights(protocols, floors, apiKey);
+      const result = await generateInsights(protocols, floors);
       setInsights(result.insights);
     } catch (err) {
       setInsightsError(err.message || 'Failed to generate insights.');

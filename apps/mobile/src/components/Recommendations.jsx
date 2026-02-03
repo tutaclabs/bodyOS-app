@@ -19,12 +19,6 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
   const [expandedRec, setExpandedRec] = useState(new Set());
 
   const handleGetRecommendations = async () => {
-    const apiKey = await storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
-    if (!apiKey) {
-      setError(t.recommendations.apiKeyRequired);
-      return;
-    }
-
     const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
     if (!settings.onboarding?.completed) {
       setError(t.recommendations.completeOnboarding);
@@ -35,7 +29,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
     setError('');
 
     try {
-      const result = await getPersonalizedRecommendations(apiKey, language);
+      const result = await getPersonalizedRecommendations(language);
       setRecommendations(result);
     } catch (err) {
       setError(err.message || t.recommendations.error);
