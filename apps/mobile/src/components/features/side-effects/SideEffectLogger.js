@@ -37,8 +37,8 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
     loadProtocols();
   }, []);
 
-  const loadProtocols = () => {
-    const savedProtocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
+  const loadProtocols = async () => {
+    const savedProtocols = await storage.load(STORAGE_KEYS.PROTOCOLS, []);
     setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   };
 
@@ -50,13 +50,14 @@ export function SideEffectLogger({ onSave, initialProtocolId }) {
 
     try {
       setSaving(true);
-      const sideEffects = storage.load(STORAGE_KEYS.SIDE_EFFECTS, []);
+      const sideEffects = await storage.load(STORAGE_KEYS.SIDE_EFFECTS, []);
+      const sideEffectsArray = Array.isArray(sideEffects) ? sideEffects : [];
       const newEffect = {
         id: Date.now(),
         ...formData,
         createdAt: new Date().toISOString(),
       };
-      storage.save(STORAGE_KEYS.SIDE_EFFECTS, [...sideEffects, newEffect]);
+      await storage.save(STORAGE_KEYS.SIDE_EFFECTS, [...sideEffectsArray, newEffect]);
       
       setFormData({
         protocolId: '',
