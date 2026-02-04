@@ -188,7 +188,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                             </View>
                           </View>
 
-                          {rec.cycleOn && rec.cycleOff && (
+                          {rec.cycleOn != null && rec.cycleOff != null && (
                             <View>
                               <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.cycle}</Text>
                               <Text style={{ fontSize: 12, color: theme.muted }}>
@@ -341,7 +341,7 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
                           </View>
                         </View>
 
-                        {rec.cycleOn && rec.cycleOff && (
+                        {rec.cycleOn != null && rec.cycleOff != null && (
                           <View>
                             <Text style={{ fontSize: 12, fontWeight: '800', color: theme.text, marginBottom: 4 }}>{t.recommendations.cycle}</Text>
                             <Text style={{ fontSize: 12, color: theme.muted }}>
