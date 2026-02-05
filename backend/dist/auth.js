@@ -38,11 +38,9 @@ export async function authenticate(request, reply) {
     }
     catch {
         reply.code(401).send({ error: 'unauthorized' });
+        return;
     }
 }
 export function registerAuth(app) {
-    app.register((instance, _opts, done) => {
-        instance.decorate('authenticate', (req, rep) => authenticate(req, rep));
-        done();
-    });
+    app.decorate('authenticate', (req, rep) => authenticate(req, rep));
 }

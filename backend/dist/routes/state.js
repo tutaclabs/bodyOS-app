@@ -4,7 +4,7 @@ export async function stateRoutes(app) {
         const userId = request.user.sub;
         const state = await prisma.userState.findUnique({
             where: { userId },
-            select: { protocols: true, nutritionFloors: true, wellnessMetrics: true, chatHistory: true, updatedAt: true },
+            select: { protocols: true, nutritionFloors: true, wellnessMetrics: true, chatHistory: true, notifications: true, updatedAt: true },
         });
         return {
             state: state ?? {
@@ -12,6 +12,7 @@ export async function stateRoutes(app) {
                 nutritionFloors: {},
                 wellnessMetrics: {},
                 chatHistory: [],
+                notifications: [],
                 updatedAt: null,
             },
         };
@@ -64,6 +65,19 @@ export async function stateRoutes(app) {
             where: { userId },
             create: { userId, chatHistory: body.chatHistory },
             update: { chatHistory: body.chatHistory },
+            select: { updatedAt: true },
+        });
+        return { ok: true, updatedAt: updated.updatedAt };
+    });
+    app.put('/state/notifications', { preHandler: app.authenticate }, async (request, reply) => {
+        const userId = request.user.sub;
+        const body = request.body;
+        if (body.notifications === undefined)
+            return reply.code(400).send({ error: 'invalid_input' });
+        const updated = await prisma.userState.upsert({
+            where: { userId },
+            create: { userId, notifications: body.notifications },
+            update: { notifications: body.notifications },
             select: { updatedAt: true },
         });
         return { ok: true, updatedAt: updated.updatedAt };
