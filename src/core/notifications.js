@@ -1,6 +1,9 @@
 export const NOTIFICATION_TYPES = {
   EXPIRATION_WARNING: 'expiration_warning',
   EXPIRATION_CRITICAL: 'expiration_critical',
+  VIAL_EXPIRING_28: 'vial_expiring_28',
+  VIAL_EXPIRED_28: 'vial_expired_28',
+  LOW_STOCK: 'low_stock',
   ROTATION_REMINDER: 'rotation_reminder',
   SIDE_EFFECT_ALERT: 'side_effect_alert',
 };

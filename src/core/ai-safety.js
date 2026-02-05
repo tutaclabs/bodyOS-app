@@ -1,12 +1,12 @@
 import { isBackendConfigured } from './auth-api';
 import { apiFetch } from './api-client';
 
-export async function checkProtocolSafety(protocols, apiKey) {
+export async function checkProtocolSafety(protocols, apiKey, language = 'en') {
   if (isBackendConfigured()) {
     try {
       const res = await apiFetch('/ai/safety', {
         method: 'POST',
-        body: JSON.stringify({ protocols: protocols || [] }),
+        body: JSON.stringify({ protocols: protocols || [], language }),
       });
       return {
         safe: res?.safe !== false,
@@ -32,6 +32,10 @@ export async function checkProtocolSafety(protocols, apiKey) {
     cycleOff: p.cycleOff || 0
   }));
 
+  const systemPrompt = language === 'pt'
+    ? 'Você é um consultor de segurança em biohacking. Analise protocolos para interações potenciais, contraindicações e preocupações de segurança. Retorne APENAS JSON válido com esta estrutura: {"safe": boolean, "warnings": ["aviso1", "aviso2"], "recommendations": ["rec1", "rec2"]}. Seja conciso e específico.'
+    : 'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.';
+
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -43,7 +47,7 @@ export async function checkProtocolSafety(protocols, apiKey) {
       messages: [
         {
           role: 'system',
-          content: 'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.'
+          content: systemPrompt
         },
         {
           role: 'user',

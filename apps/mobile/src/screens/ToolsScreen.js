@@ -6,6 +6,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { calculateUnits } from '../core/reconstitution';
 import { libraryItems } from '../data/library-items';
 import { BodyOSIntelligenceScreen } from './BodyOSIntelligenceScreen';
+import { SyringeVisualizer } from '../components/SyringeVisualizer';
 
 export function ToolsScreen() {
   const t = useTranslation();
@@ -181,6 +182,7 @@ function CalcSection() {
           <Text style={{ fontSize: 12, color: '#B5B5B5', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 }}>
             {t.reconstitution.units}
           </Text>
+          <SyringeVisualizer drawUnits={units} maxUnits={100} />
         </View>
 
         {showSafetyWarning && (

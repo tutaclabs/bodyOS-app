@@ -159,15 +159,18 @@ export async function aiRoutes(app: FastifyInstance) {
 
   app.post('/ai/safety', { preHandler: app.authenticate }, async (request, reply) => {
     if (!env.aiEnabled) return reply.code(503).send({ error: 'ai_disabled' });
-    const body = request.body as { protocols?: unknown };
+    const body = request.body as { protocols?: unknown; language?: string };
     const protocols = Array.isArray(body.protocols) ? body.protocols : [];
+    const language = typeof body.language === 'string' ? body.language : 'en';
+
+    const systemPrompt = language === 'pt'
+      ? 'Você é um consultor de segurança em biohacking. Analise protocolos para interações potenciais, contraindicações e preocupações de segurança. Retorne APENAS JSON válido com esta estrutura: {"safe": boolean, "warnings": ["aviso1", "aviso2"], "recommendations": ["rec1", "rec2"]}. Seja conciso e específico.'
+      : 'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.';
 
     const messages: ChatMessage[] = [
       {
         role: 'system',
-        content:
-          'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. ' +
-          'Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.',
+        content: systemPrompt,
       },
       { role: 'user', content: `Analyze these biohacking protocols for safety: ${JSON.stringify(protocols)}` },
     ];
@@ -203,9 +206,23 @@ export async function aiRoutes(app: FastifyInstance) {
       {
         role: 'system',
         content:
-          'You are a protocol parser for a biohacking app. Extract protocol details from natural language. ' +
-          'Return ONLY valid JSON: {"name": "string", "cycleOn": number, "cycleOff": number}. If information is missing, use defaults: cycleOn=5, cycleOff=2. ' +
-          'Extract the compound/protocol name and cycle days from text.',
+          'You are a Bio-OS Protocol Extractor. Parse unstructured text into structured JSON protocol.\n\n' +
+          'Rules:\n' +
+          '1. Default units: mg for vials, ml for water, mcg for doses unless specified.\n' +
+          '2. If frequency is missing, assume "Once Daily" (daily).\n' +
+          '3. If days are mentioned (e.g., "5 on 2 off"), calculate the schedule accordingly.\n' +
+          '4. Calculate estimatedVialDays based on vialSizeMg, reconstitutionMl, doseMcg, and frequency.\n' +
+          '5. Output ONLY valid JSON.\n\n' +
+          'Target JSON Structure:\n' +
+          '{\n' +
+          '  "compoundName": string,\n' +
+          '  "vialSizeMg": number,\n' +
+          '  "reconstitutionMl": number,\n' +
+          '  "doseMcg": number,\n' +
+          '  "frequency": "daily" | "twice_daily" | "weekly",\n' +
+          '  "schedule": { "onDays": number, "offDays": number },\n' +
+          '  "estimatedVialDays": number\n' +
+          '}',
       },
       { role: 'user', content: `Parse this protocol description: "${text}"` },
     ];
@@ -213,16 +230,44 @@ export async function aiRoutes(app: FastifyInstance) {
     try {
       const json: any = await openaiChatJson({
         messages,
-        maxTokens: 200,
+        maxTokens: 300,
         temperature: 0.3,
         responseFormat: { type: 'json_object' },
       });
       const raw = json?.choices?.[0]?.message?.content ?? '{}';
       const parsed = JSON.parse(raw);
+      
+      const frequency = parsed?.frequency === 'twice_daily' || parsed?.frequency === 'weekly' 
+        ? parsed.frequency 
+        : 'daily';
+      
+      const onDays = Number(parsed?.schedule?.onDays) || Number(parsed?.onDays) || 5;
+      const offDays = Number(parsed?.schedule?.offDays) || Number(parsed?.offDays) || 2;
+      
+      const vialSizeMg = Number(parsed?.vialSizeMg) || 0;
+      const reconstitutionMl = Number(parsed?.reconstitutionMl) || 0;
+      const doseMcg = Number(parsed?.doseMcg) || 0;
+      
+      let estimatedVialDays = Number(parsed?.estimatedVialDays) || 0;
+      if (estimatedVialDays === 0 && vialSizeMg > 0 && reconstitutionMl > 0 && doseMcg > 0) {
+        const totalMcg = (vialSizeMg * 1000);
+        const concentrationMcgPerMl = totalMcg / reconstitutionMl;
+        const dailyDoseMl = frequency === 'twice_daily' 
+          ? (doseMcg * 2) / concentrationMcgPerMl
+          : frequency === 'weekly'
+          ? doseMcg / (concentrationMcgPerMl * 7)
+          : doseMcg / concentrationMcgPerMl;
+        estimatedVialDays = Math.floor(reconstitutionMl / dailyDoseMl);
+      }
+      
       return {
-        name: parsed?.name || 'Unknown Protocol',
-        cycleOn: Number(parsed?.cycleOn) || 5,
-        cycleOff: Number(parsed?.cycleOff) || 2,
+        compoundName: parsed?.compoundName || parsed?.name || 'Unknown Protocol',
+        vialSizeMg,
+        reconstitutionMl,
+        doseMcg,
+        frequency,
+        schedule: { onDays, offDays },
+        estimatedVialDays: estimatedVialDays || 0,
       };
     } catch (e: any) {
       const msg = typeof e?.message === 'string' ? e.message : 'openai_error';

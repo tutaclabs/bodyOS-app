@@ -30,6 +30,7 @@ import { isBackendConfigured } from './core/auth-api.js';
 import { useTranslation } from './hooks/useTranslation.js';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import { MedicalDisclaimerModal, MedicalDisclaimerFooter } from './components/MedicalDisclaimer.jsx';
+import { SyringeVisualizer } from './components/SyringeVisualizer.jsx';
 import Library from './components/Library.jsx';
 import WellnessMetrics from './components/WellnessMetrics.jsx';
 import GoalMode from './components/GoalMode.jsx';
@@ -150,6 +151,7 @@ const ReconstitutionWizard = () => {
           {units.toFixed(1)}
         </span>
         <span className="text-sm text-slate-600 font-semibold uppercase tracking-wider">{t.reconstitution.units}</span>
+        <SyringeVisualizer drawUnits={units} maxUnits={100} />
       </div>
     </div>
   );
@@ -157,13 +159,16 @@ const ReconstitutionWizard = () => {
 
 const ProtocolDashboard = () => {
   const t = useTranslation();
+  const { language } = useLanguage();
   const [protocols, setProtocols] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [newProtocol, setNewProtocol] = useState({
     name: '',
     dose: '',
     cycleOn: 5,
-    cycleOff: 2
+    cycleOff: 2,
+    vial_opened_date: '',
+    current_inventory_ml: ''
   });
   const [safetyCheck, setSafetyCheck] = useState(null);
   const [checkingSafety, setCheckingSafety] = useState(false);
@@ -177,6 +182,12 @@ const ProtocolDashboard = () => {
     const savedProtocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
     setProtocols(Array.isArray(savedProtocols) ? savedProtocols : []);
   }, []);
+
+  useEffect(() => {
+    if (safetyCheck && !checkingSafety) {
+      handleSafetyCheck();
+    }
+  }, [language]);
 
   const handleSafetyCheck = async () => {
     const apiKey = storage.load(STORAGE_KEYS.OPENAI_API_KEY, '');
@@ -200,7 +211,7 @@ const ProtocolDashboard = () => {
 
     setCheckingSafety(true);
     try {
-      const result = await checkProtocolSafety(protocols, apiKey);
+      const result = await checkProtocolSafety(protocols, apiKey, language);
       setSafetyCheck(result);
     } catch (error) {
       setSafetyCheck({
@@ -221,7 +232,14 @@ const ProtocolDashboard = () => {
     ];
     setProtocols(updated);
     storage.save(STORAGE_KEYS.PROTOCOLS, updated);
-    setNewProtocol({ name: '', dose: '', cycleOn: 5, cycleOff: 2 });
+    setNewProtocol({
+      name: '',
+      dose: '',
+      cycleOn: 5,
+      cycleOff: 2,
+      vial_opened_date: '',
+      current_inventory_ml: ''
+    });
     setIsAdding(false);
   };
 
@@ -244,7 +262,13 @@ const ProtocolDashboard = () => {
       const parsed = await parseProtocolFromText(naturalLanguageInput, apiKey);
       const updated = [
         ...protocols,
-        { ...parsed, id: Date.now(), active: true }
+        {
+          ...parsed,
+          id: Date.now(),
+          active: true,
+          vial_opened_date: null,
+          current_inventory_ml: null
+        }
       ];
       setProtocols(updated);
       storage.save(STORAGE_KEYS.PROTOCOLS, updated);
@@ -927,7 +951,14 @@ export default function BodyOSApp() {
 
     const handleAddToProtocols = (protocol) => {
       const protocols = storage.load(STORAGE_KEYS.PROTOCOLS, []);
-      const updated = [...protocols, protocol];
+      const updated = [
+        ...protocols,
+        {
+          ...protocol,
+          vial_opened_date: protocol?.vial_opened_date ?? null,
+          current_inventory_ml: protocol?.current_inventory_ml ?? null,
+        }
+      ];
       storage.save(STORAGE_KEYS.PROTOCOLS, updated);
       alert(t.recommendations.addedToProtocols);
       window.location.reload();

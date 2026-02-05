@@ -15,10 +15,12 @@ import { pushNutritionFloors } from '../core/cloud';
 import { isBackendConfigured } from '../core/auth-api';
 import { ExpirationBadge } from '../components/features/expiration-alerts/ExpirationBadge';
 import { ExpirationModal } from '../components/features/expiration-alerts/ExpirationModal';
+import { ExpirationNotifications } from '../components/features/expiration-alerts/ExpirationNotifications';
 import Recommendations from '../components/Recommendations';
 import { SectionHeader } from '../ui/SectionHeader';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { EmptyState } from '../ui/EmptyState';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const storage = new AsyncStorageAdapter();
 
@@ -88,6 +90,7 @@ function SmallPill({ children }) {
 }
 
 export function DashboardScreen() {
+  const { language } = useLanguage();
   const scrollViewRef = useRef(null);
   const [activeSection, setActiveSection] = useState('protocols');
   const [protocols, setProtocols] = useState([]);
@@ -96,7 +99,6 @@ export function DashboardScreen() {
   const [cycleOn, setCycleOn] = useState('5');
   const [cycleOff, setCycleOff] = useState('2');
   const [timeOfDay, setTimeOfDay] = useState('flexible');
-  const [showScrollButtons, setShowScrollButtons] = useState(false);
   const [useNaturalLanguage, setUseNaturalLanguage] = useState(false);
   const [naturalLanguageInput, setNaturalLanguageInput] = useState('');
   const [parsing, setParsing] = useState(false);
@@ -119,6 +121,12 @@ export function DashboardScreen() {
   const [loadingInsights, setLoadingInsights] = useState(false);
   const [insightsError, setInsightsError] = useState('');
   const [expirationModalProtocol, setExpirationModalProtocol] = useState(null);
+
+  useEffect(() => {
+    if (safetyCheck && !checkingSafety) {
+      handleSafetyCheck();
+    }
+  }, [language]);
 
   useEffect(() => {
     (async () => {
@@ -279,20 +287,6 @@ export function DashboardScreen() {
     await pushNutritionFloors(next).catch(() => {});
   };
 
-  const scrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
-
-  const scrollToBottom = () => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
-  };
-
-  const handleScroll = (event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    const isScrolled = contentOffset.y > 100;
-    const canScrollMore = contentOffset.y + layoutMeasurement.height < contentSize.height - 100;
-    setShowScrollButtons(isScrolled || canScrollMore);
-  };
 
   const handleSafetyCheck = async () => {
     if (!Array.isArray(protocols) || protocols.length === 0) {
@@ -333,7 +327,7 @@ export function DashboardScreen() {
         });
       }
       
-      const aiResult = await checkProtocolSafety(protocols);
+      const aiResult = await checkProtocolSafety(protocols, language);
       if (aiResult.warnings) allWarnings.push(...aiResult.warnings);
       if (aiResult.recommendations) allRecommendations.push(...aiResult.recommendations);
       
@@ -416,7 +410,6 @@ export function DashboardScreen() {
         <ScrollView
           ref={scrollViewRef}
           contentContainerStyle={{ paddingBottom: 100 }}
-          onScroll={handleScroll}
           scrollEventThrottle={400}
         >
         <View style={{ gap: 16 }}>
@@ -1068,46 +1061,6 @@ export function DashboardScreen() {
       </ScrollView>
       )}
 
-      {showScrollButtons && activeSection === 'protocols' && (
-        <View style={{ position: 'absolute', right: 16, bottom: 100, gap: 8 }}>
-          <TouchableOpacity
-            onPress={scrollToTop}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              backgroundColor: theme.primary,
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5
-            }}
-          >
-            <Text style={{ color: '#000000', fontSize: 20, fontWeight: '800' }}>↑</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={scrollToBottom}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              backgroundColor: theme.primary,
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5
-            }}
-          >
-            <Text style={{ color: '#000000', fontSize: 20, fontWeight: '800' }}>↓</Text>
-          </TouchableOpacity>
-        </View>
-      )}
 
       {expirationModalProtocol && (
         <ExpirationModal

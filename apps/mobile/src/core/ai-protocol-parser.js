@@ -18,8 +18,12 @@ export async function parseProtocolFromText(text) {
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);
   return {
-    name: json?.name || 'Unknown Protocol',
-    cycleOn: Number(json?.cycleOn) || 5,
-    cycleOff: Number(json?.cycleOff) || 2,
+    compoundName: json?.compoundName || json?.name || 'Unknown Protocol',
+    vialSizeMg: Number(json?.vialSizeMg) || 0,
+    reconstitutionMl: Number(json?.reconstitutionMl) || 0,
+    doseMcg: Number(json?.doseMcg) || 0,
+    frequency: json?.frequency || 'daily',
+    schedule: json?.schedule || { onDays: 5, offDays: 2 },
+    estimatedVialDays: Number(json?.estimatedVialDays) || 0,
   };
 }

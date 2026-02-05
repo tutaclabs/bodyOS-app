@@ -22,10 +22,16 @@ export function ExpirationNotifications() {
     try {
       setLoading(true);
       const data = await apiFetch('/v2/protocols/expiring');
-      setExpiring(data.expiring || []);
-      setExpired(data.expired || []);
+      const expiringList = Array.isArray(data.expiring) ? data.expiring : [];
+      const expiredList = Array.isArray(data.expired) ? data.expired : [];
+      const lowStock = Array.isArray(data.lowStock) ? data.lowStock : [];
+      const expiring28 = Array.isArray(data.expiring28) ? data.expiring28 : [];
+      const expired28 = Array.isArray(data.expired28) ? data.expired28 : [];
 
-      data.expired.forEach((protocol) => {
+      setExpiring(expiringList);
+      setExpired(expiredList);
+
+      expiredList.forEach((protocol) => {
         addNotification(
           NOTIFICATION_TYPES.EXPIRATION_CRITICAL,
           t.expirationAlerts.expiredTitle,
@@ -34,7 +40,7 @@ export function ExpirationNotifications() {
         );
       });
 
-      data.expiring.forEach((protocol) => {
+      expiringList.forEach((protocol) => {
         if (protocol.daysUntilExpiry <= 7 && protocol.daysUntilExpiry > 0) {
           addNotification(
             NOTIFICATION_TYPES.EXPIRATION_WARNING,
@@ -46,6 +52,41 @@ export function ExpirationNotifications() {
           );
         }
       });
+
+      expired28.forEach((protocol) => {
+        addNotification(
+          NOTIFICATION_TYPES.VIAL_EXPIRED_28,
+          t.expirationAlerts.vialExpiredTitle,
+          t.expirationAlerts.vialExpiredMessage.replace('{name}', protocol.name || 'Protocol'),
+          { protocolId: protocol.id }
+        );
+      });
+
+      expiring28.forEach((protocol) => {
+        if (protocol.daysUntilExpiry <= 7 && protocol.daysUntilExpiry >= 0) {
+          addNotification(
+            NOTIFICATION_TYPES.VIAL_EXPIRING_28,
+            t.expirationAlerts.vialExpiringTitle,
+            t.expirationAlerts.vialExpiringMessage
+              .replace('{name}', protocol.name || 'Protocol')
+              .replace('{days}', protocol.daysUntilExpiry),
+            { protocolId: protocol.id }
+          );
+        }
+      });
+
+      lowStock.forEach((protocol) => {
+        const inventory = Number(protocol.current_inventory_ml);
+        const inventoryDisplay = Number.isFinite(inventory) ? inventory.toFixed(1) : protocol.current_inventory_ml;
+        addNotification(
+          NOTIFICATION_TYPES.LOW_STOCK,
+          t.expirationAlerts.lowStockTitle,
+          t.expirationAlerts.lowStockMessage
+            .replace('{name}', protocol.name || 'Protocol')
+            .replace('{ml}', inventoryDisplay ?? '1'),
+          { protocolId: protocol.id }
+        );
+      });
     } catch (err) {
       console.error('Failed to check expiring protocols:', err);
     } finally {
@@ -54,7 +95,13 @@ export function ExpirationNotifications() {
   };
 
   const notifications = getFilteredNotifications({
-    type: [NOTIFICATION_TYPES.EXPIRATION_WARNING, NOTIFICATION_TYPES.EXPIRATION_CRITICAL],
+    type: [
+      NOTIFICATION_TYPES.EXPIRATION_WARNING,
+      NOTIFICATION_TYPES.EXPIRATION_CRITICAL,
+      NOTIFICATION_TYPES.VIAL_EXPIRING_28,
+      NOTIFICATION_TYPES.VIAL_EXPIRED_28,
+      NOTIFICATION_TYPES.LOW_STOCK
+    ],
     unreadOnly: true,
     limit: 5,
   });
@@ -70,16 +117,22 @@ export function ExpirationNotifications() {
           key={notification.id}
           className={`p-3 rounded-lg border flex items-start gap-3 ${
             notification.type === NOTIFICATION_TYPES.EXPIRATION_CRITICAL
+              || notification.type === NOTIFICATION_TYPES.VIAL_EXPIRED_28
               ? 'bg-red-50 border-red-200'
-              : 'bg-amber-50 border-amber-200'
+              : notification.type === NOTIFICATION_TYPES.LOW_STOCK
+                ? 'bg-amber-50 border-amber-200'
+                : 'bg-blue-50 border-blue-200'
           }`}
         >
           <AlertTriangle
             size={18}
             className={
               notification.type === NOTIFICATION_TYPES.EXPIRATION_CRITICAL
+                || notification.type === NOTIFICATION_TYPES.VIAL_EXPIRED_28
                 ? 'text-red-600 mt-0.5'
-                : 'text-amber-600 mt-0.5'
+                : notification.type === NOTIFICATION_TYPES.LOW_STOCK
+                  ? 'text-amber-600 mt-0.5'
+                  : 'text-blue-600 mt-0.5'
             }
           />
           <div className="flex-1">

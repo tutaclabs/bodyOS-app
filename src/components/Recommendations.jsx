@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sparkles, Plus, AlertTriangle, Info, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation.js';
 import { WebLocalStorageAdapter } from '../core/storage.js';
@@ -42,6 +42,12 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
     }
   };
 
+  useEffect(() => {
+    if (recommendations && !loading) {
+      handleGetRecommendations();
+    }
+  }, [language]);
+
   const toggleExpand = (index) => {
     const newExpanded = new Set(expandedRec);
     if (newExpanded.has(index)) {
@@ -60,6 +66,8 @@ export default function Recommendations({ onAddToProtocols, compact = false }) {
         cycleOff: rec.cycleOff || 2,
         id: Date.now(),
         active: true,
+        vial_opened_date: null,
+        current_inventory_ml: null,
       });
     }
   };

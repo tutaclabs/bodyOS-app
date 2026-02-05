@@ -32,9 +32,9 @@ export function InjectionSiteSelector({ onSelect, selectedSite }) {
   const loadSuggestion = async () => {
     try {
       setLoading(true);
-      const logs = storage.load(STORAGE_KEYS.PEPTIDE_LOGS, []);
+      const logs = storage.load(STORAGE_KEYS.PEPTIDE_LOGS, []) || [];
       
-      if (logs.length === 0) {
+      if (!Array.isArray(logs) || logs.length === 0) {
         setSuggested({ recommended: 'left_deltoid', needsRotation: false });
         if (!selectedSite) {
           onSelect?.('left_deltoid');
