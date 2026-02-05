@@ -4,27 +4,28 @@ import { execSync } from 'child_process';
 
 const MIGRATION_NAME = '20260205005747_init';
 
-function runCommand(command, captureOutput = false) {
+function runCommand(command) {
   try {
-    if (captureOutput) {
-      const output = execSync(command, {
-        encoding: 'utf8',
-        env: process.env
-      });
-      return { success: true, output };
-    } else {
-      execSync(command, {
-        stdio: 'inherit',
-        env: process.env
-      });
-      return { success: true };
-    }
+    const result = execSync(command, {
+      encoding: 'utf8',
+      env: process.env,
+      stdio: 'pipe'
+    });
+    const output = result.toString();
+    console.log(output);
+    return { success: true, output };
   } catch (error) {
-    const stdout = error.stdout?.toString() || '';
-    const stderr = error.stderr?.toString() || '';
-    const message = error.message || '';
-    const output = stdout || stderr || message;
-    return { success: false, output, stdout, stderr };
+    const stdout = (error.stdout?.toString() || '').trim();
+    const stderr = (error.stderr?.toString() || '').trim();
+    const message = (error.message || '').trim();
+    
+    const fullOutput = [stdout, stderr, message].filter(Boolean).join('\n');
+    
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+    if (message && !stderr.includes(message)) console.error(message);
+    
+    return { success: false, output: fullOutput, stdout, stderr };
   }
 }
 
@@ -37,10 +38,12 @@ function resolveMigration() {
     return;
   }
 
-  const errorOutput = deployResult.output;
-  console.log('Migration deploy failed. Analyzing error...');
+  const errorOutput = (deployResult.output || '').toLowerCase();
+  console.log('\n=== Migration deploy failed. Analyzing error... ===');
+  console.log('Full error output:', deployResult.output);
+  console.log('==================================================\n');
 
-  if (errorOutput.includes('P3009') || errorOutput.includes('failed migrations')) {
+  if (errorOutput.includes('p3009') || errorOutput.includes('failed migrations') || errorOutput.includes('failed migration')) {
     console.log('Found failed migration. Resolving failed state...');
     
     console.log('Step 1: Marking migration as rolled-back...');
