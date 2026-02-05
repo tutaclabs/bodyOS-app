@@ -10,10 +10,11 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "lint": "eslint .",
+    "lint": "eslint 'scripts/**/*.js'",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy"
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:resolve": "node scripts/resolve-migration.js"
   },
   "dependencies": {
     "@fastify/cors": "8.5.0",

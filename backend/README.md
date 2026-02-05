@@ -19,7 +19,7 @@ API runs on `PORT` (default `3001`).
 - Create a Render **PostgreSQL** instance and copy its `DATABASE_URL`.
 - Create a Render **Web Service** from this repo and set:
   - `Root Directory`: `backend`
-  - `Build Command`: `npm install && npm run prisma:generate && npm run build && npm run prisma:migrate:deploy`
+  - `Build Command`: `npm install && npm run prisma:generate && npm run build && npm run prisma:migrate:resolve`
   - `Start Command`: `npm run start`
   - Env vars:
     - `DATABASE_URL`

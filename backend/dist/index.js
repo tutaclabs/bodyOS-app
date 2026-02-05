@@ -8,6 +8,9 @@ import { healthRoutes } from './routes/health.js';
 import { authRoutes } from './routes/auth.js';
 import { stateRoutes } from './routes/state.js';
 import { aiRoutes } from './routes/ai.js';
+import { injectionSiteRoutes } from './routes/v2/injection-sites.js';
+import { protocolRoutes } from './routes/v2/protocols.js';
+import { sideEffectRoutes } from './routes/v2/side-effects.js';
 const app = Fastify({
     logger: true,
 });
@@ -28,5 +31,8 @@ await app.register(healthRoutes);
 await app.register(authRoutes);
 await app.register(stateRoutes);
 await app.register(aiRoutes);
+await app.register(injectionSiteRoutes);
+await app.register(protocolRoutes);
+await app.register(sideEffectRoutes);
 app.get('/', async () => ({ ok: true, name: 'bodyos-api' }));
 await app.listen({ port: env.port, host: '0.0.0.0' });
