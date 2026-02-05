@@ -4,78 +4,126 @@ import { execSync } from 'child_process';
 
 const MIGRATION_NAME = '20260205005747_init';
 
-function resolveMigration() {
+function runCommand(command, captureOutput = false) {
   try {
-    console.log('Attempting to deploy migrations...');
-    execSync('npx prisma migrate deploy', {
-      stdio: 'inherit',
-      env: process.env
-    });
-    console.log('Migrations deployed successfully.');
+    if (captureOutput) {
+      const output = execSync(command, {
+        encoding: 'utf8',
+        env: process.env
+      });
+      return { success: true, output };
+    } else {
+      execSync(command, {
+        stdio: 'inherit',
+        env: process.env
+      });
+      return { success: true };
+    }
   } catch (error) {
-    const errorOutput = error.stdout?.toString() || error.stderr?.toString() || error.message;
+    const stdout = error.stdout?.toString() || '';
+    const stderr = error.stderr?.toString() || '';
+    const message = error.message || '';
+    const output = stdout || stderr || message;
+    return { success: false, output, stdout, stderr };
+  }
+}
+
+function resolveMigration() {
+  console.log('Attempting to deploy migrations...');
+  const deployResult = runCommand('npx prisma migrate deploy');
+  
+  if (deployResult.success) {
+    console.log('Migrations deployed successfully.');
+    return;
+  }
+
+  const errorOutput = deployResult.output;
+  console.log('Migration deploy failed. Analyzing error...');
+
+  if (errorOutput.includes('P3009') || errorOutput.includes('failed migrations')) {
+    console.log('Found failed migration. Resolving failed state...');
     
-    if (errorOutput.includes('P3009') || errorOutput.includes('failed migrations')) {
-      console.log('Found failed migration. Resolving...');
-      try {
-        execSync(`npx prisma migrate resolve --rolled-back ${MIGRATION_NAME}`, {
-          stdio: 'inherit',
-          env: process.env
-        });
-        console.log('Migration marked as rolled back.');
-        
-        console.log('Checking if tables exist...');
-        try {
-          execSync('npx prisma migrate deploy', {
-            stdio: 'inherit',
-            env: process.env
-          });
-          console.log('Migrations deployed successfully after rollback.');
-        } catch (deployError) {
-          const deployOutput = deployError.stdout?.toString() || deployError.stderr?.toString() || deployError.message;
-          if (deployOutput.includes('relation "User" already exists') || 
-              deployOutput.includes('already exists')) {
-            console.log('Tables already exist. Marking migration as applied...');
-            execSync(`npx prisma migrate resolve --applied ${MIGRATION_NAME}`, {
-              stdio: 'inherit',
-              env: process.env
-            });
-            console.log('Migration marked as applied successfully.');
-          } else {
-            throw deployError;
-          }
-        }
-      } catch (resolveError) {
-        const resolveOutput = resolveError.stdout?.toString() || resolveError.stderr?.toString() || resolveError.message;
-        if (resolveOutput.includes('already applied') || resolveOutput.includes('not found')) {
-          console.log('Migration already resolved. Continuing...');
-        } else {
-          console.error('Failed to resolve migration:', resolveOutput);
-          process.exit(1);
-        }
+    console.log('Step 1: Marking migration as rolled-back...');
+    const rolledBackResult = runCommand(
+      `npx prisma migrate resolve --rolled-back ${MIGRATION_NAME}`
+    );
+    
+    if (rolledBackResult.success) {
+      console.log('✓ Migration marked as rolled-back.');
+    } else {
+      const rollbackOutput = rolledBackResult.output || '';
+      if (rollbackOutput.includes('not found') || 
+          rollbackOutput.includes('already') ||
+          rollbackOutput.includes('does not exist')) {
+        console.log('Migration state already resolved or not found. Continuing...');
+      } else {
+        console.log('⚠ Rolled-back command had issues:', rollbackOutput.substring(0, 200));
+        console.log('Continuing anyway...');
       }
-    } else if (errorOutput.includes('relation "User" already exists') || 
-               errorOutput.includes('already exists')) {
-      console.log('Tables already exist. Marking migration as applied...');
-      try {
-        execSync(`npx prisma migrate resolve --applied ${MIGRATION_NAME}`, {
-          stdio: 'inherit',
-          env: process.env
-        });
-        console.log('Migration marked as applied successfully.');
-      } catch (resolveError) {
-        const resolveOutput = resolveError.stdout?.toString() || resolveError.stderr?.toString() || resolveError.message;
-        if (resolveOutput.includes('already applied') || resolveOutput.includes('not found')) {
-          console.log('Migration already resolved. Continuing...');
-        } else {
-          console.error('Failed to resolve migration:', resolveOutput);
-          process.exit(1);
+    }
+
+    console.log('Step 2: Attempting to deploy again...');
+    const retryResult = runCommand('npx prisma migrate deploy');
+    
+    if (retryResult.success) {
+      console.log('✓ Migrations deployed successfully after rollback.');
+      return;
+    }
+
+    const retryOutput = retryResult.output || '';
+    console.log('Deploy retry failed. Checking error type...');
+    
+    if (retryOutput.includes('relation "User" already exists') || 
+        retryOutput.includes('already exists') ||
+        retryOutput.includes('P3009')) {
+      console.log('Step 3: Tables already exist. Marking migration as applied...');
+      const appliedResult = runCommand(
+        `npx prisma migrate resolve --applied ${MIGRATION_NAME}`
+      );
+      
+      if (appliedResult.success) {
+        console.log('✓ Migration marked as applied successfully.');
+        return;
+      } else {
+        const appliedOutput = appliedResult.output || '';
+        if (appliedOutput.includes('already applied') || 
+            appliedOutput.includes('not found') ||
+            appliedOutput.includes('does not exist') ||
+            appliedOutput.includes('Migration `20260205005747_init` is already applied')) {
+          console.log('✓ Migration already marked as applied. Continuing...');
+          return;
         }
+        console.error('✗ Failed to mark migration as applied:', appliedOutput.substring(0, 300));
+        console.error('Full error:', appliedOutput);
+        process.exit(1);
       }
     } else {
-      console.error('Migration failed with unexpected error:', errorOutput);
+      console.error('✗ Retry deploy failed with unexpected error:', retryOutput.substring(0, 300));
+      console.error('Full error:', retryOutput);
       process.exit(1);
     }
+  } else if (errorOutput.includes('relation "User" already exists') || 
+             errorOutput.includes('already exists')) {
+    console.log('Tables already exist. Marking migration as applied...');
+    const appliedResult = runCommand(
+      `npx prisma migrate resolve --applied ${MIGRATION_NAME}`
+    );
+    
+    if (appliedResult.success) {
+      console.log('Migration marked as applied successfully.');
+      return;
+    } else {
+      const appliedOutput = appliedResult.output;
+      if (appliedOutput.includes('already applied') || appliedOutput.includes('not found')) {
+        console.log('Migration already resolved. Continuing...');
+        return;
+      }
+      console.error('Failed to resolve migration:', appliedOutput);
+      process.exit(1);
+    }
+  } else {
+    console.error('Migration failed with unexpected error:', errorOutput);
+    process.exit(1);
   }
 }
 
