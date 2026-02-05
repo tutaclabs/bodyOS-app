@@ -14,6 +14,10 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
   );
   const [expirationDate, setExpirationDate] = useState(protocol.expirationDate || '');
   const [expirationDays, setExpirationDays] = useState(protocol.expirationDays || 30);
+  const [vialOpenedDate, setVialOpenedDate] = useState(protocol.vial_opened_date || '');
+  const [currentInventoryMl, setCurrentInventoryMl] = useState(
+    protocol.current_inventory_ml != null ? String(protocol.current_inventory_ml) : ''
+  );
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
@@ -23,7 +27,14 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
       const protocolsArray = Array.isArray(protocols) ? protocols : [];
       const updated = protocolsArray.map(p => 
         p.id === protocol.id 
-          ? { ...p, reconstitutionDate, expirationDate, expirationDays }
+          ? { 
+              ...p, 
+              reconstitutionDate, 
+              expirationDate, 
+              expirationDays,
+              vial_opened_date: vialOpenedDate || null,
+              current_inventory_ml: currentInventoryMl === '' ? null : Number(currentInventoryMl) || null
+            }
           : p
       );
       storage.save(STORAGE_KEYS.PROTOCOLS, updated);
@@ -61,6 +72,49 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
 
           <ScrollView>
             <View style={{ gap: 16 }}>
+              <View>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted, marginBottom: 8 }}>
+                  {t.expirationAlerts.vialOpenedDate}
+                </Text>
+                <TextInput
+                  value={vialOpenedDate}
+                  onChangeText={setVialOpenedDate}
+                  placeholder="YYYY-MM-DD"
+                  placeholderTextColor={theme.muted}
+                  style={{
+                    backgroundColor: theme.card,
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    color: theme.text,
+                    borderBottomWidth: 2,
+                    borderBottomColor: theme.card,
+                  }}
+                />
+              </View>
+
+              <View>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted, marginBottom: 8 }}>
+                  {t.expirationAlerts.currentInventoryMl}
+                </Text>
+                <TextInput
+                  keyboardType="decimal-pad"
+                  value={currentInventoryMl}
+                  onChangeText={setCurrentInventoryMl}
+                  placeholder="e.g. 2.5"
+                  placeholderTextColor={theme.muted}
+                  style={{
+                    backgroundColor: theme.card,
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    color: theme.text,
+                    borderBottomWidth: 2,
+                    borderBottomColor: theme.card,
+                  }}
+                />
+              </View>
+
               <View>
                 <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted, marginBottom: 8 }}>
                   {t.expirationAlerts.reconstitutionDate}

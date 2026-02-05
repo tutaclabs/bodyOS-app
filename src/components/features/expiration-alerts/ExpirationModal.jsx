@@ -10,6 +10,10 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
   );
   const [expirationDate, setExpirationDate] = useState(protocol.expirationDate || '');
   const [expirationDays, setExpirationDays] = useState(protocol.expirationDays || 30);
+  const [vialOpenedDate, setVialOpenedDate] = useState(protocol.vial_opened_date || '');
+  const [currentInventoryMl, setCurrentInventoryMl] = useState(
+    protocol.current_inventory_ml ?? ''
+  );
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
@@ -21,6 +25,8 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
           reconstitutionDate,
           expirationDate,
           expirationDays,
+          vial_opened_date: vialOpenedDate,
+          current_inventory_ml: currentInventoryMl === '' ? null : Number(currentInventoryMl),
         }),
       });
       onSave?.();
@@ -60,6 +66,20 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
+              {t.expirationAlerts.vialOpenedDate}
+            </label>
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
+              <input
+                type="date"
+                value={vialOpenedDate}
+                onChange={(e) => setVialOpenedDate(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
               {t.expirationAlerts.reconstitutionDate}
             </label>
             <div className="relative">
@@ -91,6 +111,19 @@ export function ExpirationModal({ protocol, onClose, onSave }) {
                   setExpirationDate(reconDate.toISOString().split('T')[0]);
                 }
               }}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              {t.expirationAlerts.currentInventoryMl}
+            </label>
+            <input
+              type="number"
+              min="0"
+              step="0.1"
+              value={currentInventoryMl}
+              onChange={(e) => setCurrentInventoryMl(e.target.value)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none"
             />
           </div>

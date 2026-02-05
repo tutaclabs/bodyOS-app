@@ -1,7 +1,7 @@
 import { isBackendConfigured } from './auth-api';
 import { apiFetch } from './api-client';
 
-export async function checkProtocolSafety(protocols) {
+export async function checkProtocolSafety(protocols, language = 'en') {
   if (!isBackendConfigured()) {
     throw new Error('Backend not configured. Please set API_URL in environment variables.');
   }
@@ -13,7 +13,7 @@ export async function checkProtocolSafety(protocols) {
   const res = await apiFetch('/ai/safety', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ protocols: protocols || [] }),
+    body: JSON.stringify({ protocols: protocols || [], language }),
   });
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json?.error || `API error: ${res.status}`);

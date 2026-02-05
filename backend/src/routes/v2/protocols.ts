@@ -9,6 +9,8 @@ export async function protocolRoutes(app: FastifyInstance) {
       reconstitutionDate?: string;
       expirationDate?: string;
       expirationDays?: number;
+      vial_opened_date?: string | null;
+      current_inventory_ml?: number | null;
     };
 
     if (!params.id) {
@@ -37,6 +39,12 @@ export async function protocolRoutes(app: FastifyInstance) {
       reconstitutionDate: body.reconstitutionDate || protocol.reconstitutionDate,
       expirationDate: body.expirationDate || protocol.expirationDate,
       expirationDays: body.expirationDays ?? protocol.expirationDays ?? 30,
+      vial_opened_date:
+        body.vial_opened_date === '' ? null : body.vial_opened_date ?? protocol.vial_opened_date ?? null,
+      current_inventory_ml:
+        body.current_inventory_ml === null || typeof body.current_inventory_ml === 'number'
+          ? body.current_inventory_ml
+          : protocol.current_inventory_ml ?? null,
     };
 
     if (updated.reconstitutionDate && !updated.expirationDate) {
@@ -72,8 +80,31 @@ export async function protocolRoutes(app: FastifyInstance) {
 
     const expiring: any[] = [];
     const expired: any[] = [];
+    const lowStock: any[] = [];
+    const expiring28: any[] = [];
+    const expired28: any[] = [];
 
     protocols.forEach((protocol: any) => {
+      if (protocol?.current_inventory_ml !== null && protocol?.current_inventory_ml !== undefined) {
+        const inventory = Number(protocol.current_inventory_ml);
+        if (!Number.isNaN(inventory) && inventory <= 1) {
+          lowStock.push({ ...protocol });
+        }
+      }
+
+      if (protocol?.vial_opened_date) {
+        const openedDate = new Date(protocol.vial_opened_date);
+        if (!Number.isNaN(openedDate.getTime())) {
+          const daysSinceOpened = Math.floor((now.getTime() - openedDate.getTime()) / (1000 * 60 * 60 * 24));
+          const daysUntilExpiry = 28 - daysSinceOpened;
+          if (daysSinceOpened >= 28) {
+            expired28.push({ ...protocol, daysSinceOpened, daysUntilExpiry });
+          } else if (daysUntilExpiry <= 7) {
+            expiring28.push({ ...protocol, daysSinceOpened, daysUntilExpiry });
+          }
+        }
+      }
+
       if (!protocol.expirationDate) return;
 
       const expDate = new Date(protocol.expirationDate);
@@ -92,7 +123,13 @@ export async function protocolRoutes(app: FastifyInstance) {
     if (Array.isArray(expired)) {
       expired.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
     }
+    if (Array.isArray(expiring28)) {
+      expiring28.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
+    }
+    if (Array.isArray(expired28)) {
+      expired28.sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
+    }
 
-    return { expiring, expired };
+    return { expiring, expired, lowStock, expiring28, expired28 };
   });
 }

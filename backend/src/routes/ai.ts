@@ -159,15 +159,18 @@ export async function aiRoutes(app: FastifyInstance) {
 
   app.post('/ai/safety', { preHandler: app.authenticate }, async (request, reply) => {
     if (!env.aiEnabled) return reply.code(503).send({ error: 'ai_disabled' });
-    const body = request.body as { protocols?: unknown };
+    const body = request.body as { protocols?: unknown; language?: string };
     const protocols = Array.isArray(body.protocols) ? body.protocols : [];
+    const language = typeof body.language === 'string' ? body.language : 'en';
+
+    const systemPrompt = language === 'pt'
+      ? 'Você é um consultor de segurança em biohacking. Analise protocolos para interações potenciais, contraindicações e preocupações de segurança. Retorne APENAS JSON válido com esta estrutura: {"safe": boolean, "warnings": ["aviso1", "aviso2"], "recommendations": ["rec1", "rec2"]}. Seja conciso e específico.'
+      : 'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.';
 
     const messages: ChatMessage[] = [
       {
         role: 'system',
-        content:
-          'You are a biohacking safety advisor. Analyze protocols for potential interactions, contraindications, and safety concerns. ' +
-          'Return ONLY valid JSON with this structure: {"safe": boolean, "warnings": ["warning1", "warning2"], "recommendations": ["rec1", "rec2"]}. Be concise and specific.',
+        content: systemPrompt,
       },
       { role: 'user', content: `Analyze these biohacking protocols for safety: ${JSON.stringify(protocols)}` },
     ];

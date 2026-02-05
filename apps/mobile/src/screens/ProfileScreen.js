@@ -17,6 +17,12 @@ export function ProfileScreen({ onLogout }) {
   const t = useTranslation();
   const [userSettings, setUserSettings] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const lifestyleLabels = t?.onboarding?.lifestyle || {
+    sleepQuality: 'Sleep Quality',
+    stress: 'Stress',
+    trainingFreq: 'Training Frequency',
+    perWeek: 'per week',
+  };
 
   const loadProfileData = async () => {
     const settings = await storage.load(STORAGE_KEYS.USER_SETTINGS, {});
@@ -156,7 +162,7 @@ export function ProfileScreen({ onLogout }) {
               <View style={{ gap: 16 }}>
                 <View>
                   <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
-                    {t.onboarding.lifestyle.sleepQuality}
+                    {lifestyleLabels.sleepQuality}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
@@ -176,7 +182,7 @@ export function ProfileScreen({ onLogout }) {
 
                 <View>
                   <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
-                    {t.onboarding.lifestyle.stress}
+                    {lifestyleLabels.stress}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
@@ -196,7 +202,7 @@ export function ProfileScreen({ onLogout }) {
 
                 <View>
                   <Text style={{ fontSize: 13, fontWeight: '700', color: '#B5B5B5', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
-                    {t.onboarding.lifestyle.trainingFreq}
+                    {lifestyleLabels.trainingFreq}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={{ flex: 1, height: 10, backgroundColor: '#F7F7F7', borderRadius: 8, overflow: 'hidden' }}>
@@ -209,7 +215,7 @@ export function ProfileScreen({ onLogout }) {
                       />
                     </View>
                     <Text style={{ fontSize: 14, fontWeight: '900', color: '#131313', minWidth: 50 }}>
-                      {lifestyle.trainingFreq || 3} {t.onboarding.lifestyle.perWeek}
+                      {lifestyle.trainingFreq || 3} {lifestyleLabels.perWeek}
                     </Text>
                   </View>
                 </View>

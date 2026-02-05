@@ -3,6 +3,9 @@ export const NOTIFICATION_TYPES = {
   EXPIRATION_CRITICAL: 'expiration_critical',
   ROTATION_REMINDER: 'rotation_reminder',
   SIDE_EFFECT_ALERT: 'side_effect_alert',
+  LOW_STOCK: 'low_stock',
+  VIAL_EXPIRING_28: 'vial_expiring_28',
+  VIAL_EXPIRED_28: 'vial_expired_28',
 };
 
 export function createNotification(type, title, message, data = {}) {
